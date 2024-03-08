@@ -75,7 +75,7 @@ export default function Login({ navigation }) {
         }
 
         if (valid) {
-            // navigation.navigate('Home')
+            navigation.navigate('Home')
             console.log("login success")
         } else {
             console.log("login failed")
