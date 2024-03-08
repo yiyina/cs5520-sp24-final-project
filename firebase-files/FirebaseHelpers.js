@@ -1,5 +1,19 @@
 import { firestore } from "./FirebaseSetup";
-import { collection, getDocs, addDoc, query, where, updateDoc, doc, deleteDoc, orderBy } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    addDoc,
+    query,
+    where,
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    updateDoc,
+    doc,
+    deleteDoc,
+    orderBy
+} from "firebase/firestore";
 
 const FirestoreService = {
     async addUser(user) {
@@ -60,7 +74,24 @@ const FirestoreService = {
             console.error("Error getting users: ", error);
             throw error;
         }
-    }
+    },
+
+    async uploadImage(userId, imageUrl, imageType) {
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const storage = getStorage();
+            const imagePath = `users/${userId}/${imageType}/${new Date().toISOString()}`;
+            const storageReference = ref(storage, imagePath);
+
+            await uploadBytes(storageReference, blob);
+            const url = await getDownloadURL(storageReference);
+            return { url, imagePath };
+        } catch (error) {
+            console.error("Error uploading image: ", error);
+            throw error;
+        }
+    },
 }
 
 export default FirestoreService;
