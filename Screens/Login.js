@@ -128,7 +128,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 100,
+        paddingTop: 100,
         alignItems: 'center',
     },
     welcom: {
@@ -150,6 +150,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'left',
         fontWeight: 'bold',
+    },
+    errorText: {
+        color: Colors.DARK_RED,
+        height: 20,
     },
     eyeIcon: {
         position: 'absolute',
