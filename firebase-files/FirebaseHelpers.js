@@ -33,6 +33,21 @@ const FirestoreService = {
         }
     },
 
+    async checkPassword(username, password) {
+        try {
+            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
+            if (querySnapshot.size === 0) {
+                return false; // Username does not exist
+            }
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            return userData.password === password;
+        } catch (error) {
+            console.error("Error checking password: ", error);
+            throw error;
+        }
+    },
+
     async getUsers() {
         try {
             const users = [];

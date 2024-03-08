@@ -137,7 +137,7 @@ export default function Register({ navigation }) {
         } catch (error) {
             console.error("Error adding user: ", error);
         } finally {
-            setIsLoading(false); // Stop loading
+            setIsLoading(false);
         }
     }
 
@@ -203,11 +203,6 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontWeight: 'bold',
     },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        width: '100%',
-    },
     errorText: {
         color: Colors.DARK_RED,
         height: 20,
@@ -217,5 +212,10 @@ const styles = StyleSheet.create({
         right: 10,
         top: 13,
         zIndex: 1,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
     }
 })
