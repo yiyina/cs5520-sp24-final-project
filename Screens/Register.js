@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View, Switch, TouchableOpacity } from 'react-native'
+import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Input from '../Shared/Input'
 import Button from '../Shared/Button'
@@ -6,7 +6,7 @@ import FirestoreService from '../firebase-files/FirebaseHelpers'
 import Colors from '../Shared/Colors'
 import { Ionicons } from '@expo/vector-icons'
 
-export default function Register() {
+export default function Register({ navigation }) {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -14,12 +14,17 @@ export default function Register() {
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (username) setUsernameError('')
+    }, [username])
+    useEffect(() => {
         if (email) setEmailError('')
+    }, [email])
+    useEffect(() => {
         if (password) setPasswordError('')
-    }, [email, password])
+    }, [password])
 
     const handleUsernameInput = (username) => {
         setUsername(username)
@@ -33,15 +38,44 @@ export default function Register() {
         setPassword(password)
     }
 
-    const validateUsername = (username) => {
-        const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{6,}$/
-        return usernamePattern.test(username)
+    const validateUsername = async (username) => {
+        const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{4,}$/
+        try {
+            const exists = await FirestoreService.checkUsernameExists(username);
+            if (exists) {
+                setUsernameError("Username already exists");
+                return false;
+            } else {
+                if (!usernamePattern.test(username)) {
+                    setUsernameError("Invalid Username");
+                    return false;
+                }
+                return true;
+            }
+        } catch (error) {
+            console.error("Error validating username: ", error);
+            throw error;
+        }
     }
 
-    const validateEmail = (email) => {
-        // /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
-        return emailPattern.test(email)
+    const validateEmail = async (email) => {
+        const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+        try {
+            const exists = await FirestoreService.checkEmailExists(email);
+            if (exists) {
+                setEmailError("Email already exists");
+                return false;
+            } else {
+                if (!emailPattern.test(email)) {
+                    setEmailError("Invalid Email");
+                    return false;
+                }
+                return true;
+            }
+        } catch (error) {
+            console.error("Error validating email: ", error);
+            throw error;
+        }
     }
 
     const validatePassword = (password) => {
@@ -57,21 +91,17 @@ export default function Register() {
         setPasswordError('')
     }
 
-    const handleConfirmPress = () => {
+    const handleConfirmPress = async () => {
         let isValid = true;
 
-        if (!validateUsername(username)) {
-            setUsernameError("Invalid Username")
-            isValid = false
-        } else {
-            setUsernameError('')
+        const isUsernameValid = await validateUsername(username);
+        if (!isUsernameValid) {
+            isValid = false;
         }
 
-        if (!validateEmail(email)) {
-            setEmailError("Invalid Email")
-            isValid = false
-        } else {
-            setEmailError('')
+        const isEmailValid = await validateEmail(email);
+        if (!isEmailValid) {
+            isValid = false;
         }
 
         if (!validatePassword(password)) {
@@ -82,6 +112,7 @@ export default function Register() {
         }
 
         if (isValid) {
+            setIsLoading(true);
             handleRegister();
         }
     }
@@ -93,12 +124,20 @@ export default function Register() {
                 email: email,
                 password: password
             }
+            console.log("Username: ", username, ", Email: ", email, ", Password: ", password)
             const id = await FirestoreService.addUser(user);
             console.log("User added with ID: ", id);
-            console.log("Username: ", username, ", Email: ", email, ", Password: ", password)
-            FirestoreService.addUser(user)
+            Alert.alert(
+                "Hi " + username + "!",
+                "You have registered successfully! Please login to continue.",
+                [
+                    { text: "OK", onPress: () => navigation.navigate('Login') }
+                ]
+            );
         } catch (error) {
             console.error("Error adding user: ", error);
+        } finally {
+            setIsLoading(false); // Stop loading
         }
     }
 
@@ -117,7 +156,7 @@ export default function Register() {
                     {emailError ? emailError : ""}
                 </Text>
                 <Text style={styles.text}>Password:</Text>
-                <View style={styles.passwordInputContainer}>
+                <View>
                     <Input
                         text={password}
                         handleInput={handlePasswordInput}
@@ -158,10 +197,6 @@ const styles = StyleSheet.create({
         marginTop: 100,
         width: '100%',
         paddingHorizontal: '5%',
-    },
-    passwordInputContainer: {
-        // flexDirection: 'row',
-        // alignItems: 'center',
     },
     text: {
         fontSize: 20,

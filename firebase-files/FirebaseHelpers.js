@@ -1,5 +1,5 @@
 import { firestore } from "./FirebaseSetup";
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, orderBy } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc, doc, deleteDoc, orderBy } from "firebase/firestore";
 
 const FirestoreService = {
     async addUser(user) {
@@ -13,12 +13,32 @@ const FirestoreService = {
         }
     },
 
+    async checkUsernameExists(username) {
+        try {
+            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
+            return querySnapshot.size > 0;
+        } catch (error) {
+            console.error("Error checking username existence: ", error);
+            throw error;
+        }
+    },
+
+    async checkEmailExists(email) {
+        try {
+            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('email', '==', email)));
+            return querySnapshot.size > 0;
+        } catch (error) {
+            console.error("Error checking email existence: ", error);
+            throw error;
+        }
+    },
+
     async getUsers() {
         try {
             const users = [];
             const querySnapshot = await getDocs(collection(firestore, "users"));
             querySnapshot.forEach((doc) => {
-                users.push(doc.data().username);
+                users.push(doc.data());
             });
             return users;
         } catch (error) {
