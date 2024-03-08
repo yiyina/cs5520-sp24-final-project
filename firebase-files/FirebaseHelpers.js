@@ -13,3 +13,5 @@ const FirestoreService = {
         }
     }
 }
+
+export default FirestoreService;

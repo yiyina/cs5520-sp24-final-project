@@ -12,7 +12,14 @@ export default function App() {
     <NavigationContainer style={styles.container}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Register" component={Register}/>
+        <Stack.Screen name="Register" component={Register}
+          options={{
+            headerShown: true, 
+            headerTitle: "",
+            headerBackTitleVisible: false,
+            headerStyle: {backgroundColor: Colors.TRANSPARENT},
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

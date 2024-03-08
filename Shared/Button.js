@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Pressable } from 'react-native'
 import React from 'react'
 
-export default function Button({ text, textColor }) {
+export default function Button({ text, textColor, buttonPress }) {
 
     const styles = StyleSheet.create({
         container: {
@@ -14,7 +14,7 @@ export default function Button({ text, textColor }) {
     })
 
     return (
-        <Pressable style={styles.container} onPress={() => console.log("button pressed")}>
+        <Pressable style={styles.container} onPress={buttonPress}>
             <Text style={styles.text}>{text}</Text>
         </Pressable>
     )

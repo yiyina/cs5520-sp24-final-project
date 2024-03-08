@@ -1,9 +1,16 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '../Shared/Button'
 import Colors from '../Shared/Colors'
 
-export default function Login() {
+export default function Login({ navigation }) {
+    const [registerPressed, setRegisterPressed] = useState(false)
+
+    const handleRegisterPress = () => {
+        setRegisterPressed(!registerPressed)
+        console.log("register pressed", registerPressed)
+        navigation.navigate('Register')
+    }
 
     return (
         <View style={styles.container}>
@@ -11,7 +18,7 @@ export default function Login() {
             <Image
                 source={require('../assets/SpinLogo.png')}
                 style={styles.logo} />
-            <Button text="Register" textColor={Colors.BLUE}/>
+            <Button text="Register" textColor={Colors.BLUE} buttonPress={handleRegisterPress}/>
         </View>
     )
 }

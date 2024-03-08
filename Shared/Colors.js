@@ -11,4 +11,5 @@ export default {
     LIGHT_YELLOW: '#FFE9D8',
     DARK_YELLOW: '#FFD8BA',
     BLUE: "blue",
+    TRANSPARENT: 'transparent',
 };
