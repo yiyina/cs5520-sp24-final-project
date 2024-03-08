@@ -1,17 +1,18 @@
 import { StyleSheet, View, TextInput, Dimensions } from 'react-native'
 import React from 'react'
 
-export default function Input({ text, hanleInput }) {
+export default function Input({ text, handleInput, secureTextEntry }) {
 
   const textChange = (text) => {
-    hanleInput(text)
+    handleInput(text)
   }
 
   return (
     <View style={styles.container}>
       <TextInput 
         value={text}
-        onChangeText={textChange}></TextInput>
+        onChangeText={textChange}
+        secureTextEntry={secureTextEntry}></TextInput>
     </View>
   )
 }

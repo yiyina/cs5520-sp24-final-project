@@ -11,6 +11,20 @@ const FirestoreService = {
             console.error("Error adding user: ", error);
             throw error;
         }
+    },
+
+    async getUsers() {
+        try {
+            const users = [];
+            const querySnapshot = await getDocs(collection(firestore, "users"));
+            querySnapshot.forEach((doc) => {
+                users.push(doc.data().username);
+            });
+            return users;
+        } catch (error) {
+            console.error("Error getting users: ", error);
+            throw error;
+        }
     }
 }
 

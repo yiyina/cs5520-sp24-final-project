@@ -3,6 +3,11 @@ import React from 'react'
 
 export default function Button({ text, textColor, buttonPress }) {
 
+    const buttonClick = () => {
+        console.log("Button Pressed")
+        buttonPress()
+    }
+
     const styles = StyleSheet.create({
         container: {
             margin: 10,
@@ -14,7 +19,7 @@ export default function Button({ text, textColor, buttonPress }) {
     })
 
     return (
-        <Pressable style={styles.container} onPress={buttonPress}>
+        <Pressable style={styles.container} onPress={buttonClick}>
             <Text style={styles.text}>{text}</Text>
         </Pressable>
     )
