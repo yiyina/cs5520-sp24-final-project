@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Colors from './Shared/Colors';
 import Login from './Screens/Login';
 import Register from './Screens/Register';
+import TabNavigation from './Components/TabNavigation';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
             headerStyle: {backgroundColor: Colors.TRANSPARENT},
           }}
         />
+        <Stack.Screen name="Home" component={TabNavigation}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
