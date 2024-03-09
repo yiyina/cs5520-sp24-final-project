@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 import { auth } from '../firebase-files/FirebaseSetup';
+import Colors from '../Shared/Colors';
 
 export default function CameraScreen({ onCancel, type, onImageCaptured }) {
     const [hasPermission, setHasPermission] = useState(null);
@@ -45,9 +46,13 @@ export default function CameraScreen({ onCancel, type, onImageCaptured }) {
         let photo = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
         });
-        photoUri = photo.assets[0].uri;
         if (photo && !photo.canceled) {
-            handleImageAction(photoUri, type);
+            if (photo.assets && photo.assets.length > 0) {
+                let photoUri = photo.assets[0].uri;
+                handleImageAction(photoUri, type);
+            } else {
+                console.error("No assets found in the photo response.");
+            }
         }
     };
 
@@ -105,7 +110,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     captureButtonInner: {
-        backgroundColor: 'orange',
+        backgroundColor: Colors.DARK_YELLOW,
         padding: 20,
         borderRadius: 50,
         borderWidth: 2,

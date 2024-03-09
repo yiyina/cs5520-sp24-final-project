@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     backgroundColor: Colors.LIGHT_YELLOW,
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
   header: {
     position: 'absolute',
@@ -122,6 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     marginTop: 150,
+    marginBottom: 50,
     borderWidth: 5,
     borderColor: Colors.WHITE,
     backgroundColor: Colors.LIGHT_RED,
