@@ -1,6 +1,8 @@
 import { firestore } from "./FirebaseSetup";
+import { auth } from "./FirebaseSetup";
 import {
     collection,
+    getDoc,
     getDocs,
     addDoc,
     query,
@@ -12,13 +14,17 @@ import {
     updateDoc,
     doc,
     deleteDoc,
-    orderBy
+    orderBy,
+    getFirestore,
 } from "firebase/firestore";
 
 const FirestoreService = {
     async addUser(user) {
         try {
-            const docRef = await addDoc(collection(firestore, "users"), user);
+            const docRef = await addDoc(collection(firestore, "users"), {
+                ...user,
+                uid: auth.currentUser.uid,
+            });
             console.log("Document written with ID: ", docRef.id);
             return docRef.id;
         } catch (error) {
@@ -35,7 +41,7 @@ const FirestoreService = {
                 const userDoc = querySnapshot.docs[0];
                 const userData = userDoc.data();
                 console.log("Found user data: ", userData);
-                return userData.email; 
+                return userData.email;
             } else {
                 console.log("No user found for username: ", username);
                 return null;
@@ -44,7 +50,7 @@ const FirestoreService = {
             console.error("Error getting email by username: ", error);
             throw error;
         }
-    },    
+    },
 
     async checkUsernameExists(username) {
         try {
@@ -66,36 +72,79 @@ const FirestoreService = {
         }
     },
 
-    async getUsers() {
+    async getUserData (userDocId) {
         try {
-            const users = [];
-            const querySnapshot = await getDocs(collection(firestore, "users"));
-            querySnapshot.forEach((doc) => {
-                users.push(doc.data());
-            });
-            return users;
+            const userDocRef = doc(firestore, "users", userDocId);
+            const docSnapshot = await getDoc(userDocRef);
+            if (docSnapshot.exists()) {
+                return docSnapshot.data();
+            } else {
+                console.error("User document does not exist for id:", userDocId);
+                return null;
+            }
         } catch (error) {
-            console.error("Error getting users: ", error);
+            console.error("Error fetching user data: ", error);
             throw error;
         }
     },
 
-    async uploadImage(userId, imageUri, imageType) {
+    async getUserDocId(uid) {
         try {
-            const response = await fetch(imageUri);
-            const blob = await response.blob();
-            const storage = getStorage();
-            const imagePath = `users/${userId}/${imageType}/${new Date().toISOString()}`;
-            const storageReference = ref(storage, imagePath);
+            const firestore = getFirestore();
+            const usersRef = collection(firestore, "users");
+            const querySnapshot = await getDocs(query(usersRef, where("uid", "==", uid)));
 
-            await uploadBytes(storageReference, blob);
-            const url = await getDownloadURL(storageReference);
-            return { url, imagePath };
+            if (!querySnapshot.empty) {
+                return querySnapshot.docs[0].id;
+            } else {
+                console.error("User not found for UID:", uid);
+                return null;
+            }
         } catch (error) {
-            console.error("Error uploading image: ", error);
+            console.error("Error getting user: ", error);
             throw error;
         }
     },
+
+    async updateUserAvatar(uid, avatarUri) {
+        try {
+            const userDocId = await this.getUserDocId(uid);
+            if (userDocId) {
+                const firestore = getFirestore();
+                const userDocRef = doc(firestore, "users", userDocId);
+                await updateDoc(userDocRef, {
+                    avatar: avatarUri
+                });
+            } else {
+                console.error("No user document found for UID:", uid);
+            }
+        } catch (error) {
+            console.error("Error updating user avatar: ", error);
+            throw error;
+        }
+    },
+
+    async addPhotoToGallery(uid, photoUri) {
+        try {
+            const userDocId = await this.getUserDocId(uid);
+            if (userDocId) {
+                const firestore = getFirestore();
+                const galleryRef = collection(firestore, "users", userDocId, "gallery");
+                const newPhotoRef = doc(galleryRef);
+
+                await setDoc(newPhotoRef, {
+                    url: photoUri,
+                    date: new Date()
+                });
+            } else {
+                console.error("No user document found for UID:", uid);
+            }
+        } catch (error) {
+            console.error("Error adding photo to gallery: ", error);
+            throw error;
+        }
+    },
+
 }
 
 export default FirestoreService;

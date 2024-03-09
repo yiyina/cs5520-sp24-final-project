@@ -5,8 +5,9 @@ import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
+import { auth } from '../firebase-files/FirebaseSetup';
 
-export default function CameraScreen({ onCancel }) {
+export default function CameraScreen({ onCancel, type, onImageCaptured }) {
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
 
@@ -18,24 +19,35 @@ export default function CameraScreen({ onCancel }) {
         })();
     }, []);
 
+    const handleImageAction = async (imageUri, type) => {
+        const uid = auth.currentUser.uid;
+        if (type === 'avatar') {
+            await FirestoreService.updateUserAvatar(uid, imageUri);
+        } else if (type === 'gallery') {
+            await FirestoreService.addPhotoToGallery(uid, imageUri);
+        }
+        console.log("Updating user avatar to:", imageUri);
+        onCancel();
+        onImageCaptured(imageUri);
+    }
+
     // function to take a picture
     const takePicture = async (type) => {
         if (cameraRef.current) {
             let photo = await cameraRef.current.takePictureAsync();
-            console.log(photo);
-            await FirestoreService.uploadImage(userId, photo.uri, type);
+            console.log("takePicture photo: ", photo);
+            handleImageAction(photo.uri, type)
         }
     };
 
     // show image picker
     const pickImage = async (type) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
+        let photo = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
         });
-
-        if (!result.canceled) {
-            console.log(result.uri);
-            await FirestoreService.uploadImage(userId, result.uri, type);
+        photoUri = photo.assets[0].uri;
+        if (photo && !photo.canceled) {
+            handleImageAction(photoUri, type);
         }
     };
 
@@ -54,12 +66,12 @@ export default function CameraScreen({ onCancel }) {
                     <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
                         <FontAwesome5 name="window-close" size={36} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.captureButtonOuter} onPress={takePicture}>
+                    <TouchableOpacity style={styles.captureButtonOuter} onPress={() => takePicture(type)}>
                         <View style={styles.captureButtonInner}>
                             <FontAwesome name="camera" size={40} color="white" />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.galleryButton} onPress={pickImage}>
+                    <TouchableOpacity style={styles.galleryButton} onPress={() => pickImage(type)}>
                         <FontAwesome name="photo" size={36} color="white" />
                     </TouchableOpacity>
                 </View>

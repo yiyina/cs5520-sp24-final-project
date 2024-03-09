@@ -4,24 +4,52 @@ import Colors from '../Shared/Colors'
 import { FontAwesome } from '@expo/vector-icons';
 import CameraScreen from './CameraScreen';
 import { auth } from '../firebase-files/FirebaseSetup';
+import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
+  const [showCamera, setShowCamera] = useState(false);
+  const [avatarUri, setAvatarUri] = useState(null);
 
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-    });
+    const fetchUserData = async () => {
+      try {
+        const currentUser = auth.currentUser;
+        setUser(currentUser);
+        console.log("currentUser id: ", currentUser.uid);
+        console.log("currentUser photo: ", currentUser.photoURL);
+
+        const userDocId = await FirestoreService.getUserDocId(currentUser.uid);
+        if (userDocId) {
+          console.log("userDocId: ", userDocId);
+          const userDocRef = await FirestoreService.getUserData(userDocId);
+          console.log("userDocRef: ", userDocRef);
+          if (userDocRef && userDocRef.avatar) {
+            setAvatarUri({ uri: userDocRef.avatar });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data: ", error);
+      }
+    };
+
+    const subscriber = auth.onAuthStateChanged(fetchUserData);
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (user) {
-    console.log(user);
-  } else {
-    console.log('No user');
-  }
-
-  const [showCamera, setShowCamera] = useState(false)
+  const handleImageCaptured = async (imageUri) => {
+    try {
+      console.log("Profile imageUri: ", imageUri);
+      const userDocId = await FirestoreService.getUserDocId(user.uid);
+      if (userDocId) {
+        setAvatarUri({ uri: imageUri });
+      } else {
+        console.error("No user document found for UID:", uid);
+      }
+    } catch (error) {
+      console.error("Error updating user avatar: ", error);
+    }
+  };
 
   const toggleCamera = () => {
     setShowCamera(!showCamera);
@@ -32,8 +60,8 @@ export default function Profile() {
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
           <Image
-            source={require('../assets/default_avatar.png')}
-            style={styles.logo}
+            source={avatarUri ? avatarUri : require('../assets/default_avatar.png')}
+            style={styles.avatar}
           />
         </View>
         <Pressable onPress={toggleCamera}>
@@ -45,7 +73,7 @@ export default function Profile() {
           transparent={true}
           onRequestClose={toggleCamera}
         >
-          <CameraScreen onCancel={toggleCamera} />
+          <CameraScreen onCancel={toggleCamera} onImageCaptured={handleImageCaptured} type={'avatar'} />
         </Modal>
       </View>
     </View>
@@ -60,7 +88,7 @@ const styles = StyleSheet.create({
     paddingTop: 100,
   },
   header: {
-    marginTopo: 50,
+    marginTop: 50,
   },
   avatarContainer: {
     borderWidth: 5,
@@ -68,7 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     padding: 2,
   },
-  logo: {
+  avatar: {
     width: 100,
     height: 100,
     borderRadius: 100,
