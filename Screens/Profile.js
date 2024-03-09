@@ -21,12 +21,10 @@ export default function Profile() {
 
         const userDocId = await FirestoreService.getUserDocId(currentUser.uid);
         if (userDocId) {
-          console.log("userDocId: ", userDocId);
           const userDocRef = await FirestoreService.getUserData(userDocId);
-          console.log("userDocRef: ", userDocRef);
           if (userDocRef && userDocRef.avatar) {
             setAvatarUri({ uri: userDocRef.avatar });
-          }
+          } 
         }
       } catch (error) {
         console.error("Error fetching user data: ", error);
@@ -60,7 +58,8 @@ export default function Profile() {
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
           <Image
-            source={avatarUri ? avatarUri : require('../assets/default_avatar.png')}
+            source={avatarUri}
+            defaultSource={require('../assets/default_avatar.png')}
             style={styles.avatar}
           />
         </View>
