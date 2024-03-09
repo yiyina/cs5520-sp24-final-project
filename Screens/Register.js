@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import Input from '../Shared/Input'
 import Button from '../Shared/Button'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase-files/FirebaseSetup';
 import Colors from '../Shared/Colors'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -39,48 +41,48 @@ export default function Register({ navigation }) {
     }
 
     const validateUsername = async (username) => {
-        const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{4,}$/
-        try {
-            const exists = await FirestoreService.checkUsernameExists(username);
-            if (exists) {
-                setUsernameError("Username already exists");
-                return false;
-            } else {
-                if (!usernamePattern.test(username)) {
-                    setUsernameError("Invalid Username");
-                    return false;
-                }
-                return true;
-            }
-        } catch (error) {
-            console.error("Error validating username: ", error);
-            throw error;
+        const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{4,}$/;
+        if (!usernamePattern.test(username)) {
+            setUsernameError("Invalid Username, should be at least 4 characters long with at least 1 letter");
+            return false;
         }
-    }
+    
+        const exists = await FirestoreService.checkUsernameExists(username);
+        if (exists) {
+            setUsernameError("Username already exists");
+            return false;
+        }
+    
+        setUsernameError('');
+        return true;
+    };
 
     const validateEmail = async (email) => {
-        const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
-        try {
-            const exists = await FirestoreService.checkEmailExists(email);
-            if (exists) {
-                setEmailError("Email already exists");
-                return false;
-            } else {
-                if (!emailPattern.test(email)) {
-                    setEmailError("Invalid Email");
-                    return false;
-                }
-                return true;
-            }
-        } catch (error) {
-            console.error("Error validating email: ", error);
-            throw error;
+        const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            setEmailError("Invalid Email");
+            return false;
         }
-    }
+    
+        const exists = await FirestoreService.checkEmailExists(email);
+        if (exists) {
+            setEmailError("Email already exists");
+            return false;
+        }
+    
+        setEmailError('');
+        return true;
+    };
 
     const validatePassword = (password) => {
-        return password.length >= 6
-    }
+        if (password.length < 6) {
+            setPasswordError("Invalid Password, should be at least 6 characters long");
+            return false;
+        }
+    
+        setPasswordError('');
+        return true;
+    };
 
     const handleResetPress = () => {
         setUsername('')
@@ -92,54 +94,45 @@ export default function Register({ navigation }) {
     }
 
     const handleConfirmPress = async () => {
-        let isValid = true;
-
+        setIsLoading(true);
+    
         const isUsernameValid = await validateUsername(username);
-        if (!isUsernameValid) {
-            isValid = false;
-        }
-
         const isEmailValid = await validateEmail(email);
-        if (!isEmailValid) {
-            isValid = false;
-        }
-
-        if (!validatePassword(password)) {
-            setPasswordError("Invalid Password")
-            isValid = false
-        } else {
-            setPasswordError('')
-        }
-
-        if (isValid) {
-            setIsLoading(true);
+        const isPasswordValid = validatePassword(password);
+    
+        if (isUsernameValid && isEmailValid && isPasswordValid) {
             handleRegister();
+        } else {
+            setIsLoading(false);
         }
-    }
+    };
 
     const handleRegister = async () => {
         try {
-            const user = {
+            await createUserWithEmailAndPassword(auth, email, password);
+    
+            const userInfo = {
                 username: username,
                 email: email,
-                password: password
-            }
-            console.log("Username: ", username, ", Email: ", email, ", Password: ", password)
-            const id = await FirestoreService.addUser(user);
-            console.log("User added with ID: ", id);
+            };
+            await FirestoreService.addUser(userInfo);
+    
             Alert.alert(
-                "Hi " + username + "!",
-                "You have registered successfully! Please login to continue.",
-                [
-                    { text: "OK", onPress: () => navigation.navigate('Login') }
-                ]
+                "Registration Successful",
+                "Please login to continue.",
+                [{ text: "OK", onPress: () => navigation.navigate('Login') }]
             );
         } catch (error) {
-            console.error("Error adding user: ", error);
+            console.error("Error registering user: ", error);
+            if (error.code === 'auth/email-already-in-use') {
+                setEmailError("Email already in use");
+            } else {
+                Alert.alert("Error", "An unexpected error occurred.");
+            }
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     return (
         <View style={styles.container}>

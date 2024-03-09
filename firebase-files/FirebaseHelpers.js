@@ -27,6 +27,25 @@ const FirestoreService = {
         }
     },
 
+    async getEmailByUsername(username) {
+        console.log("Attempting to find email for username:", username);
+        try {
+            const querySnapshot = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
+            if (!querySnapshot.empty) {
+                const userDoc = querySnapshot.docs[0];
+                const userData = userDoc.data();
+                console.log("Found user data: ", userData);
+                return userData.email; 
+            } else {
+                console.log("No user found for username: ", username);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error getting email by username: ", error);
+            throw error;
+        }
+    },    
+
     async checkUsernameExists(username) {
         try {
             const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
@@ -47,21 +66,6 @@ const FirestoreService = {
         }
     },
 
-    async checkPassword(username, password) {
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
-            if (querySnapshot.size === 0) {
-                return false; // Username does not exist
-            }
-            const userDoc = querySnapshot.docs[0];
-            const userData = userDoc.data();
-            return userData.password === password;
-        } catch (error) {
-            console.error("Error checking password: ", error);
-            throw error;
-        }
-    },
-
     async getUsers() {
         try {
             const users = [];
@@ -76,9 +80,9 @@ const FirestoreService = {
         }
     },
 
-    async uploadImage(userId, imageUrl, imageType) {
+    async uploadImage(userId, imageUri, imageType) {
         try {
-            const response = await fetch(imageUrl);
+            const response = await fetch(imageUri);
             const blob = await response.blob();
             const storage = getStorage();
             const imagePath = `users/${userId}/${imageType}/${new Date().toISOString()}`;

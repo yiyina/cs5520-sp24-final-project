@@ -4,6 +4,7 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 export default function CameraScreen({ onCancel }) {
     const [hasPermission, setHasPermission] = useState(null);
@@ -18,23 +19,23 @@ export default function CameraScreen({ onCancel }) {
     }, []);
 
     // function to take a picture
-    const takePicture = async () => {
+    const takePicture = async (type) => {
         if (cameraRef.current) {
             let photo = await cameraRef.current.takePictureAsync();
             console.log(photo);
-            
+            await FirestoreService.uploadImage(userId, photo.uri, type);
         }
     };
 
     // show image picker
-    const pickImage = async () => {
+    const pickImage = async (type) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
         });
 
         if (!result.canceled) {
             console.log(result.uri);
-            
+            await FirestoreService.uploadImage(userId, result.uri, type);
         }
     };
 

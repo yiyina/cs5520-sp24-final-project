@@ -1,10 +1,26 @@
 import { StyleSheet, Pressable, View, Image, Modal } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Colors from '../Shared/Colors'
 import { FontAwesome } from '@expo/vector-icons';
 import CameraScreen from './CameraScreen';
+import { auth } from '../firebase-files/FirebaseSetup';
 
 export default function Profile() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (user) {
+    console.log(user);
+  } else {
+    console.log('No user');
+  }
+
   const [showCamera, setShowCamera] = useState(false)
 
   const toggleCamera = () => {
