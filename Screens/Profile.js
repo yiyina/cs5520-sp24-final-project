@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, Image, Modal } from 'react-native'
+import { StyleSheet, Pressable, View, Image, Modal, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../Shared/Colors'
 import { FontAwesome } from '@expo/vector-icons';
@@ -65,7 +65,7 @@ export default function Profile() {
           />
         </View>
         <Pressable onPress={toggleCamera}>
-          <FontAwesome name="camera-retro" size={24} color="black" />
+          <FontAwesome name="camera-retro" size={24} color="white" style={{padding: 10}}/>
         </Pressable>
         <Modal
           visible={showCamera}
@@ -76,6 +76,9 @@ export default function Profile() {
           <CameraScreen onCancel={toggleCamera} onImageCaptured={handleImageCaptured} type={'avatar'} />
         </Modal>
       </View>
+      <View style={styles.body}>
+
+      </View>
     </View>
   )
 }
@@ -84,17 +87,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F0F0F0',
+    backgroundColor: Colors.LIGHT_YELLOW,
     alignItems: 'center',
-    paddingTop: 100,
   },
   header: {
-    marginTop: 50,
+    position: 'absolute',
+    zIndex: 1,
+    marginTop: 100,
+    alignItems: 'center',
   },
   avatarContainer: {
     borderWidth: 5,
     borderColor: Colors.WHITE,
     borderRadius: 100,
-    padding: 2,
   },
   avatar: {
     width: 100,
@@ -112,5 +117,14 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'white',
     opacity: 1,
+  },
+  body: {
+    flex: 1,
+    width: '100%',
+    marginTop: 150,
+    borderWidth: 5,
+    borderColor: Colors.WHITE,
+    backgroundColor: Colors.LIGHT_RED,
+    borderRadius: 50,
   },
 })
