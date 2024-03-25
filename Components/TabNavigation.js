@@ -46,20 +46,20 @@ export default function TabNavigation() {
                     ),
                 }}
             />
+            <Tab.Screen name="Favorite" component={Favorite} 
+                options={{
+                    tabBarLabel: 'Favorite',
+                    tabBarIcon: ({ color, size }) => (
+                        <AntDesign name="hearto" size={size} color={color} />
+                    ),
+                }}
+            />
             <Tab.Screen name="Game" component={Game} 
                 options={{
                     tabBarLabel: 'Game',
                     tabBarIcon: ({ color, size }) => (
                         // <MaterialIcons name="auto-awesome" size={24} color={color} />
                         <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
-                    ),
-                }}
-            />
-            <Tab.Screen name="Favorite" component={Favorite} 
-                options={{
-                    tabBarLabel: 'Favorite',
-                    tabBarIcon: ({ color, size }) => (
-                        <AntDesign name="hearto" size={size} color={color} />
                     ),
                 }}
             />

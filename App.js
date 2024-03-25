@@ -24,7 +24,7 @@ export default function App({ navigation }) {
       }
     })
 
-    return unsubscribe
+    return unsubscribe;
   }, [])
 
   const AuthStack = (

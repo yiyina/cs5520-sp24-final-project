@@ -8,24 +8,25 @@ import FirestoreService from '../firebase-files/FirebaseHelpers';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(auth.currentUser || null);
   const [showCamera, setShowCamera] = useState(false);
   const [avatarUri, setAvatarUri] = useState(null);
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-          console.log("No user is currently logged in.");
-          return;
-        }
-        setUser(currentUser);
-        console.log("currentUser id: ", currentUser.uid);
-        console.log("currentUser photo: ", currentUser.photoURL);
+    console.log("currentUser id: ", auth.currentUser.uid);
+    console.log("currentUser photo: ", auth.currentUser.photoURL);
+    const subscriber = auth.onAuthStateChanged((user) => {
+      if (user) {
+        fetchUserData(auth.currentUser.uid);
+      } else {
+        setUser(null);
+        setAvatarUri(null);
+      }
+    });
 
-        const userDocId = await FirestoreService.getUserDocId(currentUser.uid);
+    const fetchUserData = async (uid) => {
+      try {
+        const userDocId = await FirestoreService.getUserDocId(uid);
         if (userDocId) {
           const userDocRef = await FirestoreService.getUserData(userDocId);
           if (userDocRef && userDocRef.avatar) {
@@ -37,17 +38,13 @@ export default function Profile() {
       }
     };
 
-    const subscriber = auth.onAuthStateChanged(fetchUserData);
-    return subscriber; // unsubscribe on unmount
+    return () => {
+      subscriber();
+    };
   }, []);
 
   const handleImageCaptured = async (imageUri) => {
     try {
-      console.log("Profile imageUri: ", imageUri);
-      if (isLoggedOut) {
-        console.error("User has logged out, unable to update avatar.");
-        return;
-      }
       const userDocId = await FirestoreService.getUserDocId(user.uid);
       if (userDocId) {
         setAvatarUri({ uri: imageUri });
@@ -66,7 +63,6 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      setIsLoggedOut(true); // 设置为 true 表示用户已注销
     } catch (error) {
       console.error("Error signing out: ", error);
     }
