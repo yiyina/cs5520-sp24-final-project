@@ -44,7 +44,7 @@ export default function EditProfile({ showProfile, onCancel }) {
                     <Octicons name="chevron-down" size={24} color="white" />
                 </Pressable>
                 <View style={styles.modalContent}>
-                    <Text>Edit Profile</Text>
+                    <Text style={styles.title}>Edit Profile</Text>
                     <Text>Username : {userName}</Text>
                     <Text>Email : {email}</Text>
                     <Pressable onPress={fetchUserData}>
@@ -85,5 +85,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 1,
-    }
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: Colors.DEEP_RED,
+        marginBottom: 10,
+    },
+    
 })

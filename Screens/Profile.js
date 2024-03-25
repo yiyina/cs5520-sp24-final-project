@@ -86,7 +86,7 @@ export default function Profile() {
         </View>
         <Pressable onPress={toggleCamera} style={styles.editAvatar}>
           <FontAwesome name="camera-retro" size={24} color="white" style={{ padding: 10 }} />
-          <Text style={styles.text}>Edit</Text>
+          {/* <Text style={styles.text}>Edit</Text> */}
         </Pressable>
         <CameraScreen
           showCamera={showCamera}
@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: Colors.WHITE,
     backgroundColor: Colors.LIGHT_RED,
-    borderRadius: 50,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
