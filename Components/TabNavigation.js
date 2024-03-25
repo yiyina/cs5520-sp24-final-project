@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { AntDesign } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Home from '../Screens/Home'
@@ -20,8 +21,6 @@ export default function TabNavigation() {
         <Pressable
             style={{
                 top: -30, // Adjust this to make the button float
-                justifyContent: 'center',
-                alignItems: 'center',
                 shadowColor: '#7F5DF0', // You can adjust shadow color
                 shadowOffset: {
                     width: 0,
@@ -39,6 +38,7 @@ export default function TabNavigation() {
             <View style={{
                 width: 70,
                 height: 70,
+                paddingTop: 10,
                 borderRadius: 35,
                 backgroundColor: '#ffffff'
             }}>
@@ -88,9 +88,9 @@ export default function TabNavigation() {
                     options={{
                         tabBarLabel: '',
                         tabBarIcon: ({ focused }) => (
-                            <AntDesign
+                            <EvilIcons
                                 name="camera"
-                                size={focused ? 30 : 40} // 30 when tab is focused, 25 otherwise
+                                size={50} // 30 when tab is focused, 25 otherwise
                                 color={focused ? "#e32f45" : "#748c94"} // specific colors based on focus
                             />
                         ),
