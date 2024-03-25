@@ -1,9 +1,38 @@
 import { StyleSheet, Text, View, Modal, Pressable } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Octicons } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
+import { auth } from '../firebase-files/FirebaseSetup';
+import FirestoreService from '../firebase-files/FirebaseHelpers';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function EditProfile({ showProfile, onCancel }) {
+    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const user = auth.currentUser;
+    
+    useEffect(() => {
+        console.log("UserName: ", userName);
+        console.log("Email: ", email);
+    }, [userName, email]);
+
+    const fetchUserData = async () => {
+        try {
+            const userDocId = await FirestoreService.getUserDocId(user.uid);
+            if (userDocId) {
+                const userDocRef = await FirestoreService.getUserData(userDocId);
+                if(userDocRef) {
+                    setUserName(userDocRef.username);
+                    setEmail(userDocRef.email);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching user data: ", error);
+        }
+    }
+
     return (
         <Modal
             visible={showProfile}
@@ -16,8 +45,11 @@ export default function EditProfile({ showProfile, onCancel }) {
                 </Pressable>
                 <View style={styles.modalContent}>
                     <Text>Edit Profile</Text>
-                    <Text>Username : </Text>
-                    
+                    <Text>Username : {userName}</Text>
+                    <Text>Email : {email}</Text>
+                    <Pressable onPress={fetchUserData}>
+                        <MaterialCommunityIcons name="lead-pencil" size={24} color="black" />
+                    </Pressable>
                 </View>
             </View>
         </Modal>
@@ -27,7 +59,6 @@ export default function EditProfile({ showProfile, onCancel }) {
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
-        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'flex-end',
     },
     modalContent: {
@@ -51,8 +82,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 20,
         backgroundColor: Colors.DEEP_RED,
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         zIndex: 1,
     }
 })
