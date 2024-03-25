@@ -1,11 +1,12 @@
-import { StyleSheet, Pressable, View, Image } from 'react-native'
+import { StyleSheet, Pressable, View, Image, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../Shared/Colors'
 import { FontAwesome } from '@expo/vector-icons';
 import CameraScreen from './CameraScreen';
 import { auth } from '../firebase-files/FirebaseSetup';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
-import { MaterialIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import CameraService from '../Services/CameraService';
 
 export default function Profile() {
@@ -59,6 +60,17 @@ export default function Profile() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <View style={styles.logoutProfile}>
+          <Pressable onPress={handleLogout} style={styles.logout}>
+            <SimpleLineIcons name="logout" size={24} color="darkred" />
+            <Text style={styles.text}>Logout</Text>
+          </Pressable>
+          <Pressable onPress={handleLogout} style={styles.logout}>
+            <Text style={styles.text}>Profile</Text>
+            <AntDesign name="profile" size={24} color="darkred" />
+          </Pressable>
+        </View>
+
         <View style={styles.avatarContainer}>
           <Image
             source={avatarUri}
@@ -66,8 +78,9 @@ export default function Profile() {
             style={styles.avatar}
           />
         </View>
-        <Pressable onPress={toggleCamera}>
+        <Pressable onPress={toggleCamera} style={styles.editAvatar}>
           <FontAwesome name="camera-retro" size={24} color="white" style={{ padding: 10 }} />
+          <Text style={styles.text}>Edit</Text>
         </Pressable>
         <CameraScreen
           showCamera={showCamera}
@@ -76,9 +89,6 @@ export default function Profile() {
           type={'avatar'} />
       </View>
       <View style={styles.body}>
-        <Pressable onPress={handleLogout}>
-          <MaterialIcons name="logout" size={24} color="white" />
-        </Pressable>
       </View>
     </View>
   )
@@ -95,8 +105,15 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: 100,
+    marginTop: 50,
     alignItems: 'center',
+    width: '100%',
+  },
+  logoutProfile: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 10,
   },
   avatarContainer: {
     borderWidth: 5,
@@ -107,6 +124,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 100,
+  },
+  editAvatar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalOverlay: {
     flex: 1,
@@ -122,6 +144,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    flexDirection: 'row',
     width: '100%',
     marginTop: 150,
     marginBottom: 50,
@@ -131,5 +154,15 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  text: {
+    color: 'darkred',
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingHorizontal: 5,
+  },
+  logout: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
