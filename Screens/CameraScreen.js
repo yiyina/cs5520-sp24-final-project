@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Camera } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
+import CameraService from '../Services/CameraService';
 import { auth } from '../firebase-files/FirebaseSetup';
 import Colors from '../Shared/Colors';
 
@@ -32,30 +32,6 @@ export default function CameraScreen({ onCancel, type, onImageCaptured }) {
         onImageCaptured(imageUri);
     }
 
-    // function to take a picture
-    const takePicture = async (type) => {
-        if (cameraRef.current) {
-            let photo = await cameraRef.current.takePictureAsync();
-            console.log("takePicture photo: ", photo);
-            handleImageAction(photo.uri, type)
-        }
-    };
-
-    // show image picker
-    const pickImage = async (type) => {
-        let photo = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        });
-        if (photo && !photo.canceled) {
-            if (photo.assets && photo.assets.length > 0) {
-                let photoUri = photo.assets[0].uri;
-                handleImageAction(photoUri, type);
-            } else {
-                console.error("No assets found in the photo response.");
-            }
-        }
-    };
-
     if (hasPermission === null) {
         return <View />;
     }
@@ -71,12 +47,12 @@ export default function CameraScreen({ onCancel, type, onImageCaptured }) {
                     <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
                         <FontAwesome5 name="window-close" size={36} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.captureButtonOuter} onPress={() => takePicture(type)}>
+                    <TouchableOpacity style={styles.captureButtonOuter} onPress={() => CameraService.takePicture(cameraRef, type, handleImageAction)}>
                         <View style={styles.captureButtonInner}>
                             <FontAwesome name="camera" size={40} color="white" />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.galleryButton} onPress={() => pickImage(type)}>
+                    <TouchableOpacity style={styles.galleryButton} onPress={() => CameraService.pickImage(type, handleImageAction)}>
                         <FontAwesome name="photo" size={36} color="white" />
                     </TouchableOpacity>
                 </View>
