@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Modal, View, Pressable } from 'react-native'
+import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { AntDesign } from '@expo/vector-icons';
@@ -10,68 +10,123 @@ import Search from '../Screens/Search'
 import Profile from '../Screens/Profile'
 import Game from '../Screens/Game'
 import Favorite from '../Screens/Favorite'
+import CameraScreen from '../Screens/CameraScreen';
 
 
 export default function TabNavigation() {
     const Tab = createBottomTabNavigator()
+    const [showCamera, setShowCamera] = useState(false);
+
+    const CustomTabBarButton = ({ children }) => (
+        <Pressable
+            style={{
+                top: -30, // Adjust this to make the button float
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: '#7F5DF0', // You can adjust shadow color
+                shadowOffset: {
+                    width: 0,
+                    height: 10,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.5,
+                elevation: 5,
+                backgroundColor: '#ffffff', // Background color of the button
+                borderRadius: 35,
+                width: 70,
+                height: 70,
+            }}
+            onPress={() => setShowCamera(true)}>
+            <View style={{
+                width: 70,
+                height: 70,
+                borderRadius: 35,
+                backgroundColor: '#ffffff'
+            }}>
+                {children}
+            </View>
+        </Pressable>
+    )
+
     return (
-        <Tab.Navigator screenOptions={{
-            headerShown: false,
-            // tabBarShowLabel: false,
-            tabBarStyle: {
-                position: 'absolute',
-                // bottom: 50,
-                left: 20,
-                right: 20,
-                elevation: 0,
-                backgroundColor: '#ffffff',
-                borderRadius: 15,
-                // height: 90,
-                ...styles.shadow
-            }
-        }}>
-            <Tab.Screen name="MainHome" component={Home} 
-                options={{
-                    tabBarLabel: 'Home',
-                    tabBarIcon: ({ color, size }) => (
-                        <AntDesign name="home" size={size} color={color} />
-                    ),
-                }}
-            />
-            <Tab.Screen name="Search" component={Search} 
-                options={{
-                    tabBarLabel: 'Search',
-                    tabBarIcon: ({ color, size }) => (
-                        <AntDesign name="search1" size={size} color={color} />
-                    ),
-                }}
-            />
-            <Tab.Screen name="Favorite" component={Favorite} 
+        <>
+            <Tab.Navigator screenOptions={{
+                headerShown: false,
+                // tabBarShowLabel: false,
+                tabBarStyle: {
+                    position: 'absolute',
+                    // bottom: 50,
+                    // left: 20,
+                    // right: 20,
+                    elevation: 0,
+                    backgroundColor: '#ffffff',
+                    borderRadius: 15,
+                    // height: 90,
+                    ...styles.shadow
+                }
+            }}>
+                <Tab.Screen name="MainHome" component={Home}
+                    options={{
+                        tabBarLabel: 'Home',
+                        tabBarIcon: ({ color, size }) => (
+                            <AntDesign name="home" size={size} color={color} />
+                        ),
+                    }}
+                />
+                <Tab.Screen name="Search" component={Search}
+                    options={{
+                        tabBarLabel: 'Search',
+                        tabBarIcon: ({ color, size }) => (
+                            <AntDesign name="search1" size={size} color={color} />
+                        ),
+                    }}
+                />
+                {/* <Tab.Screen name="Favorite" component={Favorite} 
                 options={{
                     tabBarLabel: 'Favorite',
                     tabBarIcon: ({ color, size }) => (
                         <AntDesign name="hearto" size={size} color={color} />
                     ),
                 }}
-            />
-            <Tab.Screen name="Game" component={Game} 
-                options={{
-                    tabBarLabel: 'Game',
-                    tabBarIcon: ({ color, size }) => (
-                        // <MaterialIcons name="auto-awesome" size={24} color={color} />
-                        <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
-                    ),
-                }}
-            />
-            <Tab.Screen name="Profile" component={Profile} 
-                options={{
-                    tabBarLabel: 'Profile',
-                    tabBarIcon: ({ color, size }) => (
-                        <AntDesign name="profile" size={size} color={color} />
-                    ),
-                }}
-            />
-        </Tab.Navigator>
+            /> */}
+                <Tab.Screen name="Camera" component={CameraScreen}
+                    options={{
+                        tabBarLabel: '',
+                        tabBarIcon: ({ focused }) => (
+                            <AntDesign
+                                name="camera"
+                                size={focused ? 30 : 40} // 30 when tab is focused, 25 otherwise
+                                color={focused ? "#e32f45" : "#748c94"} // specific colors based on focus
+                            />
+                        ),
+                        tabBarButton: (props) => (
+                            <CustomTabBarButton {...props} />
+                        ),
+                    }}
+                />
+                <Tab.Screen name="Game" component={Game}
+                    options={{
+                        tabBarLabel: 'Game',
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
+                        ),
+                    }}
+                />
+                <Tab.Screen name="Profile" component={Profile}
+                    options={{
+                        tabBarLabel: 'Profile',
+                        tabBarIcon: ({ color, size }) => (
+                            <AntDesign name="profile" size={size} color={color} />
+                        ),
+                    }}
+                />
+            </Tab.Navigator>
+            <Modal
+                visible={showCamera}
+                onRequestClose={() => setShowCamera(false)}>
+                <CameraScreen onCancel={() => setShowCamera(false)} />
+            </Modal>
+        </>
     )
 }
 

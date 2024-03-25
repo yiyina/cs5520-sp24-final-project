@@ -1,4 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
+import FirestoreService from '../firebase-files/FirebaseHelpers';
+import { auth } from '../firebase-files/FirebaseSetup';
 
 class CameraService {
     static async takePicture(cameraRef, type, handleImageAction) {
@@ -20,6 +22,22 @@ class CameraService {
             } else {
                 console.error("No assets found in the photo response.");
             }
+        }
+    }
+
+    static async handleImageCaptured(imageUri, setAvatarUri) {
+        try {
+            const user = auth.currentUser;
+            if (!user) throw new Error("User not authenticated");
+
+            const userDocId = await FirestoreService.getUserDocId(user.uid);
+            if (userDocId) {
+                setAvatarUri({ uri: imageUri });
+            } else {
+                console.error("No user document found for UID:", user.uid);
+            }
+        } catch (error) {
+            console.error("Error updating user avatar: ", error);
         }
     }
 }

@@ -6,6 +6,7 @@ import CameraScreen from './CameraScreen';
 import { auth } from '../firebase-files/FirebaseSetup';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 import { MaterialIcons } from '@expo/vector-icons';
+import CameraService from '../Services/CameraService';
 
 export default function Profile() {
   const [user, setUser] = useState(auth.currentUser || null);
@@ -42,20 +43,7 @@ export default function Profile() {
       subscriber();
     };
   }, []);
-
-  const handleImageCaptured = async (imageUri) => {
-    try {
-      const userDocId = await FirestoreService.getUserDocId(user.uid);
-      if (userDocId) {
-        setAvatarUri({ uri: imageUri });
-      } else {
-        console.error("No user document found for UID:", uid);
-      }
-    } catch (error) {
-      console.error("Error updating user avatar: ", error);
-    }
-  };
-
+  
   const toggleCamera = () => {
     setShowCamera(!showCamera);
   }
@@ -87,7 +75,10 @@ export default function Profile() {
           transparent={true}
           onRequestClose={toggleCamera}
         >
-          <CameraScreen onCancel={toggleCamera} onImageCaptured={handleImageCaptured} type={'avatar'} />
+          <CameraScreen 
+            onCancel={toggleCamera} 
+            onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)} 
+            type={'avatar'} />
         </Modal>
       </View>
       <View style={styles.body}>
