@@ -21,6 +21,7 @@ export default function Profile() {
     console.log("currentUser photo: ", auth.currentUser.photoURL);
     const subscriber = auth.onAuthStateChanged((user) => {
       if (user) {
+        console.log("User: ", user);
         fetchUserData(auth.currentUser.uid);
       } else {
         setUser(null);

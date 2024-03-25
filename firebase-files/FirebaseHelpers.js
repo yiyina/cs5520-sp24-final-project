@@ -1,5 +1,4 @@
-import { firestore } from "./FirebaseSetup";
-import { auth } from "./FirebaseSetup";
+import { firestore, auth, functions } from "./FirebaseSetup";
 import {
     collection,
     getDoc,
@@ -16,10 +15,13 @@ import {
     deleteDoc,
     orderBy,
     getFirestore,
+    checkUsernameExists,
+    checkEmailExists
 } from "firebase/firestore";
 
 const FirestoreService = {
     async addUser(user) {
+        console.log("Adding user: ", user);
         try {
             const docRef = await addDoc(collection(firestore, "users"), {
                 ...user,
@@ -52,25 +54,25 @@ const FirestoreService = {
         }
     },
 
-    async checkUsernameExists(username) {
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
-            return querySnapshot.size > 0;
-        } catch (error) {
-            console.error("Error checking username existence: ", error);
-            throw error;
-        }
-    },
+    // async checkUsernameExists(username) {
+    //     try {
+    //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
+    //         return querySnapshot.size > 0;
+    //     } catch (error) {
+    //         console.error("Error checking username existence: ", error);
+    //         throw error;
+    //     }
+    // },
 
-    async checkEmailExists(email) {
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('email', '==', email)));
-            return querySnapshot.size > 0;
-        } catch (error) {
-            console.error("Error checking email existence: ", error);
-            throw error;
-        }
-    },
+    // async checkEmailExists(email) {
+    //     try {
+    //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('email', '==', email)));
+    //         return querySnapshot.size > 0;
+    //     } catch (error) {
+    //         console.error("Error checking email existence: ", error);
+    //         throw error;
+    //     }
+    // },
 
     async getUserData (userDocId) {
         try {
@@ -89,11 +91,11 @@ const FirestoreService = {
     },
 
     async getUserDocId(uid) {
+        console.log("Getting user doc ID for UID:", uid);
         try {
             const firestore = getFirestore();
             const usersRef = collection(firestore, "users");
             const querySnapshot = await getDocs(query(usersRef, where("uid", "==", uid)));
-
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             } else {

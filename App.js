@@ -18,7 +18,13 @@ export default function App({ navigation }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserloggedIn(true);
+        const { creationTime, lastSignInTime } = user.metadata;
+        const creationTimestamp = new Date(creationTime).getTime();
+        const lastSignInTimestamp = new Date(lastSignInTime).getTime();
+        const isNewUser = lastSignInTimestamp - creationTimestamp < 1 * 60 * 1000;
+        if (!isNewUser) {
+          setUserloggedIn(true);
+        }
       } else {
         setUserloggedIn(false);
       }
