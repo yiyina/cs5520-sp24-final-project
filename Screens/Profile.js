@@ -17,36 +17,36 @@ export default function Profile() {
   const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
-    console.log("currentUser id: ", auth.currentUser.uid);
-    console.log("currentUser photo: ", auth.currentUser.photoURL);
     const subscriber = auth.onAuthStateChanged((user) => {
       if (user) {
         console.log("User: ", user);
-        fetchUserData(auth.currentUser.uid);
+        setUser(user);
+        fetchUserData(user.uid);
       } else {
         setUser(null);
         setAvatarUri(null);
       }
     });
 
-    const fetchUserData = async (uid) => {
-      try {
-        const userDocId = await FirestoreService.getUserDocId(uid);
-        if (userDocId) {
-          const userDocRef = await FirestoreService.getUserData(userDocId);
-          if (userDocRef && userDocRef.avatar) {
-            setAvatarUri({ uri: userDocRef.avatar });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data: ", error);
-      }
-    };
-
     return () => {
       subscriber();
     };
   }, []);
+
+  const fetchUserData = async (uid) => {
+    try {
+      const userDocId = await FirestoreService.getUserDocId(uid);
+      if (userDocId) {
+        const userDocRef = await FirestoreService.getUserData(userDocId);
+        if (userDocRef && userDocRef.avatar) {
+          console.log("Avatar: ", userDocRef.avatar);
+          setAvatarUri({ uri: userDocRef.avatar });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    }
+  };
 
   const toggleCamera = () => {
     setShowCamera(!showCamera);
