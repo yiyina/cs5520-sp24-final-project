@@ -52,25 +52,25 @@ const FirestoreService = {
         }
     },
 
-    async checkUsernameExists(username) {
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
-            return querySnapshot.size > 0;
-        } catch (error) {
-            console.error("Error checking username existence: ", error);
-            throw error;
-        }
-    },
+    // async checkUsernameExists(username) {
+    //     try {
+    //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
+    //         return querySnapshot.size > 0;
+    //     } catch (error) {
+    //         console.error("Error checking username existence: ", error);
+    //         throw error;
+    //     }
+    // },
 
-    async checkEmailExists(email) {
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('email', '==', email)));
-            return querySnapshot.size > 0;
-        } catch (error) {
-            console.error("Error checking email existence: ", error);
-            throw error;
-        }
-    },
+    // async checkEmailExists(email) {
+    //     try {
+    //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('email', '==', email)));
+    //         return querySnapshot.size > 0;
+    //     } catch (error) {
+    //         console.error("Error checking email existence: ", error);
+    //         throw error;
+    //     }
+    // },
 
     async getUserData (userDocId) {
         try {

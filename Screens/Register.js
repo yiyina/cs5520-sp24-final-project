@@ -47,11 +47,11 @@ export default function Register({ navigation }) {
             return false;
         }
     
-        const exists = await FirestoreService.checkUsernameExists(username);
-        if (exists) {
-            setUsernameError("Username already exists");
-            return false;
-        }
+        // const exists = await FirestoreService.checkUsernameExists(username);
+        // if (exists) {
+        //     setUsernameError("Username already exists");
+        //     return false;
+        // }
     
         setUsernameError('');
         return true;
@@ -64,11 +64,11 @@ export default function Register({ navigation }) {
             return false;
         }
     
-        const exists = await FirestoreService.checkEmailExists(email);
-        if (exists) {
-            setEmailError("Email already exists");
-            return false;
-        }
+        // const exists = await FirestoreService.checkEmailExists(email);
+        // if (exists) {
+        //     setEmailError("Email already exists");
+        //     return false;
+        // }
     
         setEmailError('');
         return true;
