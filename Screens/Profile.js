@@ -5,16 +5,22 @@ import { FontAwesome } from '@expo/vector-icons';
 import CameraScreen from './CameraScreen';
 import { auth } from '../firebase-files/FirebaseSetup';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [avatarUri, setAvatarUri] = useState(null);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const currentUser = auth.currentUser;
+        if (!currentUser) {
+          console.log("No user is currently logged in.");
+          return;
+        }
         setUser(currentUser);
         console.log("currentUser id: ", currentUser.uid);
         console.log("currentUser photo: ", currentUser.photoURL);
@@ -24,7 +30,7 @@ export default function Profile() {
           const userDocRef = await FirestoreService.getUserData(userDocId);
           if (userDocRef && userDocRef.avatar) {
             setAvatarUri({ uri: userDocRef.avatar });
-          } 
+          }
         }
       } catch (error) {
         console.error("Error fetching user data: ", error);
@@ -38,6 +44,10 @@ export default function Profile() {
   const handleImageCaptured = async (imageUri) => {
     try {
       console.log("Profile imageUri: ", imageUri);
+      if (isLoggedOut) {
+        console.error("User has logged out, unable to update avatar.");
+        return;
+      }
       const userDocId = await FirestoreService.getUserDocId(user.uid);
       if (userDocId) {
         setAvatarUri({ uri: imageUri });
@@ -53,6 +63,15 @@ export default function Profile() {
     setShowCamera(!showCamera);
   }
 
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      setIsLoggedOut(true); // 设置为 true 表示用户已注销
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -64,7 +83,7 @@ export default function Profile() {
           />
         </View>
         <Pressable onPress={toggleCamera}>
-          <FontAwesome name="camera-retro" size={24} color="white" style={{padding: 10}}/>
+          <FontAwesome name="camera-retro" size={24} color="white" style={{ padding: 10 }} />
         </Pressable>
         <Modal
           visible={showCamera}
@@ -76,7 +95,9 @@ export default function Profile() {
         </Modal>
       </View>
       <View style={styles.body}>
-
+        <Pressable onPress={handleLogout}>
+          <MaterialIcons name="logout" size={24} color="white" />
+        </Pressable>
       </View>
     </View>
   )
@@ -127,5 +148,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.WHITE,
     backgroundColor: Colors.LIGHT_RED,
     borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })

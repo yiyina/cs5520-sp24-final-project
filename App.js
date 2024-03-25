@@ -16,13 +16,15 @@ export default function App({ navigation }) {
   const [userloggedIn, setUserloggedIn] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserloggedIn(true);
       } else {
         setUserloggedIn(false);
       }
     })
+
+    return unsubscribe
   }, [])
 
   const AuthStack = (
