@@ -1,4 +1,4 @@
-import { StyleSheet, Modal, View, Pressable } from 'react-native'
+import { StyleSheet, View, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
@@ -9,7 +9,6 @@ import Home from '../Screens/Home'
 import Search from '../Screens/Search'
 import Profile from '../Screens/Profile'
 import Game from '../Screens/Game'
-import Favorite from '../Screens/Favorite'
 import CameraScreen from '../Screens/CameraScreen';
 
 
@@ -48,6 +47,10 @@ export default function TabNavigation() {
         </Pressable>
     )
 
+    const toggleCamera = () => {
+        setShowCamera(!showCamera);
+    }
+
     return (
         <>
             <Tab.Navigator screenOptions={{
@@ -81,14 +84,6 @@ export default function TabNavigation() {
                         ),
                     }}
                 />
-                {/* <Tab.Screen name="Favorite" component={Favorite} 
-                options={{
-                    tabBarLabel: 'Favorite',
-                    tabBarIcon: ({ color, size }) => (
-                        <AntDesign name="hearto" size={size} color={color} />
-                    ),
-                }}
-            /> */}
                 <Tab.Screen name="Camera" component={CameraScreen}
                     options={{
                         tabBarLabel: '',
@@ -121,11 +116,11 @@ export default function TabNavigation() {
                     }}
                 />
             </Tab.Navigator>
-            <Modal
-                visible={showCamera}
-                onRequestClose={() => setShowCamera(false)}>
-                <CameraScreen onCancel={() => setShowCamera(false)} />
-            </Modal>
+            <CameraScreen
+                showCamera={showCamera}
+                onCancel={toggleCamera}
+                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)}
+                type={'avatar'} />
         </>
     )
 }

@@ -1,6 +1,6 @@
 // CameraScreen.js
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Modal } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
@@ -8,7 +8,7 @@ import CameraService from '../Services/CameraService';
 import { auth } from '../firebase-files/FirebaseSetup';
 import Colors from '../Shared/Colors';
 
-export default function CameraScreen({ onCancel, type, onImageCaptured }) {
+export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured }) {
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
 
@@ -41,6 +41,12 @@ export default function CameraScreen({ onCancel, type, onImageCaptured }) {
     }
 
     return (
+        <Modal
+          visible={showCamera}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={onCancel}
+        >
         <View style={styles.fullscreen}>
             <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
                 <View style={styles.controlLayer}>
@@ -58,6 +64,7 @@ export default function CameraScreen({ onCancel, type, onImageCaptured }) {
                 </View>
             </Camera>
         </View>
+        </Modal>
     );
 }
 

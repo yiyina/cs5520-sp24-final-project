@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, Image, Modal, Text } from 'react-native'
+import { StyleSheet, Pressable, View, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../Shared/Colors'
 import { FontAwesome } from '@expo/vector-icons';
@@ -43,7 +43,7 @@ export default function Profile() {
       subscriber();
     };
   }, []);
-  
+
   const toggleCamera = () => {
     setShowCamera(!showCamera);
   }
@@ -69,17 +69,11 @@ export default function Profile() {
         <Pressable onPress={toggleCamera}>
           <FontAwesome name="camera-retro" size={24} color="white" style={{ padding: 10 }} />
         </Pressable>
-        <Modal
-          visible={showCamera}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={toggleCamera}
-        >
-          <CameraScreen 
-            onCancel={toggleCamera} 
-            onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)} 
-            type={'avatar'} />
-        </Modal>
+        <CameraScreen
+          showCamera={showCamera}
+          onCancel={toggleCamera}
+          onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)}
+          type={'avatar'} />
       </View>
       <View style={styles.body}>
         <Pressable onPress={handleLogout}>
