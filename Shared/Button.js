@@ -4,7 +4,6 @@ import React from 'react'
 export default function Button({ text, textColor, buttonPress }) {
 
     const buttonClick = () => {
-        console.log("Button Pressed")
         buttonPress()
     }
 

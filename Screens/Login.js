@@ -5,17 +5,19 @@ import Colors from '../Shared/Colors'
 import Input from '../Shared/Input'
 import { Ionicons } from '@expo/vector-icons'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase-files/FirebaseSetup';
 
 export default function Login({ navigation }) {
     const [usernameEmail, setUsernameEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [nameEmailError, setnameEmailError] = useState('')
+    const [nameEmailError, setNameEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [registerPressed, setRegisterPressed] = useState(false)
 
     useEffect(() => {
-        if (usernameEmail) setnameEmailError('')
+        if (usernameEmail) setNameEmailError('')
     }, [usernameEmail])
     useEffect(() => {
         if (password) setPasswordError('')
@@ -29,58 +31,40 @@ export default function Login({ navigation }) {
         setPassword(password)
     }
 
-    const validateUsernameEmail = async (usernameOrEmail) => {
-        try {
-            const usernameExists = await FirestoreService.checkUsernameExists(usernameOrEmail);
-            const emailExists = await FirestoreService.checkEmailExists(usernameOrEmail);
-            
-            if (usernameExists || emailExists) {
-                setnameEmailError(""); // Reset error message if either username or email exists
-                return true;
-            } else {
-                setnameEmailError("Username or Email does not exist");
-                return false;
-            }
-        } catch (error) {
-            console.error("Error validating username/email: ", error);
-            throw error;
-        }
-    }
-
-    const validatePassword = async (password) => {
-        try {
-            const passwordValid = await FirestoreService.checkPassword(usernameEmail, password);
-            if (!passwordValid) {
-                setPasswordError("Invalid Password");
-                return false;
-            }
-            return true;
-        } catch (error) {
-            console.error("Error validating password: ", error);
-            throw error;
-        }
-    }
-
     const handleLoginPress = async () => {
-        let valid = true
+        setNameEmailError("");
+        setPasswordError("");
+        try {
+            let email = usernameEmail;
+            if (!email.includes('@')) {
+                console.log("Email: ", email);
+                email = await FirestoreService.getEmailByUsername(usernameEmail);
+                console.log("Email from Firestore: ", email);
+            }
 
-        const isNameEmailValid = await validateUsernameEmail(usernameEmail)
-        if (!isNameEmailValid) {
-            valid = false
-        } else {
-            const isPasswordValid = await validatePassword(password)
-            if (!isPasswordValid) {
-                valid = false
+            if (email) {
+                console.log(auth, email, password)
+                await signInWithEmailAndPassword(auth, email, password);
+                console.log("Login successful");
+                navigation.navigate('Home');
+                console.log(auth)
+            } else {
+                setNameEmailError("Username or Email does not exist");
+            }
+        } catch (error) {
+            if (error.code === 'auth/user-not-found') {
+                setNameEmailError("Username or Email does not exist");
+            } else if (error.code === 'auth/wrong-password') {
+                setPasswordError("Invalid Password");
+            } else if (error.code === 'auth/too-many-requests') {
+                setPasswordError("You've tried too many times, please try again later.");
+            } else if (error.code === 'auth/invalid-credential') {
+                setPasswordError("Invalid Password");
+            } else if (error.code === 'auth/missing-password') {
+                setPasswordError("Password could not be empty");
             }
         }
-
-        if (valid) {
-            navigation.navigate('Home')
-            console.log("login success")
-        } else {
-            console.log("login failed")
-        }
-    }
+    };
 
     const handleRegisterPress = () => {
         setRegisterPressed(!registerPressed)
@@ -128,7 +112,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 100,
+        paddingTop: 100,
         alignItems: 'center',
     },
     welcom: {
@@ -150,6 +134,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'left',
         fontWeight: 'bold',
+    },
+    errorText: {
+        color: Colors.DARK_RED,
+        height: 20,
     },
     eyeIcon: {
         position: 'absolute',
