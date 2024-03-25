@@ -45,7 +45,6 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
           visible={showCamera}
           animationType="slide"
           transparent={true}
-          onRequestClose={onCancel}
         >
         <View style={styles.fullscreen}>
             <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>

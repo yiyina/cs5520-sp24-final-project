@@ -8,11 +8,13 @@ import FirestoreService from '../firebase-files/FirebaseHelpers';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import CameraService from '../Services/CameraService';
+import EditProfile from './EditProfile';
 
 export default function Profile() {
   const [user, setUser] = useState(auth.currentUser || null);
   const [showCamera, setShowCamera] = useState(false);
   const [avatarUri, setAvatarUri] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     console.log("currentUser id: ", auth.currentUser.uid);
@@ -57,17 +59,21 @@ export default function Profile() {
     }
   }
 
+  const toggleEditProfile = () => {
+    setShowProfile(!showProfile);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.logoutProfile}>
           <Pressable onPress={handleLogout} style={styles.logout}>
-            <SimpleLineIcons name="logout" size={24} color="darkred" />
+            <SimpleLineIcons name="logout" size={24} color={Colors.DEEP_RED} />
             <Text style={styles.text}>Logout</Text>
           </Pressable>
-          <Pressable onPress={handleLogout} style={styles.logout}>
+          <Pressable onPress={toggleEditProfile} style={styles.logout}>
             <Text style={styles.text}>Profile</Text>
-            <AntDesign name="profile" size={24} color="darkred" />
+            <AntDesign name="profile" size={24} color={Colors.DEEP_RED} />
           </Pressable>
         </View>
 
@@ -90,6 +96,9 @@ export default function Profile() {
       </View>
       <View style={styles.body}>
       </View>
+      <EditProfile
+        showProfile={showProfile}
+        onCancel={toggleEditProfile} />
     </View>
   )
 }
@@ -156,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: 'darkred',
+    color: Colors.DEEP_RED,
     fontSize: 16,
     fontWeight: 'bold',
     paddingHorizontal: 5,
