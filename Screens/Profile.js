@@ -64,7 +64,6 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setShowProfile(!showProfile);
   }
-  
   const handleDeleteAvatar = async () => {
     try {
 
@@ -75,7 +74,7 @@ export default function Profile() {
       console.error("Error deleting avatar: ", error);
     }
   };
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
