@@ -49,9 +49,12 @@ const FirestoreService = {
         }
     },
 
-    async getUserData(userDocId) {
+    async getUserData(uid) {
+        console.log("Getting user data for user doc ID:", uid);
         try {
+            const userDocId = await this.getUserDocId(uid);
             const userDocRef = doc(firestore, "users", userDocId);
+            console.log("User doc ref:", userDocRef);
             const docSnapshot = await getDoc(userDocRef);
             if (docSnapshot.exists()) {
                 return docSnapshot.data();
