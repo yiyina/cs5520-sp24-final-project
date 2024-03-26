@@ -14,8 +14,7 @@ export default function GoogleMapView({ placeList }) {
             try {
                 // Replace 'userDocId' with the actual user document ID
                 const uid = auth.currentUser.uid;
-                const userDocId = await FirestoreService.getUserDocId(uid);
-                const userData = await FirestoreService.getUserData(userDocId); // Fetch user data
+                const userData = await FirestoreService.getUserData(uid); // Fetch user data
                 console.log('userData:', userData);
                 if (userData && userData.coords) {
                     setMapRegion({

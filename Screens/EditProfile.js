@@ -27,9 +27,8 @@ export default function EditProfile({ showProfile, onCancel }) {
 
     const fetchUserData = async () => {
         try {
-            const userDocId = await FirestoreService.getUserDocId(user.uid);
             if (userDocId) {
-                const userDocRef = await FirestoreService.getUserData(userDocId);
+                const userDocRef = await FirestoreService.getUserData(user.uid);
                 if (userDocRef) {
                     setUserName(userDocRef.username);
                     setEmail(userDocRef.email);

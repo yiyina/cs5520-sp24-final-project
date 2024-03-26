@@ -36,9 +36,8 @@ export default function Profile() {
 
   const fetchUserData = async (uid) => {
     try {
-      const userDocId = await FirestoreService.getUserDocId(uid);
-      if (userDocId) {
-        const userDocRef = await FirestoreService.getUserData(userDocId);
+      if (uid) {
+        const userDocRef = await FirestoreService.getUserData(uid);
         if (userDocRef && userDocRef.avatar) {
           console.log("Avatar: ", userDocRef.avatar);
           setAvatarUri({ uri: userDocRef.avatar });
@@ -74,7 +73,7 @@ export default function Profile() {
       console.error("Error deleting avatar: ", error);
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
