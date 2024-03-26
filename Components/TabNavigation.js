@@ -58,13 +58,12 @@ export default function TabNavigation() {
                 // tabBarShowLabel: false,
                 tabBarStyle: {
                     position: 'absolute',
-                    // bottom: 50,
-                    // left: 20,
-                    // right: 20,
+                    left: 20,
+                    right: 20,
                     elevation: 0,
                     backgroundColor: '#ffffff',
-                    borderRadius: 15,
-                    // height: 90,
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
                     ...styles.shadow
                 }
             }}>

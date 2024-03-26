@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapView from 'react-native-maps';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import Colors from '../../Shared/Colors';
 import { auth } from '../../firebase-files/FirebaseSetup';
 
 export default function GoogleMapView({ placeList }) {
@@ -31,20 +32,15 @@ export default function GoogleMapView({ placeList }) {
 
         fetchUserDataAndSetRegion();
 
-    }, []);    
+    }, []);
 
     return (
-        <View style={{marginTop:10}}>
-            <View style={{borderRadius:20, overflow:'hidden'}}>
-                <MapView style={{
-                    width:Dimensions.get('screen').width*0.9,
-                    height:Dimensions.get('screen').height*0.25,
-                    borderRadius:20
-                }}
-                provider={PROVIDER_GOOGLE}
-                showsUserLocation={true}
-                showsMyLocationButton={true}
-                region={mapRegion}
+        <View style={styles.container}>
+                <MapView style={styles.mapView}
+                    provider={PROVIDER_GOOGLE}
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}
+                    region={mapRegion}
                 >
                     {/* {mapRegion.latitude && mapRegion.longitude && (
                         <Marker 
@@ -60,9 +56,19 @@ export default function GoogleMapView({ placeList }) {
                             return <PlaceMarker key={key} item={item} />;
                         })} */}
                 </MapView>
-            </View>
         </View>
     )
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    container: {
+        marginTop: 10,
+    },
+    mapView: {
+        width: Dimensions.get('screen').width,
+        height: Dimensions.get('screen').height * 0.25,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: Colors.WHITE,
+    }
+});

@@ -10,11 +10,26 @@ import {
     doc,
     deleteDoc,
     orderBy,
+    onSnapshot,
     getFirestore,
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const FirestoreService = {
+    async onUserDataChange(uid, callback) {
+        const userDocId = await this.getUserDocId(uid);
+        const userDocRef = doc(firestore, "users", userDocId);
+        const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                callback(docSnapshot.data());
+            } else {
+                console.log("Document not found");
+            }
+        }, (error) => {
+            console.error("Error listening to user data:", error);
+        });
+    },
+
     async addUser(user) {
         console.log("Adding user: ", user);
         try {

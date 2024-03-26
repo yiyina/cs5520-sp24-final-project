@@ -9,6 +9,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import CameraService from '../Services/CameraService';
 import EditProfile from './EditProfile';
+import Avatar from '../Shared/Avatar';
 
 
 export default function Profile() {
@@ -87,12 +88,8 @@ export default function Profile() {
             <AntDesign name="profile" size={24} color={Colors.DEEP_RED} />
           </Pressable>
         </View>
-
         <View style={styles.avatarContainer}>
-          <Image
-            source={avatarUri ? avatarUri : require('../assets/default_avatar.png')}
-            style={styles.avatar}
-          />
+          <Avatar avatarUri={avatarUri} size={100} />
           <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
             <AntDesign name="delete" size={24} color="red" />
           </Pressable>
