@@ -1,5 +1,4 @@
-import { firestore } from "./FirebaseSetup";
-import { auth } from "./FirebaseSetup";
+import { firestore, auth, storage } from "./FirebaseSetup";
 import {
     collection,
     getDoc,
@@ -7,19 +6,17 @@ import {
     addDoc,
     query,
     where,
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL,
     updateDoc,
     doc,
     deleteDoc,
     orderBy,
     getFirestore,
 } from "firebase/firestore";
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const FirestoreService = {
     async addUser(user) {
+        console.log("Adding user: ", user);
         try {
             const docRef = await addDoc(collection(firestore, "users"), {
                 ...user,
@@ -52,6 +49,7 @@ const FirestoreService = {
         }
     },
 
+<<<<<<< HEAD
     // async checkUsernameExists(username) {
     //     try {
     //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
@@ -73,6 +71,9 @@ const FirestoreService = {
     // },
 
     async getUserData (userDocId) {
+=======
+    async getUserData(userDocId) {
+>>>>>>> v3
         try {
             const userDocRef = doc(firestore, "users", userDocId);
             const docSnapshot = await getDoc(userDocRef);
@@ -89,11 +90,11 @@ const FirestoreService = {
     },
 
     async getUserDocId(uid) {
+        console.log("Getting user doc ID for UID:", uid);
         try {
             const firestore = getFirestore();
             const usersRef = collection(firestore, "users");
             const querySnapshot = await getDocs(query(usersRef, where("uid", "==", uid)));
-
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             } else {
@@ -106,14 +107,51 @@ const FirestoreService = {
         }
     },
 
+    async uploadToStorage(uid, fileUri) {
+        try {
+            if (!uid || !fileUri) {
+                throw new Error("Invalid parameters for uploadToStorage");
+            }
+    
+            const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
+            const ref = storageRef(storage, `user_avatars/${uid}/${fileName}`);
+    
+            const response = await fetch(fileUri);
+            if (!response.ok) {
+                throw new Error("Failed to fetch file for upload");
+            }
+    
+            const blob = await response.blob();
+            const snapshot = await uploadBytes(ref, blob);
+            const downloadURL = await getDownloadURL(ref);
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error("No user document found for UID: " + uid);
+            }
+    
+            const userDocRef = doc(firestore, "users", userDocId);
+            await updateDoc(userDocRef, { avatar: downloadURL });
+    
+            return downloadURL;
+        } catch (error) {
+            console.error("Error uploading to storage: ", error);
+            throw error;
+        }
+    },
+
     async updateUserAvatar(uid, avatarUri) {
         try {
+            if (!uid || !avatarUri) {
+                throw new Error("Invalid parameters for updateUserAvatar");
+            }
+
+            const url = await this.uploadToStorage(uid, avatarUri);
             const userDocId = await this.getUserDocId(uid);
             if (userDocId) {
                 const firestore = getFirestore();
                 const userDocRef = doc(firestore, "users", userDocId);
                 await updateDoc(userDocRef, {
-                    avatar: avatarUri
+                    avatar: url
                 });
             } else {
                 console.error("No user document found for UID:", uid);
@@ -132,7 +170,7 @@ const FirestoreService = {
                 const galleryRef = collection(firestore, "users", userDocId, "gallery");
                 const newPhotoRef = doc(galleryRef);
 
-                await setDoc(newPhotoRef, {
+                await getDoc(newPhotoRef, {
                     url: photoUri,
                     date: new Date()
                 });
@@ -144,6 +182,28 @@ const FirestoreService = {
             throw error;
         }
     },
+
+    async addCurrentLocation(uid, location) {
+        try {
+            const userDocId = await this.getUserDocId(uid);
+            if (userDocId) {
+                const firestore = getFirestore();
+                const userDocRef = doc(firestore, "users", userDocId);
+                await updateDoc(userDocRef, {
+                    coords: {
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude
+                    }
+                });
+                console.log("Location added for user:", userDocId);
+            } else {
+                console.error("No user document found for UID:", uid);
+            }
+        } catch (error) {
+            console.error("Error updating user location: ", error);
+            throw error;
+        }
+    }
 
 }
 

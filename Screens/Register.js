@@ -7,8 +7,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../firebase-files/FirebaseSetup';
 import Colors from '../Shared/Colors'
 import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native';
 
-export default function Register({ navigation }) {
+export default function Register({  }) {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -17,6 +18,7 @@ export default function Register({ navigation }) {
     const [passwordError, setPasswordError] = useState('')
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const navigation = useNavigation();
 
     useEffect(() => {
         if (username) setUsernameError('')
@@ -46,13 +48,6 @@ export default function Register({ navigation }) {
             setUsernameError("Invalid Username, should be at least 4 characters long with at least 1 letter");
             return false;
         }
-    
-        // const exists = await FirestoreService.checkUsernameExists(username);
-        // if (exists) {
-        //     setUsernameError("Username already exists");
-        //     return false;
-        // }
-    
         setUsernameError('');
         return true;
     };
@@ -63,13 +58,6 @@ export default function Register({ navigation }) {
             setEmailError("Invalid Email");
             return false;
         }
-    
-        // const exists = await FirestoreService.checkEmailExists(email);
-        // if (exists) {
-        //     setEmailError("Email already exists");
-        //     return false;
-        // }
-    
         setEmailError('');
         return true;
     };
@@ -116,14 +104,16 @@ export default function Register({ navigation }) {
                 email: email,
             };
             await FirestoreService.addUser(userInfo);
-    
+            console.log("Registration successful: ", navigation);
             Alert.alert(
                 "Registration Successful",
                 "Please login to continue.",
-                [{ text: "OK", onPress: () => navigation.navigate('Login') }]
+                [{ text: "OK", onPress: () => navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                  }) }]
             );
         } catch (error) {
-            console.error("Error registering user: ", error);
             if (error.code === 'auth/email-already-in-use') {
                 setEmailError("Email already in use");
             } else {

@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import CameraService from '../Services/CameraService';
 import EditProfile from './EditProfile';
 
+
 export default function Profile() {
   const [user, setUser] = useState(auth.currentUser || null);
   const [showCamera, setShowCamera] = useState(false);
@@ -17,35 +18,36 @@ export default function Profile() {
   const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
-    console.log("currentUser id: ", auth.currentUser.uid);
-    console.log("currentUser photo: ", auth.currentUser.photoURL);
     const subscriber = auth.onAuthStateChanged((user) => {
       if (user) {
-        fetchUserData(auth.currentUser.uid);
+        console.log("User: ", user);
+        setUser(user);
+        fetchUserData(user.uid);
       } else {
         setUser(null);
         setAvatarUri(null);
       }
     });
 
-    const fetchUserData = async (uid) => {
-      try {
-        const userDocId = await FirestoreService.getUserDocId(uid);
-        if (userDocId) {
-          const userDocRef = await FirestoreService.getUserData(userDocId);
-          if (userDocRef && userDocRef.avatar) {
-            setAvatarUri({ uri: userDocRef.avatar });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data: ", error);
-      }
-    };
-
     return () => {
       subscriber();
     };
   }, []);
+
+  const fetchUserData = async (uid) => {
+    try {
+      const userDocId = await FirestoreService.getUserDocId(uid);
+      if (userDocId) {
+        const userDocRef = await FirestoreService.getUserData(userDocId);
+        if (userDocRef && userDocRef.avatar) {
+          console.log("Avatar: ", userDocRef.avatar);
+          setAvatarUri({ uri: userDocRef.avatar });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    }
+  };
 
   const toggleCamera = () => {
     setShowCamera(!showCamera);
@@ -62,6 +64,17 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setShowProfile(!showProfile);
   }
+  
+  const handleDeleteAvatar = async () => {
+    try {
+
+      setAvatarUri(null);
+
+      console.log("Avatar successfully deleted.");
+    } catch (error) {
+      console.error("Error deleting avatar: ", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -79,10 +92,12 @@ export default function Profile() {
 
         <View style={styles.avatarContainer}>
           <Image
-            source={avatarUri}
-            defaultSource={require('../assets/default_avatar.png')}
+            source={avatarUri ? avatarUri : require('../assets/default_avatar.png')}
             style={styles.avatar}
           />
+          <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
+            <AntDesign name="delete" size={24} color="red" />
+          </Pressable>
         </View>
         <Pressable onPress={toggleCamera} style={styles.editAvatar}>
           <FontAwesome name="camera-retro" size={24} color="white" style={{ padding: 10 }} />
@@ -174,5 +189,12 @@ const styles = StyleSheet.create({
   logout: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  deleteButton: {
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 5,
   },
 })
