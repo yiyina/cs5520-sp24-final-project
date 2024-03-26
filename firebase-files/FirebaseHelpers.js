@@ -49,33 +49,12 @@ const FirestoreService = {
         }
     },
 
-<<<<<<< HEAD
-    // async checkUsernameExists(username) {
-    //     try {
-    //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('username', '==', username)));
-    //         return querySnapshot.size > 0;
-    //     } catch (error) {
-    //         console.error("Error checking username existence: ", error);
-    //         throw error;
-    //     }
-    // },
-
-    // async checkEmailExists(email) {
-    //     try {
-    //         const querySnapshot = await getDocs(query(collection(firestore, 'users'), where('email', '==', email)));
-    //         return querySnapshot.size > 0;
-    //     } catch (error) {
-    //         console.error("Error checking email existence: ", error);
-    //         throw error;
-    //     }
-    // },
-
-    async getUserData (userDocId) {
-=======
-    async getUserData(userDocId) {
->>>>>>> v3
+    async getUserData(uid) {
+        console.log("Getting user data for user doc ID:", uid);
         try {
+            const userDocId = await this.getUserDocId(uid);
             const userDocRef = doc(firestore, "users", userDocId);
+            console.log("User doc ref:", userDocRef);
             const docSnapshot = await getDoc(userDocRef);
             if (docSnapshot.exists()) {
                 return docSnapshot.data();

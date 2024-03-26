@@ -3,7 +3,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import MapView from 'react-native-maps';
-import { getUserData } from './FirestoreService';
+import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import { auth } from '../../firebase-files/FirebaseSetup';
 
 export default function GoogleMapView({ placeList }) {
     const [mapRegion, setMapRegion] = useState({});
@@ -12,8 +13,9 @@ export default function GoogleMapView({ placeList }) {
         const fetchUserDataAndSetRegion = async () => {
             try {
                 // Replace 'userDocId' with the actual user document ID
-                const userDocId = 'user_document_id_here'; // Provide the user document ID
-                const userData = await getUserData(userDocId); // Fetch user data
+                const userDocId = auth.currentUser.uid;
+                const userData = await FirestoreService.getUserData(userDocId); // Fetch user data
+                console.log('userData:', userData);
                 if (userData && userData.coords) {
                     setMapRegion({
                         latitude: userData.coords.latitude,
@@ -32,7 +34,7 @@ export default function GoogleMapView({ placeList }) {
     }, []);    
 
     return (
-        <View s tyle={{marginTop:10}}>
+        <View style={{marginTop:10}}>
             <View style={{borderRadius:20, overflow:'hidden'}}>
                 <MapView style={{
                     width:Dimensions.get('screen').width*0.9,
