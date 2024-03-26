@@ -64,22 +64,17 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setShowProfile(!showProfile);
   }
-const handleDeleteAvatar = async () => {
-  try {
-    
-    setAvatarUri(null);
-
-    console.log("Avatar successfully deleted.");
-  } catch (error) {
-    console.error("Error deleting avatar: ", error);
-  }
-};
-
-
   
+  const handleDeleteAvatar = async () => {
+    try {
 
+      setAvatarUri(null);
 
-
+      console.log("Avatar successfully deleted.");
+    } catch (error) {
+      console.error("Error deleting avatar: ", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -97,8 +92,8 @@ const handleDeleteAvatar = async () => {
 
         <View style={styles.avatarContainer}>
           <Image
-          source={avatarUri ?  avatarUri  : require('../assets/default_avatar.png')}
-          style={styles.avatar}
+            source={avatarUri ? avatarUri : require('../assets/default_avatar.png')}
+            style={styles.avatar}
           />
           <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
             <AntDesign name="delete" size={24} color="red" />
@@ -111,7 +106,7 @@ const handleDeleteAvatar = async () => {
         <CameraScreen
           showCamera={showCamera}
           onCancel={toggleCamera}
-          onImageCaptured={(imageUri) =>  CameraService.handleImageCaptured(imageUri, setAvatarUri)}
+          onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)}
           type={'avatar'} />
       </View>
       <View style={styles.body}>
@@ -195,11 +190,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-   deleteButton: {
-    position: 'absolute', 
+  deleteButton: {
+    position: 'absolute',
     bottom: 0,
-    backgroundColor: 'white', 
-    borderRadius: 12, 
+    backgroundColor: 'white',
+    borderRadius: 12,
     padding: 5,
   },
 })

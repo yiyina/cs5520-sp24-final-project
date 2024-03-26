@@ -1,4 +1,4 @@
-import { firestore, auth, functions } from "./FirebaseSetup";
+import { firestore, auth, storage } from "./FirebaseSetup";
 import {
     collection,
     getDoc,
@@ -6,16 +6,13 @@ import {
     addDoc,
     query,
     where,
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL,
     updateDoc,
     doc,
     deleteDoc,
     orderBy,
     getFirestore,
 } from "firebase/firestore";
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const FirestoreService = {
     async addUser(user) {
@@ -52,7 +49,7 @@ const FirestoreService = {
         }
     },
 
-    async getUserData (userDocId) {
+    async getUserData(userDocId) {
         try {
             const userDocRef = doc(firestore, "users", userDocId);
             const docSnapshot = await getDoc(userDocRef);
@@ -86,14 +83,51 @@ const FirestoreService = {
         }
     },
 
+    async uploadToStorage(uid, fileUri) {
+        try {
+            if (!uid || !fileUri) {
+                throw new Error("Invalid parameters for uploadToStorage");
+            }
+    
+            const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
+            const ref = storageRef(storage, `user_avatars/${uid}/${fileName}`);
+    
+            const response = await fetch(fileUri);
+            if (!response.ok) {
+                throw new Error("Failed to fetch file for upload");
+            }
+    
+            const blob = await response.blob();
+            const snapshot = await uploadBytes(ref, blob);
+            const downloadURL = await getDownloadURL(ref);
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error("No user document found for UID: " + uid);
+            }
+    
+            const userDocRef = doc(firestore, "users", userDocId);
+            await updateDoc(userDocRef, { avatar: downloadURL });
+    
+            return downloadURL;
+        } catch (error) {
+            console.error("Error uploading to storage: ", error);
+            throw error;
+        }
+    },
+
     async updateUserAvatar(uid, avatarUri) {
         try {
+            if (!uid || !avatarUri) {
+                throw new Error("Invalid parameters for updateUserAvatar");
+            }
+
+            const url = await this.uploadToStorage(uid, avatarUri);
             const userDocId = await this.getUserDocId(uid);
             if (userDocId) {
                 const firestore = getFirestore();
                 const userDocRef = doc(firestore, "users", userDocId);
                 await updateDoc(userDocRef, {
-                    avatar: avatarUri
+                    avatar: url
                 });
             } else {
                 console.error("No user document found for UID:", uid);
@@ -124,6 +158,28 @@ const FirestoreService = {
             throw error;
         }
     },
+
+    async addCurrentLocation(uid, location) {
+        try {
+            const userDocId = await this.getUserDocId(uid);
+            if (userDocId) {
+                const firestore = getFirestore();
+                const userDocRef = doc(firestore, "users", userDocId);
+                await updateDoc(userDocRef, {
+                    coords: {
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude
+                    }
+                });
+                console.log("Location added for user:", userDocId);
+            } else {
+                console.error("No user document found for UID:", uid);
+            }
+        } catch (error) {
+            console.error("Error updating user location: ", error);
+            throw error;
+        }
+    }
 
 }
 
