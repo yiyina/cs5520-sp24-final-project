@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     mapView: {
-        width: Dimensions.get('screen').width,
+        width: Dimensions.get('screen').width*0.9,
         height: Dimensions.get('screen').height * 0.25,
         borderRadius: 20,
-        borderWidth: 1,
+        borderWidth: 5,
         borderColor: Colors.WHITE,
     }
 });

@@ -11,7 +11,6 @@ import CameraService from '../Services/CameraService';
 import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
 
-
 export default function Profile() {
   const [user, setUser] = useState(auth.currentUser || null);
   const [showCamera, setShowCamera] = useState(false);
@@ -21,7 +20,6 @@ export default function Profile() {
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log("User: ", user);
         setUser(user);
         fetchUserData(user.uid);
       } else {
@@ -40,7 +38,6 @@ export default function Profile() {
       if (uid) {
         const userDocRef = await FirestoreService.getUserData(uid);
         if (userDocRef && userDocRef.avatar) {
-          console.log("Avatar: ", userDocRef.avatar);
           setAvatarUri({ uri: userDocRef.avatar });
         }
       }
@@ -88,6 +85,7 @@ export default function Profile() {
             <AntDesign name="profile" size={24} color={Colors.DEEP_RED} />
           </Pressable>
         </View>
+        
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
           <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>

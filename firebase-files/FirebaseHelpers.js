@@ -8,28 +8,11 @@ import {
     where,
     updateDoc,
     doc,
-    deleteDoc,
-    orderBy,
-    onSnapshot,
     getFirestore,
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const FirestoreService = {
-    async onUserDataChange(uid, callback) {
-        const userDocId = await this.getUserDocId(uid);
-        const userDocRef = doc(firestore, "users", userDocId);
-        const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
-            if (docSnapshot.exists()) {
-                callback(docSnapshot.data());
-            } else {
-                console.log("Document not found");
-            }
-        }, (error) => {
-            console.error("Error listening to user data:", error);
-        });
-    },
-
     async addUser(user) {
         console.log("Adding user: ", user);
         try {
@@ -68,7 +51,6 @@ const FirestoreService = {
         try {
             const userDocId = await this.getUserDocId(uid);
             const userDocRef = doc(firestore, "users", userDocId);
-            console.log("User doc ref:", userDocRef);
             const docSnapshot = await getDoc(userDocRef);
             if (docSnapshot.exists()) {
                 return docSnapshot.data();
@@ -83,7 +65,6 @@ const FirestoreService = {
     },
 
     async getUserDocId(uid) {
-        console.log("Getting user doc ID for UID:", uid);
         try {
             const firestore = getFirestore();
             const usersRef = collection(firestore, "users");
