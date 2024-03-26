@@ -112,7 +112,7 @@ const FirestoreService = {
                 const galleryRef = collection(firestore, "users", userDocId, "gallery");
                 const newPhotoRef = doc(galleryRef);
 
-                await setDoc(newPhotoRef, {
+                await getDoc(newPhotoRef, {
                     url: photoUri,
                     date: new Date()
                 });
