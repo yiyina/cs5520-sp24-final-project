@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, TextInput, Alert } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors';
 import Avatar from '../../Shared/Avatar';
@@ -8,9 +8,9 @@ import { auth } from '../../firebase-files/FirebaseSetup';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
-import { getUpdatedUserData } from '../../Shared/updateUserData';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import EditFields from './EditFields';
 
 export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserName, email, setEmail, showCamera, setShowCamera }) {
     const [password, setPassword] = useState("");
@@ -34,7 +34,6 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
             if (user.uid) {
                 const userDocRef = await FirestoreService.getUserData(user.uid);
                 if (userDocRef) {
-                    // setAvatarUri({ uri: userDocRef.avatar });
                     setUserName(userDocRef.username);
                     setEmail(userDocRef.email);
                 }
@@ -94,45 +93,13 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
                 )}
                 <Pressable onPress={toggleCamera} style={styles.editAvatar}>
                     <FontAwesome name="camera-retro" size={24} color="black" />
-                    {/* <Text style={styles.text}>Edit</Text> */}
                 </Pressable>
             </View>
 
             <Text style={styles.title}>Edit Profile</Text>
-            <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>Username : </Text>
-                {editProfilePressed ?
-                    <TextInput style={styles.fieldInput} value={userName} onChangeText={setUserName} />
-                    :
-                    <Text>{userName}</Text>
-                }
-            </View>
-            <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>Email : </Text>
-                {editProfilePressed ?
-                    <TextInput style={styles.fieldInput} value={email} onChangeText={setEmail} />
-                    :
-                    <Text>{email}</Text>
-                }
-            </View>
-            <View style={styles.fieldContainer}>
-                <Text style={styles.fieldText}>Password : </Text>
-                {editProfilePressed ? (
-                    <TextInput
-                        style={styles.fieldInput}
-                        value={editProfilePressed ? password : "*********"}
-                        onChangeText={setPassword}
-                        onFocus={() => {
-                            if (editProfilePressed) {
-                                setPassword("");
-                            }
-                        }}
-                        secureTextEntry={true}
-                    />
-                ) : (
-                    <Text>*********</Text>
-                )}
-            </View>
+            <EditFields title="Username" type={userName} setType={setUserName} editProfilePressed={editProfilePressed} />
+            <EditFields title="Email" type={email} setType={setEmail} editProfilePressed={editProfilePressed} />
+            <EditFields title="Password" type={password} setType={setPassword} editProfilePressed={editProfilePressed} />
             <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
                 {editProfilePressed ?
                     <>
@@ -205,22 +172,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
         justifyContent: 'center',
-    },
-    fieldContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '80%',
-        margin: 20,
-    },
-    fieldText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-    fieldInput: {
-        flex: 1,
-        borderBottomWidth: 1,
-        borderColor: 'black',
-        marginLeft: 10,
-        padding: 5,
     },
 })
