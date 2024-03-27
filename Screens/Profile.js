@@ -79,7 +79,7 @@ export default function Profile() {
                         if (user && user.uid) {
                           
                             await FirestoreService.deleteAvatarFromStorage(user.uid);
-                            await FirestoreService.updateUserAvatar(user.uid, null);
+                   
 
                            
                             setAvatarUri(null);
@@ -111,9 +111,11 @@ export default function Profile() {
         
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
-          <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
-            <AntDesign name="delete" size={24} color="red" />
+          {avatarUri && (
+            <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
+              <AntDesign name="delete" size={24} color="red" />
           </Pressable>
+        )}
         </View>
         <Pressable onPress={toggleCamera} style={styles.editAvatar}>
           <FontAwesome name="camera-retro" size={24} color="white" style={{ padding: 10 }} />

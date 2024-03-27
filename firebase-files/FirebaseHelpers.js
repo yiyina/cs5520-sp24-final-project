@@ -10,7 +10,8 @@ import {
     doc,
     getFirestore,
 } from "firebase/firestore";
-import { ref as storageRef, uploadBytes, getDownloadURL,deleteObject} from 'firebase/storage';
+import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { deleteField } from "firebase/firestore";
 
 
 const FirestoreService = {
@@ -184,28 +185,26 @@ const FirestoreService = {
     },
 
     async deleteAvatarFromStorage(uid) {
-    try {
-        const userDocData = await this.getUserData(uid);
-        const avatarUrl = userDocData.avatar;
-        if (!avatarUrl) {
-            console.log("No avatar to delete for UID:", uid);
-            return;
+        try {
+            if (!uid) {
+                throw new Error("Invalid UID for removeAvatarFieldFromUser");
+            }
+
+            const userDocId = await this.getUserDocId(uid);
+            if (userDocId) {
+                const userDocRef = doc(firestore, "users", userDocId);
+                // Correctly use deleteField() to remove the 'avatar' field
+                await updateDoc(userDocRef, {
+                    avatar: deleteField()
+                });
+            } else {
+                console.error("No user document found for UID:", uid);
+            }
+        } catch (error) {
+            console.error("Error removing avatar field:", error);
+            throw error;
         }
-
-        // Correctly extracting the file path
-        const avatarUrlPath = new URL(avatarUrl).pathname;
-        const filePath = decodeURIComponent(avatarUrlPath.split('/o/')[1]).split('?')[0];
-        const fileRef = storageRef(storage, filePath);
-
-        console.log("Deleting avatar from storage for UID:", filePath);
-        await deleteObject(fileRef);
-        console.log("Avatar successfully deleted from storage for UID:", uid);
-    } catch (error) {
-        console.error("Error deleting avatar from storage:", error);
-        throw error;
     }
-}
-
 
 }
 
