@@ -38,9 +38,9 @@ export default function App({ navigation }) {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register}
         options={{
-          // headerShown: true,
+          headerShown: true,
           headerTitle: "",
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: true,
           headerStyle: { backgroundColor: Colors.TRANSPARENT },
         }}
       />

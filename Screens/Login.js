@@ -31,7 +31,7 @@ export default function Login({ navigation }) {
         setPassword(password)
     }
 
-    const handleLoginPress = async () => {
+     const handleLoginPress = async () => {
         setNameEmailError("");
         setPasswordError("");
         try {

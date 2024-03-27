@@ -77,8 +77,9 @@ export default function Profile() {
                     try {
                        
                         if (user && user.uid) {
-                          
-                            await FirestoreService.deleteAvatarFromStorage(user.uid);
+                          await FirestoreService.deleteAvatarFileFromStorage(user.uid);
+                          await FirestoreService.removeAvatarFieldFromUser(user.uid);
+                         
                    
 
                            

@@ -184,7 +184,7 @@ const FirestoreService = {
         }
     },
 
-    async deleteAvatarFromStorage(uid) {
+    async removeAvatarFieldFromUser(uid) {
         try {
             if (!uid) {
                 throw new Error("Invalid UID for removeAvatarFieldFromUser");
@@ -204,9 +204,37 @@ const FirestoreService = {
             console.error("Error removing avatar field:", error);
             throw error;
         }
+    },
+    async deleteAvatarFileFromStorage(uid) {
+    try {
+        const userDocData = await this.getUserData(uid);
+        console.log("User data for UID:", uid, userDocData);
+        if (!userDocData || !userDocData.avatar) {
+            console.log("No avatar to delete for UID:", uid);
+            return;
+        }
+        
+        const filePath = userDocData.avatar; 
+        console.log("Deleting avatar from Firebase Storage for UID:", uid);
+        const fileRef = storageRef(storage, filePath);
+        
+        await deleteObject(fileRef);
+        console.log("Avatar successfully deleted from Firebase Storage for UID:", uid);
+        
+    
+       
+    } catch (error) {
+        console.error("Error deleting avatar from Firebase Storage:", error);
+        throw error;
     }
+},
+    async doesEmailExist(email) {
+    const querySnapshot = await getDocs(query(collection(firestore, "users"), where("email", "==", email)));
+    return !querySnapshot.empty; // Returns true if an email exists, false otherwise
+},
 
 }
+
 
 
 
