@@ -8,6 +8,7 @@ import { auth } from '../../firebase-files/FirebaseSetup';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -21,7 +22,9 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
     }, [avatarUri, userName, email]);
 
     useEffect(() => {
-        console.log("EditInfo AvatarUri: ", avatarUri.uri);
+        if( avatarUri && avatarUri.uri ) {
+            console.log("EditInfo AvatarUri: ", avatarUri.uri);
+        }
         console.log("UserName: ", userName);
         console.log("Email: ", email);
     }, [userName, email]);
@@ -31,7 +34,7 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
             if (user.uid) {
                 const userDocRef = await FirestoreService.getUserData(user.uid);
                 if (userDocRef) {
-                    setAvatarUri({ uri: userDocRef.avatar });
+                    // setAvatarUri({ uri: userDocRef.avatar });
                     setUserName(userDocRef.username);
                     setEmail(userDocRef.email);
                 }
@@ -84,7 +87,7 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
         <View style={styles.modalContent}>
             <View style={styles.avatarContainer}>
                 <Avatar avatarUri={avatarUri} size={100} />
-                {avatarUri.uri && (
+                {avatarUri && avatarUri.uri && (
                     <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
                         <AntDesign name="delete" size={24} color="red" />
                     </Pressable>

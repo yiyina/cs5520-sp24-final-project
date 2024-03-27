@@ -14,24 +14,38 @@ const Stack = createStackNavigator();
 
 export default function App({ navigation }) {
   const [userloggedIn, setUserloggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { creationTime, lastSignInTime } = user.metadata;
-        const creationTimestamp = new Date(creationTime).getTime();
-        const lastSignInTimestamp = new Date(lastSignInTime).getTime();
-        const isNewUser = lastSignInTimestamp - creationTimestamp < 1 * 60 * 1000;
-        if (!isNewUser) {
-          setUserloggedIn(true);
-        }
-      } else {
-        setUserloggedIn(false);
-      }
-    })
+      setUserloggedIn(!!user);
+      setIsLoading(false); // 认证完成
+    });
 
-    return unsubscribe;
-  }, [])
+    return unsubscribe; // 清理订阅
+  }, []);
+
+  if (isLoading) {
+    return <Login />; // 当正在加载时显示加载界面
+  }
+
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       const { creationTime, lastSignInTime } = user.metadata;
+  //       const creationTimestamp = new Date(creationTime).getTime();
+  //       const lastSignInTimestamp = new Date(lastSignInTime).getTime();
+  //       const isNewUser = lastSignInTimestamp - creationTimestamp < 1 * 60 * 1000;
+  //       if (!isNewUser) {
+  //         setUserloggedIn(true);
+  //       }
+  //     } else {
+  //       setUserloggedIn(false);
+  //     }
+  //   })
+
+  //   return unsubscribe;
+  // }, [])
 
   const AuthStack = (
     <>

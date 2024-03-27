@@ -37,7 +37,6 @@ export default function Profile() {
             <AntDesign name="profile" size={24} color={Colors.DEEP_RED} />
           </Pressable>
         </View>
-
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
         </View>
@@ -45,6 +44,7 @@ export default function Profile() {
       <View style={styles.body}>
       </View>
       <EditProfile
+        avatarUri={avatarUri}
         showProfile={showProfile}
         onCancel={toggleEditProfile} />
     </View>

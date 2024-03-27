@@ -10,9 +10,14 @@ export default function Profile({ avatarUri, size }) {
         }
     })
 
+    const imageSource = avatarUri && avatarUri.uri
+        ? { uri: avatarUri.uri }
+        : require('../assets/default_avatar.png');
+
+
     return (
         <Image
-            source={avatarUri.uri ? avatarUri : require('../assets/default_avatar.png')}
+            source={imageSource}
             style={styles.avatar}
         />
     )
