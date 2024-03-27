@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, Image, Text } from 'react-native'
+import { StyleSheet, Pressable, View, Alert, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../Shared/Colors'
 import { FontAwesome } from '@expo/vector-icons';
@@ -61,17 +61,40 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setShowProfile(!showProfile);
   }
-  const handleDeleteAvatar = async () => {
-    try {
+ const handleDeleteAvatar = () => {
+    Alert.alert(
+        "Delete Avatar", // Alert Title
+        "Are you sure you want to delete your avatar?", // Alert Message
+        [
+            {
+                text: "Cancel",
+                onPress: () => console.log("Avatar deletion canceled"), // Optionally handle the cancel action
+                style: "cancel"
+            },
+            { 
+                text: "OK", 
+                onPress: async () => {
+                    try {
+                       
+                        if (user && user.uid) {
+                          
+                            await FirestoreService.deleteAvatarFromStorage(user.uid);
+                            await FirestoreService.updateUserAvatar(user.uid, null);
 
-      setAvatarUri(null);
+                           
+                            setAvatarUri(null);
 
-      console.log("Avatar successfully deleted.");
-    } catch (error) {
-      console.error("Error deleting avatar: ", error);
-    }
-  };
-
+                            console.log("Avatar successfully deleted.");
+                        }
+                    } catch (error) {
+                        console.error("Error deleting avatar: ", error);
+                    }
+                }
+            }
+        ],
+        { cancelable: false } 
+    );
+};
   return (
     <View style={styles.container}>
       <View style={styles.header}>

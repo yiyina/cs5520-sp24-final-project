@@ -10,7 +10,8 @@ import {
     doc,
     getFirestore,
 } from "firebase/firestore";
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref as storageRef, uploadBytes, getDownloadURL,deleteObject} from 'firebase/storage';
+
 
 const FirestoreService = {
     async addUser(user) {
@@ -86,6 +87,7 @@ const FirestoreService = {
             if (!uid || !fileUri) {
                 throw new Error("Invalid parameters for uploadToStorage");
             }
+    
             const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
             const ref = storageRef(storage, `user_avatars/${uid}/${fileName}`);
     
@@ -93,6 +95,7 @@ const FirestoreService = {
             if (!response.ok) {
                 throw new Error("Failed to fetch file for upload");
             }
+    
             const blob = await response.blob();
             const snapshot = await uploadBytes(ref, blob);
             const downloadURL = await getDownloadURL(ref);
@@ -100,8 +103,10 @@ const FirestoreService = {
             if (!userDocId) {
                 throw new Error("No user document found for UID: " + uid);
             }
+    
             const userDocRef = doc(firestore, "users", userDocId);
             await updateDoc(userDocRef, { avatar: downloadURL });
+    
             return downloadURL;
         } catch (error) {
             console.error("Error uploading to storage: ", error);
@@ -111,10 +116,14 @@ const FirestoreService = {
 
     async updateUserAvatar(uid, avatarUri) {
         try {
-            if (!uid || !avatarUri) {
+            if (!uid || (avatarUri !== null && typeof avatarUri !== 'string')) {
                 throw new Error("Invalid parameters for updateUserAvatar");
             }
-            const url = await this.uploadToStorage(uid, avatarUri);
+
+              let url = avatarUri;
+                if (avatarUri) {
+                url = await this.uploadToStorage(uid, avatarUri);
+                }
             const userDocId = await this.getUserDocId(uid);
             if (userDocId) {
                 const firestore = getFirestore();
@@ -138,6 +147,7 @@ const FirestoreService = {
                 const firestore = getFirestore();
                 const galleryRef = collection(firestore, "users", userDocId, "gallery");
                 const newPhotoRef = doc(galleryRef);
+
                 await getDoc(newPhotoRef, {
                     url: photoUri,
                     date: new Date()
@@ -171,7 +181,34 @@ const FirestoreService = {
             console.error("Error updating user location: ", error);
             throw error;
         }
+    },
+
+    async deleteAvatarFromStorage(uid) {
+    try {
+        const userDocData = await this.getUserData(uid);
+        const avatarUrl = userDocData.avatar;
+        if (!avatarUrl) {
+            console.log("No avatar to delete for UID:", uid);
+            return;
+        }
+
+        // Correctly extracting the file path
+        const avatarUrlPath = new URL(avatarUrl).pathname;
+        const filePath = decodeURIComponent(avatarUrlPath.split('/o/')[1]).split('?')[0];
+        const fileRef = storageRef(storage, filePath);
+
+        console.log("Deleting avatar from storage for UID:", filePath);
+        await deleteObject(fileRef);
+        console.log("Avatar successfully deleted from storage for UID:", uid);
+    } catch (error) {
+        console.error("Error deleting avatar from storage:", error);
+        throw error;
     }
 }
+
+
+}
+
+
 
 export default FirestoreService;
