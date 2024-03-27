@@ -10,9 +10,6 @@ import { getLocation } from '../../Shared/LocationManager';
 
 export default function GoogleMapView({ placeList }) {
     const [mapRegion, setMapRegion] = useState({});
-    useEffect(() => {
-        getLocation();
-    }, []);
 
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {
@@ -34,8 +31,9 @@ export default function GoogleMapView({ placeList }) {
             }
         };
 
-        fetchUserDataAndSetRegion();
-
+        getLocation().then(() => {
+            fetchUserDataAndSetRegion();
+        })
     }, []);
 
     return (
