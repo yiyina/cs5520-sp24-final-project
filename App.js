@@ -48,7 +48,9 @@ export default function App({ navigation }) {
   )
   const AppStack = (
     <>
-      <Stack.Screen name="Home" component={TabNavigation} />
+      <Stack.Screen
+        name="Home"
+        component={TabNavigation} />
     </>
   )
 

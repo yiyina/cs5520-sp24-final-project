@@ -4,6 +4,7 @@ import { auth, firestore } from '../../firebase-files/FirebaseSetup'
 import { onSnapshot, collection, query, where } from "firebase/firestore";
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
+import { getUpdatedUserData } from '../../Shared/updateUserData'
 
 const getGreetingBasedOnTime = () => {
     const date = new Date();
@@ -18,33 +19,38 @@ const getGreetingBasedOnTime = () => {
 }
 
 export default function Header() {
+    const { username, avatarUri } = getUpdatedUserData();
     const [user, setUser] = useState(auth.currentUser || null);
-    const [username, setUsername] = useState(null);
-    const [avatarUri, setAvatarUri] = useState(null);
-    const greeting = getGreetingBasedOnTime();
-
+    const [greeting, setGreeting] = useState('');
+    // const [username, setUsername] = useState(null);
+    // const [avatarUri, setAvatarUri] = useState(null);
     useEffect(() => {
-        const unsubscribe = onSnapshot(
-            query(
-                collection(firestore, "users"),
-                where("uid", "==", auth.currentUser.uid)
-            ),
-            (querySnapshot) => {
-                if (querySnapshot.empty) {
-                    console.log("Cannot find user data in firestore.");
-                    return;
-                }
-                setAvatarUri({ uri: querySnapshot.docs[0].data().avatar });
-                setUsername(querySnapshot.docs[0].data().username);
-            },
-            (error) => {
-                console.error(error.message);
-            }
-        );
-        return () => {
-            unsubscribe();
-        };
+        console.log("Header avatarUri: ", avatarUri);
+        setGreeting(getGreetingBasedOnTime());
     }, []);
+
+    // useEffect(() => {
+    //     const unsubscribe = onSnapshot(
+    //         query(
+    //             collection(firestore, "users"),
+    //             where("uid", "==", auth.currentUser.uid)
+    //         ),
+    //         (querySnapshot) => {
+    //             if (querySnapshot.empty) {
+    //                 console.log("Cannot find user data in firestore.");
+    //                 return;
+    //             }
+    //             setAvatarUri({ uri: querySnapshot.docs[0].data().avatar });
+    //             setUsername(querySnapshot.docs[0].data().username);
+    //         },
+    //         (error) => {
+    //             console.error(error.message);
+    //         }
+    //     );
+    //     return () => {
+    //         unsubscribe();
+    //     };
+    // }, []);
 
     return (
         <View style={styles.container}>
