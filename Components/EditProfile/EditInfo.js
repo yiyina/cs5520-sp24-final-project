@@ -18,10 +18,10 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
 
     useEffect(() => {
         fetchUserData();
-    }, [userName, email]);
+    }, [avatarUri, userName, email]);
 
     useEffect(() => {
-        console.log("EditInfo AvatarUri: ", avatarUri);
+        console.log("EditInfo AvatarUri: ", avatarUri.uri);
         console.log("UserName: ", userName);
         console.log("Email: ", email);
     }, [userName, email]);
@@ -84,17 +84,15 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
         <View style={styles.modalContent}>
             <View style={styles.avatarContainer}>
                 <Avatar avatarUri={avatarUri} size={100} />
-                {avatarUri && (
-                    <>
-                        <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
-                            <AntDesign name="delete" size={24} color="red" />
-                        </Pressable>
-                        <Pressable onPress={toggleCamera} style={styles.editAvatar}>
-                            <FontAwesome name="camera-retro" size={24} color="black" />
-                            {/* <Text style={styles.text}>Edit</Text> */}
-                        </Pressable>
-                    </>
+                {avatarUri.uri && (
+                    <Pressable onPress={handleDeleteAvatar} style={styles.deleteButton}>
+                        <AntDesign name="delete" size={24} color="red" />
+                    </Pressable>
                 )}
+                <Pressable onPress={toggleCamera} style={styles.editAvatar}>
+                    <FontAwesome name="camera-retro" size={24} color="black" />
+                    {/* <Text style={styles.text}>Edit</Text> */}
+                </Pressable>
             </View>
 
             <Text style={styles.title}>Edit Profile</Text>
