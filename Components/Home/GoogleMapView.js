@@ -6,9 +6,13 @@ import MapView from 'react-native-maps';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import Colors from '../../Shared/Colors';
 import { auth } from '../../firebase-files/FirebaseSetup';
+import { getLocation } from '../../Shared/LocationManager';
 
 export default function GoogleMapView({ placeList }) {
     const [mapRegion, setMapRegion] = useState({});
+    useEffect(() => {
+        getLocation();
+    }, []);
 
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {

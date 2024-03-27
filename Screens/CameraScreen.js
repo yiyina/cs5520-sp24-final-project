@@ -1,6 +1,6 @@
 // CameraScreen.js
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
@@ -24,10 +24,11 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
         const uid = auth.currentUser.uid;
         if (type === 'avatar') {
             await FirestoreService.updateUserAvatar(uid, imageUri);
+            Alert.alert('You have successfully updated your avatar!');
         } else if (type === 'gallery') {
             await FirestoreService.addPhotoToGallery(uid, imageUri);
+            Alert.alert('You have successfully updated your avatar!');
         }
-        console.log("Updating user avatar to:", imageUri);
         onCancel();
         onImageCaptured(imageUri);
     }

@@ -5,10 +5,23 @@ import { onSnapshot, collection, query, where } from "firebase/firestore";
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
 
+const getGreetingBasedOnTime = () => {
+    const date = new Date();
+    const hours = date.getHours();
+    if (hours < 12) {
+        return 'Good Morning';
+    } else if (hours < 18) {
+        return 'Good Afternoon';
+    } else {
+        return 'Good Evening';
+    }
+}
+
 export default function Header() {
     const [user, setUser] = useState(auth.currentUser || null);
     const [username, setUsername] = useState(null);
     const [avatarUri, setAvatarUri] = useState(null);
+    const greeting = getGreetingBasedOnTime();
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -21,7 +34,6 @@ export default function Header() {
                     console.log("Cannot find user data in firestore.");
                     return;
                 }
-                console.log("User data found in firestore: ", querySnapshot.docs[0].data());
                 setAvatarUri({ uri: querySnapshot.docs[0].data().avatar });
                 setUsername(querySnapshot.docs[0].data().username);
             },
@@ -30,18 +42,17 @@ export default function Header() {
             }
         );
         return () => {
-            console.log("unsubscribe");
             unsubscribe();
         };
     }, []);
 
     return (
         <View style={styles.container}>
-            <View style={styles.greeting}>
-                <Text>Welcome, {user ? username : 'Guest'}</Text>
-            </View>
             <View style={styles.avatarContainer}>
                 <Avatar avatarUri={avatarUri} size={50} />
+            </View>
+            <View style={styles.greetingContainer}>
+                <Text style={styles.greetingText}>{username || 'Guest'}, {greeting} !</Text>
             </View>
         </View>
     )
@@ -51,18 +62,22 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         marginTop: 50,
-        borderWidth: 1,
-        width: '100%',
+        width: '90%',
         alignItems: 'center',
-        justifyContent: 'center',
     },
     avatarContainer: {
         borderWidth: 5,
         borderColor: Colors.WHITE,
         borderRadius: 100,
+        marginRight: 10,
     },
-    greeting: {
+    greetingContainer: {
         alignItems: 'center',
         marginRight: 10,
+    },
+    greetingText: {
+        fontSize: 20,
+        color: Colors.DEEP_RED,
+        fontWeight: 'bold',
     },
 })

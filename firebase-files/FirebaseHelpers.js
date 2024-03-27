@@ -86,7 +86,6 @@ const FirestoreService = {
             if (!uid || !fileUri) {
                 throw new Error("Invalid parameters for uploadToStorage");
             }
-    
             const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
             const ref = storageRef(storage, `user_avatars/${uid}/${fileName}`);
     
@@ -94,7 +93,6 @@ const FirestoreService = {
             if (!response.ok) {
                 throw new Error("Failed to fetch file for upload");
             }
-    
             const blob = await response.blob();
             const snapshot = await uploadBytes(ref, blob);
             const downloadURL = await getDownloadURL(ref);
@@ -102,10 +100,8 @@ const FirestoreService = {
             if (!userDocId) {
                 throw new Error("No user document found for UID: " + uid);
             }
-    
             const userDocRef = doc(firestore, "users", userDocId);
             await updateDoc(userDocRef, { avatar: downloadURL });
-    
             return downloadURL;
         } catch (error) {
             console.error("Error uploading to storage: ", error);
@@ -118,7 +114,6 @@ const FirestoreService = {
             if (!uid || !avatarUri) {
                 throw new Error("Invalid parameters for updateUserAvatar");
             }
-
             const url = await this.uploadToStorage(uid, avatarUri);
             const userDocId = await this.getUserDocId(uid);
             if (userDocId) {
@@ -143,7 +138,6 @@ const FirestoreService = {
                 const firestore = getFirestore();
                 const galleryRef = collection(firestore, "users", userDocId, "gallery");
                 const newPhotoRef = doc(galleryRef);
-
                 await getDoc(newPhotoRef, {
                     url: photoUri,
                     date: new Date()
@@ -178,7 +172,6 @@ const FirestoreService = {
             throw error;
         }
     }
-
 }
 
 export default FirestoreService;
