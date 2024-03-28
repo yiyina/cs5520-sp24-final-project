@@ -80,8 +80,9 @@ Explain how Create, Read, Update, and Delete (CRUD) operations are implemented i
 
 # Screenshots
 This screenshot showcases the user profile editing screen, providing users with access to their personal information. Here, they can update or delete their avatar and make modifications to other personal details. The second image demonstrates a successful update of the user's avatar.
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/b0b70134-7bfe-4419-b5cc-aed983b0194e" width="50%">
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/2d1c6463-edde-4528-84fe-4ba5cde37dba" width="50%">
+
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/b0b70134-7bfe-4419-b5cc-aed983b0194e" width="30%">
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/b7777fce-ab14-4116-af27-685fc84f4625" width="30%">
 
 # Description of Member Contributions
 | Contribution Area                  | Yina Yi                                                              | Wei Song                                                              |
