@@ -47,9 +47,9 @@ export default function TabNavigation() {
         </Pressable>
     )
 
-    const toggleCamera = () => {
-        setShowCamera(!showCamera);
-    }
+    // const toggleCamera = () => {
+    //     setShowCamera(!showCamera);
+    // }
 
     return (
         <>
@@ -113,11 +113,11 @@ export default function TabNavigation() {
                     }}
                 />
             </Tab.Navigator>
-            <CameraScreen
+            {/* <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
                 onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
-                type={'avatar'} />
+                type={'avatar'} /> */}
         </>
     )
 }

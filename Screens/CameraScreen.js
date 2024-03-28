@@ -34,7 +34,7 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
             onCancel();
             onImageCaptured(imageUri);
         } catch (error) {
-            console.error("Error updating user avatar: ", error);
+            console.error("CameraScreen handleImageAction Error updating user avatar: ", error);
         } finally {
             setIsUploading(false);
         }

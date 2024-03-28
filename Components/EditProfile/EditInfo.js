@@ -74,7 +74,7 @@ export default function EditInfo() {
 
                 if (currentUsername !== username || currentEmail !== email || password !== "**********") {
                     await FirestoreService.updateDocuments(user.uid, fieldsToUpdate);
-                    Alert.alert("User data updated successfully.");
+                    Alert.alert("Your data updated successfully.");
                 } else {
                     Alert.alert("No changes.");
                 }

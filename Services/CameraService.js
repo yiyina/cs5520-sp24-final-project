@@ -32,13 +32,14 @@ class CameraService {
             if (!user) throw new Error("User not authenticated");
 
             const userDocId = await FirestoreService.getUserDocId(user.uid);
+            console.log("handleImageCaptured User Doc ID: ", userDocId);
             if (userDocId) {
                 console.log("Update Avatar URI: ", imageUri);
             } else {
                 console.error("No user document found for UID:", user.uid);
             }
         } catch (error) {
-            console.error("Error updating user avatar: ", error);
+            console.error("CameraService handleImageCaptured Error updating user avatar: ", error);
         }
     }
 }

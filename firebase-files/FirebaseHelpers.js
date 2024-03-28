@@ -60,7 +60,7 @@ const FirestoreService = {
                 return null;
             }
         } catch (error) {
-            console.error("Error fetching user data: ", error);
+            console.error("getUserData Error fetching user data: ", error);
             throw error;
         }
     },
@@ -135,7 +135,7 @@ const FirestoreService = {
                 console.error("No user document found for UID:", uid);
             }
         } catch (error) {
-            console.error("Error updating user avatar: ", error);
+            console.error("FirebaseHelper updateUserAvatar Error updating user avatar: ", error);
             throw error;
         }
     },
