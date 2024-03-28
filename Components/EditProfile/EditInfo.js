@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,7 +11,8 @@ import EditFields from './EditFields';
 import EditAvatar from './EditAvatar';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
 
-export default function EditInfo({ userName, setUserName, email, setEmail, showCamera, setShowCamera }) {
+export default function EditInfo({ userName, setUserName, email, setEmail }) {
+    const [showCamera, setShowCamera] = useState(false);
     const { avatarUri } = getUpdatedUserData();
     const [password, setPassword] = useState("");
     const [editProfilePressed, setEditProfilePressed] = useState(false);
@@ -47,34 +48,6 @@ export default function EditInfo({ userName, setUserName, email, setEmail, showC
         setShowCamera(!showCamera);
     }
 
-    const handleDeleteAvatar = () => {
-        Alert.alert(
-            "Delete Avatar", // Alert Title
-            "Are you sure you want to delete your avatar?", // Alert Message
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => console.log("Avatar deletion canceled"), // Optionally handle the cancel action
-                    style: "cancel"
-                },
-                {
-                    text: "OK",
-                    onPress: async () => {
-                        try {
-                            if (user && user.uid) {
-                                await FirestoreService.deleteAvatarFileFromStorage(user.uid);
-                                await FirestoreService.removeAvatarFieldFromUser(user.uid);
-                            }
-                        } catch (error) {
-                            console.error("Error deleting avatar: ", error);
-                        }
-                    }
-                }
-            ],
-            { cancelable: false }
-        );
-    };
-
     const toggleEditProfile = async () => {
         console.log("Edit Profile Pressed: ", editProfilePressed);
         setEditProfilePressed(!editProfilePressed);
@@ -82,7 +55,7 @@ export default function EditInfo({ userName, setUserName, email, setEmail, showC
 
     return (
         <View style={styles.modalContent}>
-            <EditAvatar avatarUri={avatarUri} handleDeleteAvatar={handleDeleteAvatar} toggleCamera={toggleCamera} />
+            <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera}/>
             <Text style={styles.title}>Edit Profile</Text>
             <EditFields title="Username" type={userName} setType={setUserName} editProfilePressed={editProfilePressed} />
             <EditFields title="Email" type={email} setType={setEmail} editProfilePressed={editProfilePressed} />

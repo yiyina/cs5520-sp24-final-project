@@ -86,18 +86,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // modalOverlay: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  // },
-  // modalContent: {
-  //   width: '100%',
-  //   height: '100%',
-  //   backgroundColor: 'white',
-  //   opacity: 1,
-  // },
   body: {
     flex: 1,
     flexDirection: 'row',

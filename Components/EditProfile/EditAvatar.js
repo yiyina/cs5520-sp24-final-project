@@ -1,11 +1,43 @@
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet, View, Alert } from 'react-native'
 import React from 'react'
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
+import FirestoreService from '../../firebase-files/FirebaseHelpers'
+import { auth } from '../../firebase-files/FirebaseSetup'
 import { AntDesign } from '@expo/vector-icons'
 import { FontAwesome } from '@expo/vector-icons'
 
-export default function EditAvatar({ avatarUri, handleDeleteAvatar, toggleCamera}) {
+export default function EditAvatar({ avatarUri, toggleCamera }) {
+    const user = auth.currentUser;
+
+    const handleDeleteAvatar = () => {
+        Alert.alert(
+            "Delete Avatar", // Alert Title
+            "Are you sure you want to delete your avatar?", // Alert Message
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Avatar deletion canceled"), // Optionally handle the cancel action
+                    style: "cancel"
+                },
+                {
+                    text: "OK",
+                    onPress: async () => {
+                        try {
+                            if (user && user.uid) {
+                                await FirestoreService.deleteAvatarFileFromStorage(user.uid);
+                                await FirestoreService.removeAvatarFieldFromUser(user.uid);
+                            }
+                        } catch (error) {
+                            console.error("Error deleting avatar: ", error);
+                        }
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
+
     return (
         <View style={styles.avatarContainer}>
             <Avatar avatarUri={avatarUri} size={100} />

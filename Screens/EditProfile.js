@@ -5,7 +5,6 @@ import Colors from '../Shared/Colors';
 import EditInfo from '../Components/EditProfile/EditInfo';
 
 export default function EditProfile({ showProfile, onCancel }) {
-    const [showCamera, setShowCamera] = useState(false);
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
 
@@ -22,7 +21,7 @@ export default function EditProfile({ showProfile, onCancel }) {
                 <EditInfo
                     userName={userName} setUserName={setUserName}
                     email={email} setEmail={setEmail}
-                    showCamera={showCamera} setShowCamera={setShowCamera} />
+                />
             </View>
         </Modal>
     )
