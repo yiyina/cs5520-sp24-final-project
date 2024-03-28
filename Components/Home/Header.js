@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { auth, firestore } from '../../firebase-files/FirebaseSetup'
-import { onSnapshot, collection, query, where } from "firebase/firestore";
+import { auth } from '../../firebase-files/FirebaseSetup'
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
 import { getUpdatedUserData } from '../../Shared/updateUserData'
@@ -25,7 +24,6 @@ export default function Header() {
     // const [username, setUsername] = useState(null);
     // const [avatarUri, setAvatarUri] = useState(null);
     useEffect(() => {
-        console.log("Header avatarUri: ", avatarUri);
         setGreeting(getGreetingBasedOnTime());
     }, []);
 

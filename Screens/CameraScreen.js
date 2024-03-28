@@ -1,6 +1,5 @@
-// CameraScreen.js
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
@@ -9,6 +8,7 @@ import { auth } from '../firebase-files/FirebaseSetup';
 import Colors from '../Shared/Colors';
 
 export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured }) {
+    const [isUploading, setIsUploading] = useState(false);
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
 
@@ -21,16 +21,23 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
     }, []);
 
     const handleImageAction = async (imageUri, type) => {
-        const uid = auth.currentUser.uid;
-        if (type === 'avatar') {
-            await FirestoreService.updateUserAvatar(uid, imageUri);
-            Alert.alert('You have successfully updated your avatar!');
-        } else if (type === 'gallery') {
-            await FirestoreService.addPhotoToGallery(uid, imageUri);
-            Alert.alert('You have successfully updated your avatar!');
+        setIsUploading(true);
+        try {
+            const uid = auth.currentUser.uid;
+            if (type === 'avatar') {
+                await FirestoreService.updateUserAvatar(uid, imageUri);
+                Alert.alert('You have successfully updated your avatar!');
+            } else if (type === 'gallery') {
+                await FirestoreService.addPhotoToGallery(uid, imageUri);
+                Alert.alert('You have successfully updated your avatar!');
+            }
+            onCancel();
+            onImageCaptured(imageUri);
+        } catch (error) {
+            console.error("Error updating user avatar: ", error);
+        } finally {
+            setIsUploading(false);
         }
-        onCancel();
-        onImageCaptured(imageUri);
     }
 
     if (hasPermission === null) {
@@ -39,6 +46,14 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
 
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
+    }
+
+    if (isUploading) {
+        return (
+            <View style={styles.waitingView}>
+                <ActivityIndicator size="large" color={Colors.DEEP_RED} />
+            </View>
+        );
     }
 
     return (
@@ -53,12 +68,12 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
                     <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
                         <FontAwesome5 name="window-close" size={36} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.captureButtonOuter} onPress={() => CameraService.takePicture(cameraRef, type, handleImageAction)}>
+                    <TouchableOpacity style={styles.captureButtonOuter} onPress={async () => CameraService.takePicture(cameraRef, type, handleImageAction)}>
                         <View style={styles.captureButtonInner}>
                             <FontAwesome name="camera" size={40} color="white" />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.galleryButton} onPress={() => CameraService.pickImage(type, handleImageAction)}>
+                    <TouchableOpacity style={styles.galleryButton} onPress={async () => CameraService.pickImage(type, handleImageAction)}>
                         <FontAwesome name="photo" size={36} color="white" />
                     </TouchableOpacity>
                 </View>
@@ -108,5 +123,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         color: 'black',
+    },
+    waitingView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

@@ -34,8 +34,6 @@ const styles = StyleSheet.create({
     },
     editableFieldInput: {
         flex: 1,
-        // borderWidth: 2,
-        // borderColor: Colors.LIGHT_YELLOW,
         backgroundColor: 'white',
         marginTop: 5,
         padding: 15,
@@ -43,8 +41,6 @@ const styles = StyleSheet.create({
     },
     nonEditableFieldInput: {
         flex: 1,
-        // borderWidth: 2,
-        // borderColor: "#e0e0e0",
         backgroundColor: '#e0e0e0',
         marginTop: 5,
         padding: 15,

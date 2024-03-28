@@ -19,7 +19,6 @@ export const getUpdatedUserData = () => {
                     console.log("Cannot find user data in firestore.");
                     return;
                 }
-                console.log("Query currentUser snapshot: ", querySnapshot.docs[0].data());
                 setAvatarUri({ uri: querySnapshot.docs[0].data().avatar });
                 setUsername(querySnapshot.docs[0].data().username);
                 setEmail(querySnapshot.docs[0].data().email);

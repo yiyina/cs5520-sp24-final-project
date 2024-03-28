@@ -10,14 +10,14 @@ import CameraService from '../../Services/CameraService';
 import EditFields from './EditFields';
 import EditAvatar from './EditAvatar';
 
-export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserName, email, setEmail, showCamera, setShowCamera }) {
+export default function EditInfo({ avatarUri, userName, setUserName, email, setEmail, showCamera, setShowCamera }) {
     const [password, setPassword] = useState("");
     const [editProfilePressed, setEditProfilePressed] = useState(false);
     const user = auth.currentUser;
 
     useEffect(() => {
         fetchUserData();
-    }, [avatarUri, userName, email]);
+    }, []);
 
     useEffect(() => {
         if( avatarUri && avatarUri.uri ) {
@@ -25,7 +25,7 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
         }
         console.log("UserName: ", userName);
         console.log("Email: ", email);
-    }, [userName, email]);
+    }, []);
 
     const fetchUserData = async () => {
         try {
@@ -62,8 +62,6 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
                             if (user && user.uid) {
                                 await FirestoreService.deleteAvatarFileFromStorage(user.uid);
                                 await FirestoreService.removeAvatarFieldFromUser(user.uid);
-                                setAvatarUri(null);
-                                console.log("Avatar successfully deleted.");
                             }
                         } catch (error) {
                             console.error("Error deleting avatar: ", error);
@@ -103,7 +101,7 @@ export default function EditInfo({ avatarUri, setAvatarUri, userName, setUserNam
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
-                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)}
+                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
                 type={'avatar'} />
         </View>
     )
@@ -115,7 +113,6 @@ const styles = StyleSheet.create({
         height: '90%',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        borderRadius: 55,
         borderWidth: 5,
         borderColor: Colors.DARK_YELLOW,
         overflow: 'hidden',

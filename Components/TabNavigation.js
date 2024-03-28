@@ -116,7 +116,7 @@ export default function TabNavigation() {
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
-                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri, setAvatarUri)}
+                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
                 type={'avatar'} />
         </>
     )
