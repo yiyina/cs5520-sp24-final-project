@@ -28,8 +28,26 @@ service firebase.storage {
   }
 }
 ```
+# Describe the data model
+## User Data Model:
+- Each user is identified by a unique user ID (uid).
+- Users have attributes such as email, username, avatar URI, and geographical coordinates (coords).
+- Users also have subcollections associated with features like the Spin Wheel and Gallery.
+- Users collection including 2 subcollections: Spin and Gallery
+  
+## Spin Wheel Data Model:
+- Each user has one or more Spin Wheels associated with them. 
+- Each Spin Wheel contains a unique spin ID (spinId) and a spin name (spinName).
+- Spin Wheels have a subcollection called SpinDetails for storing more detailed information.
+  
+## SpinDetails Data Model:
+- Each SpinDetails document contains a color scheme (colorSet) and a list of items on the spin (items).
 
-# Introduction of Collections
+## Photo Gallery Data Model:
+- Each user has a gallery containing multiple photos.
+- Each photo has a unique photo URI (photoUri), timestamp (timestamp), and description (description).
+
+# Describe the Collections
 ### Users Collection (Completed in Iteration 1)
 The Users collection is a top-level collection where each document represents an individual user in our database. Users can edit their profiles, including the uploading and deleting of avatars. The collection includes the following fields:
 
