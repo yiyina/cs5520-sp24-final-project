@@ -2,6 +2,7 @@
 ### Our App SpinToSpot lets users explore the local area spontaneously and personalized. Simply tap and the user will find a bunch of nearby restaurants, cafes, and many other options which are categorized. Take advantage of the Spin Wheel feature to make choosing users' next outing an exhilarating game of chance, tailored just for users.This integration offers a more comprehensive solution, allowing users to seamlessly find locations without the need to switch between different apps.
 ###    Authors: Yina Yi, Wei Song
 
+# Firebase Ruls
 #### This app uses Firestore database.
 #### This is our rule for Cloud Firestore:
 ```
@@ -27,6 +28,8 @@ service firebase.storage {
   }
 }
 ```
+
+# Introduction of Collections
 ### Users Collection (Completed in Iteration 1)
 The Users collection is a top-level collection where each document represents an individual user in our database. Users can edit their profiles, including the uploading and deleting of avatars. The collection includes the following fields:
 
@@ -55,7 +58,7 @@ The Users collection is a top-level collection where each document represents an
 - timestamp: The time and date when the photo was added or modified (e.g., "2024-03-27T14:00:00Z").
 - description: A brief description or caption for the photo (e.g., "Today I came to an XXX restaurant, ...").
   
-## CRUD Operations
+# CRUD Operations
 Explain how Create, Read, Update, and Delete (CRUD) operations are implemented in your Firestore collections. For example:
 
 ### Users Collection:
@@ -75,12 +78,12 @@ Explain how Create, Read, Update, and Delete (CRUD) operations are implemented i
 -  Update: Users can edit photo descriptions.
 -  Delete: Users can remove photos from their gallery.
 
-## Screenshots
+# Screenshots
 This screenshot showcases the user profile editing screen, providing users with access to their personal information. Here, they can update or delete their avatar and make modifications to other personal details. The second image demonstrates a successful update of the user's avatar.
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/b0b70134-7bfe-4419-b5cc-aed983b0194e" width="50%">
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/2d1c6463-edde-4528-84fe-4ba5cde37dba" width="50%">
 
-## Description of Member Contributions
+# Description of Member Contributions
 | Contribution Area                  | Yina Yi                                                              | Wei Song                                                              |
 | ---------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | **UI Design**                      | Led the UI design process, ensuring a visually appealing experience. |                                                                       |
