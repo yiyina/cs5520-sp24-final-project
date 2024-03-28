@@ -106,14 +106,6 @@ export default function EditInfo() {
                 setError={setEmailError}
                 editProfilePressed={editProfilePressed}
             />
-            {/* <EditFields
-                title="Password"
-                value={editProfilePressed ? password : "**********"}
-                onChange={setPassword}
-                error={passwordError}
-                setError={setPasswordError}
-                editProfilePressed={editProfilePressed}
-            /> */}
             <Pressable
                 onPress={toggleEditProfile}
                 style={({ pressed }) => [
