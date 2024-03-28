@@ -103,7 +103,7 @@ This screenshot showcases the user profile editing screen, providing users with 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/b0b70134-7bfe-4419-b5cc-aed983b0194e" width="30%">
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/b7777fce-ab14-4116-af27-685fc84f4625" width="30%">
 
-# Description of Member Contributions
+# Contributions
 | Contribution Area                  | Yina Yi                                                              | Wei Song                                                              |
 | ---------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | **UI Design**                      | Led the UI design process, ensuring a visually appealing experience. |                                                                       |
