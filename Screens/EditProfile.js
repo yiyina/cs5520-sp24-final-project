@@ -19,8 +19,8 @@ export default function EditProfile({ showProfile, onCancel }) {
                     <Octicons name="chevron-down" size={50} color="white" />
                 </Pressable>
                 <EditInfo
-                    userName={userName} setUserName={setUserName}
-                    email={email} setEmail={setEmail}
+                    // userName={userName} setUserName={setUserName}
+                    // email={email} setEmail={setEmail}
                 />
             </View>
         </Modal>

@@ -3,46 +3,25 @@ import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { auth } from '../../firebase-files/FirebaseSetup';
-import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
 import EditFields from './EditFields';
 import EditAvatar from './EditAvatar';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
 
-export default function EditInfo({ userName, setUserName, email, setEmail }) {
+export default function EditInfo() {
+    const { avatarUri, username, email } = getUpdatedUserData();
     const [showCamera, setShowCamera] = useState(false);
-    const { avatarUri } = getUpdatedUserData();
     const [password, setPassword] = useState("");
     const [editProfilePressed, setEditProfilePressed] = useState(false);
-    const user = auth.currentUser;
-
-    useEffect(() => {
-        fetchUserData();
-    }, []);
 
     useEffect(() => {
         if( avatarUri && avatarUri.uri ) {
             console.log("EditInfo AvatarUri: ", avatarUri.uri);
         }
-        console.log("UserName: ", userName);
+        console.log("UserName: ", username);
         console.log("Email: ", email);
     }, []);
-
-    const fetchUserData = async () => {
-        try {
-            if (user.uid) {
-                const userDocRef = await FirestoreService.getUserData(user.uid);
-                if (userDocRef) {
-                    setUserName(userDocRef.username);
-                    setEmail(userDocRef.email);
-                }
-            }
-        } catch (error) {
-            console.error("Error fetching user data: ", error);
-        }
-    }
 
     const toggleCamera = () => {
         setShowCamera(!showCamera);
@@ -57,8 +36,8 @@ export default function EditInfo({ userName, setUserName, email, setEmail }) {
         <View style={styles.modalContent}>
             <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera}/>
             <Text style={styles.title}>Edit Profile</Text>
-            <EditFields title="Username" type={userName} setType={setUserName} editProfilePressed={editProfilePressed} />
-            <EditFields title="Email" type={email} setType={setEmail} editProfilePressed={editProfilePressed} />
+            <EditFields title="Username" type={username} setType={username} editProfilePressed={editProfilePressed} />
+            <EditFields title="Email" type={email} setType={email} editProfilePressed={editProfilePressed} />
             <EditFields title="Password" type={password} setType={setPassword} editProfilePressed={editProfilePressed} />
             <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
                 {editProfilePressed ?
