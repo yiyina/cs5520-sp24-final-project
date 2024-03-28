@@ -26,10 +26,10 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
             const uid = auth.currentUser.uid;
             if (type === 'avatar') {
                 await FirestoreService.updateUserAvatar(uid, imageUri);
-                Alert.alert('You have successfully updated your avatar!');
+                Alert.alert('Your avatar has been successfully updated!');
             } else if (type === 'gallery') {
                 await FirestoreService.addPhotoToGallery(uid, imageUri);
-                Alert.alert('You have successfully updated your avatar!');
+                Alert.alert('Your avatar has been successfully updated!');
             }
             onCancel();
             onImageCaptured(imageUri);

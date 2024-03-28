@@ -9,8 +9,10 @@ import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
 import EditFields from './EditFields';
 import EditAvatar from './EditAvatar';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
 
-export default function EditInfo({ avatarUri, userName, setUserName, email, setEmail, showCamera, setShowCamera }) {
+export default function EditInfo({ userName, setUserName, email, setEmail, showCamera, setShowCamera }) {
+    const { avatarUri } = getUpdatedUserData();
     const [password, setPassword] = useState("");
     const [editProfilePressed, setEditProfilePressed] = useState(false);
     const user = auth.currentUser;

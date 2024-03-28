@@ -1,10 +1,10 @@
 import { StyleSheet, View, Modal, Pressable } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Octicons } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import EditInfo from '../Components/EditProfile/EditInfo';
 
-export default function EditProfile({ avatarUri, showProfile, onCancel }) {
+export default function EditProfile({ showProfile, onCancel }) {
     const [showCamera, setShowCamera] = useState(false);
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
@@ -20,7 +20,6 @@ export default function EditProfile({ avatarUri, showProfile, onCancel }) {
                     <Octicons name="chevron-down" size={50} color="white" />
                 </Pressable>
                 <EditInfo
-                    avatarUri={avatarUri} 
                     userName={userName} setUserName={setUserName}
                     email={email} setEmail={setEmail}
                     showCamera={showCamera} setShowCamera={setShowCamera} />

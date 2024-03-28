@@ -44,7 +44,6 @@ export default function Profile() {
       <View style={styles.body}>
       </View>
       <EditProfile
-        avatarUri={avatarUri}
         showProfile={showProfile}
         onCancel={toggleEditProfile} />
     </View>

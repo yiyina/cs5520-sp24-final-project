@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, Dimensions } from 'react-native'
+import { StyleSheet, View, TextInput } from 'react-native'
 import React from 'react'
 
 export default function Input({ text, handleInput, secureTextEntry }) {
