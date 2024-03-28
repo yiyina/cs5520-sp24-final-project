@@ -2,7 +2,7 @@
 ### Our App SpinToSpot lets users explore the local area spontaneously and personalized. Simply tap and the user will find a bunch of nearby restaurants, cafes, and many other options which are categorized. Take advantage of the Spin Wheel feature to make choosing users' next outing an exhilarating game of chance, tailored just for users.This integration offers a more comprehensive solution, allowing users to seamlessly find locations without the need to switch between different apps.
 ###    Authors: Yina Yi, Wei Song
 
-# Firebase Ruls
+# Firebase Rules
 #### This app uses Firestore database.
 #### This is our rule for Cloud Firestore:
 ```
