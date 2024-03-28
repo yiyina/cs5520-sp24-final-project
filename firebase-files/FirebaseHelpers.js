@@ -1,4 +1,5 @@
 import { firestore, auth, storage } from "./FirebaseSetup";
+import { reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import {
     collection,
     getDoc,
@@ -12,7 +13,6 @@ import {
     deleteField
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-
 
 const FirestoreService = {
     async addUser(user) {
@@ -254,7 +254,18 @@ const FirestoreService = {
 
 }
 
+async function updatePassword(uid, currentPassword, newPassword) {
+    try {
+        const user = auth.currentUser;
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
 
+        await updatePassword(user, newPassword);
+        console.log("Password updated successfully!");
+    } catch (error) {
+        console.error("Error updating password:", error);
+        throw error;
+    }
+}
 
-
-export default FirestoreService;
+export { FirestoreService, updatePassword };
