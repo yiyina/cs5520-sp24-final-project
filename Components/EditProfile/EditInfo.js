@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,15 +8,38 @@ import CameraService from '../../Services/CameraService';
 import EditFields from './EditFields';
 import EditAvatar from './EditAvatar';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
+import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import { auth } from '../../firebase-files/FirebaseSetup';
 
 export default function EditInfo() {
-    const { avatarUri, username, email } = getUpdatedUserData();
+    const { avatarUri } = getUpdatedUserData();
     const [showCamera, setShowCamera] = useState(false);
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("**********");
+    const [usernameError, setUsernameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const [editProfilePressed, setEditProfilePressed] = useState(false);
+    const user = auth.currentUser;
 
     useEffect(() => {
-        if( avatarUri && avatarUri.uri ) {
+        async function fetchUserData() {
+            if (auth.currentUser) {
+                const userData = await FirestoreService.getUserData(auth.currentUser.uid);
+                if (userData) {
+                    setUsername(userData.username || "");
+                    setEmail(userData.email || "");
+                }
+            }
+        }
+        if (auth.currentUser) {
+            fetchUserData();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (avatarUri && avatarUri.uri) {
             console.log("EditInfo AvatarUri: ", avatarUri.uri);
         }
         console.log("UserName: ", username);
@@ -30,16 +53,80 @@ export default function EditInfo() {
     const toggleEditProfile = async () => {
         console.log("Edit Profile Pressed: ", editProfilePressed);
         setEditProfilePressed(!editProfilePressed);
+        if (editProfilePressed) {
+            if (usernameError || emailError || passwordError) {
+                Alert.alert("Please correct the errors before saving.");
+                return;
+            }
+            try {
+                const userData = await FirestoreService.getUserData(user.uid);
+                const currentUsername = userData.username;
+                const currentEmail = userData.email;
+
+                const fieldsToUpdate = {
+                    username: username,
+                    email: email
+                };
+
+                if (password !== "**********") {
+                    fieldsToUpdate.password = password;
+                }
+
+                if (currentUsername !== username || currentEmail !== email || password !== "**********") {
+                    await FirestoreService.updateDocuments(user.uid, fieldsToUpdate);
+                    Alert.alert("User data updated successfully.");
+                } else {
+                    Alert.alert("No changes.");
+                }
+            } catch (error) {
+                console.log("Error updating user data: ", error);
+            }
+        } else {
+            setEditProfilePressed(true);
+        }
     }
 
     return (
         <View style={styles.modalContent}>
-            <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera}/>
+            <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera} />
             <Text style={styles.title}>Edit Profile</Text>
-            <EditFields title="Username" type={username} setType={username} editProfilePressed={editProfilePressed} />
-            <EditFields title="Email" type={email} setType={email} editProfilePressed={editProfilePressed} />
-            <EditFields title="Password" type={password} setType={setPassword} editProfilePressed={editProfilePressed} />
-            <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
+            <EditFields
+                title="Username"
+                value={username}
+                onChange={setUsername}
+                error={usernameError}
+                setError={setUsernameError}
+                editProfilePressed={editProfilePressed}
+            />
+            <EditFields
+                title="Email"
+                value={email}
+                onChange={setEmail}
+                error={emailError}
+                setError={setEmailError}
+                editProfilePressed={editProfilePressed}
+            />
+            <EditFields
+                title="Password"
+                value={editProfilePressed ? password : "**********"}
+                onChange={setPassword}
+                error={passwordError}
+                setError={setPasswordError}
+                editProfilePressed={editProfilePressed}
+            />
+            <Pressable
+                onPress={toggleEditProfile}
+                style={({ pressed }) => [
+                    styles.editProfileButton,
+                    {
+                        backgroundColor: pressed
+                            ? Colors.DARK_YELLOW_PRESSED
+                            : Colors.DARK_YELLOW,
+                        opacity: (usernameError || emailError || passwordError) ? 0.5 : 1
+                    }
+                ]}
+                disabled={usernameError || emailError || passwordError}
+            >
                 {editProfilePressed ?
                     <>
                         <Feather name="save" size={24} color="black" />
@@ -61,6 +148,7 @@ export default function EditInfo() {
     )
 }
 
+
 const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: Colors.LIGHT_YELLOW,
@@ -80,7 +168,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
     },
-    editProfile: {
+    editProfileButton: {
         flexDirection: 'row',
         backgroundColor: Colors.DARK_YELLOW,
         alignItems: 'center',

@@ -12,22 +12,22 @@ import { auth } from './firebase-files/FirebaseSetup'
 
 const Stack = createStackNavigator();
 
-export default function App({ navigation }) {
+export default function App() {
   const [userloggedIn, setUserloggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserloggedIn(!!user);
-      setIsLoading(false); // 认证完成
+      // setIsLoading(false);
     });
 
-    return unsubscribe; // 清理订阅
+    return unsubscribe; 
   }, []);
 
-  if (isLoading) {
-    return <Login />; // 当正在加载时显示加载界面
-  }
+  // if (isLoading) {
+  //   return <Login />; 
+  // }
 
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, (user) => {

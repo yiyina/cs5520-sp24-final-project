@@ -9,9 +9,9 @@ import {
     updateDoc,
     doc,
     getFirestore,
+    deleteField
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { deleteField } from "firebase/firestore";
 
 
 const FirestoreService = {
@@ -225,6 +225,31 @@ const FirestoreService = {
     async doesEmailExist(email) {
         const querySnapshot = await getDocs(query(collection(firestore, "users"), where("email", "==", email)));
         return !querySnapshot.empty; // Returns true if an email exists, false otherwise
+    },
+
+    async updateDocuments(uid, fieldsToUpdate, subcollectionPath = null) {
+        try {
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error("User document not found for UID: " + uid);
+            }
+
+            const collectionPath = subcollectionPath ?
+                `users/${userDocId}/${subcollectionPath}` :
+                `users/${userDocId}`;
+
+            Object.keys(fieldsToUpdate).forEach(key => {
+                if (fieldsToUpdate[key] === null) {
+                    delete fieldsToUpdate[key];
+                }
+            });
+
+            const docRef = doc(firestore, collectionPath);
+            await updateDoc(docRef, fieldsToUpdate);
+        } catch (error) {
+            console.error("Error updating user data:", error);
+            throw error;
+        }
     },
 
 }

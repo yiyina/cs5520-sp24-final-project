@@ -13,4 +13,5 @@ export default {
     DARK_YELLOW: '#FFD8BA',
     BLUE: "blue",
     TRANSPARENT: 'transparent',
+    INVALID_TEXT: '#e0e0e0',
 };
