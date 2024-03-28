@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,38 +14,14 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [userloggedIn, setUserloggedIn] = useState(false);
-  // const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserloggedIn(!!user);
-      // setIsLoading(false);
     });
 
     return unsubscribe; 
   }, []);
-
-  // if (isLoading) {
-  //   return <Login />; 
-  // }
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       const { creationTime, lastSignInTime } = user.metadata;
-  //       const creationTimestamp = new Date(creationTime).getTime();
-  //       const lastSignInTimestamp = new Date(lastSignInTime).getTime();
-  //       const isNewUser = lastSignInTimestamp - creationTimestamp < 1 * 60 * 1000;
-  //       if (!isNewUser) {
-  //         setUserloggedIn(true);
-  //       }
-  //     } else {
-  //       setUserloggedIn(false);
-  //     }
-  //   })
-
-  //   return unsubscribe;
-  // }, [])
 
   const AuthStack = (
     <>

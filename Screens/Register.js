@@ -41,7 +41,7 @@ export default function Register({ navigation }) {
     const handlePasswordInput = (password) => {
         setPassword(password)
     }
-    
+
     const handleResetPress = () => {
         setUsername('')
         setEmail('')
@@ -54,9 +54,6 @@ export default function Register({ navigation }) {
     const handleConfirmPress = async () => {
         setIsLoading(true);
 
-        // const isUsernameValid = await validateUsername(username);
-        // const isEmailValid = await validateEmail(email);
-        // const isPasswordValid = validatePassword(password);
         const usernameErrorText = validateUsername(username);
         const emailErrorText = validateEmail(email);
         const passwordErrorText = validatePassword(password);
