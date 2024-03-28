@@ -34,6 +34,12 @@ export default function Login({ navigation }) {
      const handleLoginPress = async () => {
         setNameEmailError("");
         setPasswordError("");
+
+        if(!usernameEmail || !password) {
+            if (!usernameEmail) setNameEmailError("Username or Email could not be empty");
+            if (!password) setPasswordError("Password could not be empty");
+            return;
+        }
         try {
             let email = usernameEmail;
             if (!email.includes('@')) {
