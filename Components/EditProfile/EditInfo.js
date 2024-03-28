@@ -19,6 +19,9 @@ export default function EditInfo() {
     const [password, setPassword] = useState("**********");
     const [usernameError, setUsernameError] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [hasUsernameError, setHasUsernameError] = useState(false);
+    const [hasEmailError, setHasEmailError] = useState(false);
+    const [hasPasswordError, setHasPasswordError] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [editProfilePressed, setEditProfilePressed] = useState(false);
     const user = auth.currentUser;
@@ -95,7 +98,10 @@ export default function EditInfo() {
                 value={username}
                 onChange={setUsername}
                 error={usernameError}
-                setError={setUsernameError}
+                setError={newError => {
+                    setUsernameError(newError);
+                    setHasUsernameError(!!newError);
+                }}
                 editProfilePressed={editProfilePressed}
             />
             <EditFields
@@ -103,7 +109,10 @@ export default function EditInfo() {
                 value={email}
                 onChange={setEmail}
                 error={emailError}
-                setError={setEmailError}
+                setError={newError => {
+                    setUsernameError(newError);
+                    setHasUsernameError(!!newError);
+                }}
                 editProfilePressed={editProfilePressed}
             />
             <Pressable
@@ -117,7 +126,7 @@ export default function EditInfo() {
                         opacity: (usernameError || emailError || passwordError) ? 0.5 : 1
                     }
                 ]}
-                disabled={usernameError || emailError || passwordError}
+                disabled={hasUsernameError || hasEmailError || hasPasswordError}
             >
                 {editProfilePressed ?
                     <>
