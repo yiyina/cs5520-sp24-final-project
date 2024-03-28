@@ -16,7 +16,7 @@ service cloud.firestore {
 }
 ```
 #### This is our rule for firestore storage:
-、、、
+```
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
@@ -26,7 +26,7 @@ service firebase.storage {
     }
   }
 }
-、、、
+```
 ###  1. Users Collection(done iteration 1)
 This is a top-level collection. Each document in the Users collection represents a user of our application.Through Edit Profile User can upload and delete her/his own avatar. 
 It has these fields:
