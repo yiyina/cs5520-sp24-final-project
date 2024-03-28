@@ -68,12 +68,13 @@ Explain how Create, Read, Update, and Delete (CRUD) operations are implemented i
 -  Delete: Users can delete their avatar.
 
 ### Spins Collection:
--  Create: New spins are created every time a user interacts with the Spin Wheel.
--  Read: Spin history is viewable by the user.
--  Update/Delete: Not applicable or not implemented.
+-  Create: New spins can be created when the user chooses to add a new Spin Wheel.
+-  Read: Each spin's information is viewable by the user.
+-  Update: The color theme and the items of each spin can be edited.
+-  Delete: Users can delete selected spin, or delete items in each spin
 
 ### Gallery Collection:
--  Create: Users can upload new photos.
+-  Create: Users can upload new photos to the gallery.
 -  Read: Users can view their gallery.
 -  Update: Users can edit photo descriptions.
 -  Delete: Users can remove photos from their gallery.
