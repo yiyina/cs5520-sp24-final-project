@@ -30,7 +30,6 @@ const FirestoreService = {
     },
 
     async getEmailByUsername(username) {
-        console.log("Attempting to find email for username:", username);
         try {
             const querySnapshot = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
             if (!querySnapshot.empty) {
@@ -274,8 +273,12 @@ const FirestoreService = {
             const docRef = doc(firestore, collectionPath);
             await updateDoc(docRef, fieldsToUpdate);
         } catch (error) {
-            console.error("Error updating user data:", error);
-            throw error;
+            if (error.code === 'auth/requires-recent-login') {
+                console.log("There is no way to reauthenticate the user from here.");
+            } else {
+                console.error("Error updating documents: ", error);
+                throw error;
+            }
         }
     },
 

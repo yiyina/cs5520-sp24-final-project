@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Button from '../Shared/Button'
 import Colors from '../Shared/Colors'
 import Input from '../Shared/Input'
 import { Ionicons } from '@expo/vector-icons'
-import FirestoreService from '../firebase-files/FirebaseHelpers'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../firebase-files/FirebaseSetup';
 
@@ -43,9 +42,8 @@ export default function Login({ navigation }) {
         try {
             let email = usernameEmail;
             if (!email.includes('@')) {
-                console.log("Email: ", email);
-                email = await FirestoreService.getEmailByUsername(usernameEmail);
-                console.log("Email from Firestore: ", email);
+                Alert.alert("Please enter a valid email address");
+                return;
             }
 
             if (email) {
@@ -85,7 +83,7 @@ export default function Login({ navigation }) {
                 source={require('../assets/SpinLogo.png')}
                 style={styles.logo} />
             <View style={styles.inputContainer}>
-                <Text style={styles.text}>Username / Email:</Text>
+                <Text style={styles.text}>Email:</Text>
                 <Input text={usernameEmail} handleInput={handleNameEmailInput} />
                 <Text style={styles.errorText}>
                     {nameEmailError ? nameEmailError : ""}
