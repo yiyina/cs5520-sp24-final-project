@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Pressable } from 'react-native'
 import React from 'react'
 
-export default function Button({ text, textColor, buttonPress }) {
+export default function Button({ text, textColor, buttonPress, containerStyle, textStyle }) {
 
     const buttonClick = () => {
         buttonPress()
@@ -11,6 +11,7 @@ export default function Button({ text, textColor, buttonPress }) {
         container: {
             margin: 10,
             padding: 10,
+            alignItems: 'center',
         },  
         text: {
             color: textColor,
@@ -18,8 +19,8 @@ export default function Button({ text, textColor, buttonPress }) {
     })
 
     return (
-        <Pressable style={styles.container} onPress={buttonClick}>
-            <Text style={styles.text}>{text}</Text>
+        <Pressable style={containerStyle ? [containerStyle, styles.container] : styles.container} onPress={buttonClick}>
+            <Text style={textStyle? [textStyle, styles.text] : styles.text}>{text}</Text>
         </Pressable>
     )
 }

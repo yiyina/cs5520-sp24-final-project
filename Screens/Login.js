@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Button from '../Shared/Button'
 import Colors from '../Shared/Colors'
@@ -6,6 +6,7 @@ import Input from '../Shared/Input'
 import { Ionicons } from '@expo/vector-icons'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../firebase-files/FirebaseSetup';
+import { BlurView } from 'expo-blur';
 
 export default function Login({ navigation }) {
     const [usernameEmail, setUsernameEmail] = useState('')
@@ -30,11 +31,11 @@ export default function Login({ navigation }) {
         setPassword(password)
     }
 
-     const handleLoginPress = async () => {
+    const handleLoginPress = async () => {
         setNameEmailError("");
         setPasswordError("");
 
-        if(!usernameEmail || !password) {
+        if (!usernameEmail || !password) {
             if (!usernameEmail) setNameEmailError("Username or Email could not be empty");
             if (!password) setPasswordError("Password could not be empty");
             return;
@@ -77,39 +78,53 @@ export default function Login({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.welcom}>Welcome To</Text>
-            <Image
-                source={require('../assets/SpinLogo.png')}
-                style={styles.logo} />
-            <View style={styles.inputContainer}>
-                <Text style={styles.text}>Email:</Text>
-                <Input text={usernameEmail} handleInput={handleNameEmailInput} />
-                <Text style={styles.errorText}>
-                    {nameEmailError ? nameEmailError : ""}
-                </Text>
-                <Text style={styles.text}>Password:</Text>
-                <View>
-                    <Input
-                        text={password}
-                        handleInput={handlePasswordInput}
-                        secureTextEntry={!showPassword}
-                    />
+        <ImageBackground
+            source={require('../assets/main_background.jpg')}
+            style={styles.container}>
+            <Text style={styles.welcome}>Spin To</Text>
+            <Text style={styles.welcome}>Explore</Text>
+            <View style={styles.overlay}></View>
+            <View intensity={10} tint="dark" style={styles.blurViewContainer}>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.text}>Email:</Text>
+                    <Input text={usernameEmail} handleInput={handleNameEmailInput} />
                     <Text style={styles.errorText}>
-                        {passwordError ? passwordError : ""}
+                        {nameEmailError ? nameEmailError : ""}
                     </Text>
-                    <TouchableOpacity
-                        style={styles.eyeIcon}
-                        onPress={() => setShowPassword(!showPassword)}>
-                        <Ionicons name={showPassword ? "eye" : "eye-off"} size={24} color="black" />
-                    </TouchableOpacity>
+                    <Text style={styles.text}>Password:</Text>
+                    <View>
+                        <Input
+                            text={password}
+                            handleInput={handlePasswordInput}
+                            secureTextEntry={!showPassword}
+                        />
+                        <Text style={styles.errorText}>
+                            {passwordError ? passwordError : ""}
+                        </Text>
+                        <TouchableOpacity
+                            style={styles.eyeIcon}
+                            onPress={() => setShowPassword(!showPassword)}>
+                            <Ionicons name={showPassword ? "eye" : "eye-off"} size={24} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <Button
+                        text="Login"
+                        textColor={Colors.BLACK}
+                        buttonPress={handleLoginPress}
+                        containerStyle={styles.loginButton} />
+                    <View style={styles.registerContainer}>
+                        <Text>Don't have an account?</Text>
+                        <Button
+                        text="Register"
+                        textColor={Colors.BLUE}
+                        buttonPress={handleRegisterPress} 
+                        textStyle={styles.registerText}/>
+                    </View>
                 </View>
             </View>
-            <View style={styles.buttonContainer}>
-                <Button text="Register" textColor={Colors.BLUE} buttonPress={handleRegisterPress} />
-                <Button text="Login" textColor={Colors.BLACK} buttonPress={handleLoginPress} />
-            </View>
-        </View>
+        </ImageBackground>
     )
 }
 
@@ -119,19 +134,44 @@ const styles = StyleSheet.create({
         paddingTop: 100,
         alignItems: 'center',
     },
-    welcom: {
-        fontSize: 60,
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: Colors.WHITE,
+        opacity: 0.4,
+        top: 250,
+    },
+    welcome: {
+        fontSize: 50,
         textAlign: 'center',
-        margin: 10,
         fontWeight: 'bold',
+        color: Colors.WHITE,
+        fontFamily: 'Arial',
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 5,
     },
     logo: {
         width: 300,
         height: 100,
     },
+    blurViewContainer: {
+        position: 'absolute',
+        top: 300,
+        paddingVertical: '10%',
+        borderRadius: 20,
+        width: '80%',
+        backgroundColor: Colors.WHITE,
+        opacity: 0.9,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 10,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        elevation: 10,
+    },
     inputContainer: {
-        marginTop: 100,
-        width: '100%',
         paddingHorizontal: '5%',
     },
     text: {
@@ -150,8 +190,29 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     buttonContainer: {
-        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-evenly',
-        width: '100%',
+    },
+    loginButton: {
+        width: '80%',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: Colors.LIGHT_YELLOW,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 10,
+    },
+    registerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    registerText: {
+        textDecorationLine: 'underline',
     },
 })

@@ -137,7 +137,7 @@ export default function Register({ navigation }) {
                     buttonPress={handleResetPress}
                 />
                 <Button
-                    text="Confirm"
+                    text="Register and Login"
                     buttonPress={handleConfirmPress}
                     disabled={hasErrors}
                     style={hasErrors ? styles.disabledButton : null} 
