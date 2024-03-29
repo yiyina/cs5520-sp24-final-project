@@ -1,4 +1,4 @@
-import { firestore, auth, storage } from "./FirebaseSetup";
+import { firestore, auth, storage, updateEmail } from "./FirebaseSetup";
 import {
     collection,
     getDoc,
@@ -9,7 +9,7 @@ import {
     updateDoc,
     doc,
     getFirestore,
-    deleteField
+    deleteField,
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
@@ -224,6 +224,34 @@ const FirestoreService = {
     async doesEmailExist(email) {
         const querySnapshot = await getDocs(query(collection(firestore, "users"), where("email", "==", email)));
         return !querySnapshot.empty; // Returns true if an email exists, false otherwise
+    },
+
+    async updateEmailForUser(uid, newEmail) {
+        console.log("Updating email for user: ", uid, newEmail);
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                try {
+                    updateEmail(user, newEmail);
+                    console.log("Email updated successfully.");
+                } catch (error) {
+                    console.error("Error updating email: ", error);
+                    throw error;
+                }
+            } else {
+                console.error("Current user is not available.");
+            }
+
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error("No user document found for UID: " + uid);
+            }
+            const userDocRef = doc(firestore, "users", userDocId);
+            await updateDoc(userDocRef, { email: newEmail });
+        } catch (error) {
+            console.error("Error updating email for user: ", error);
+            throw error;
+        }
     },
 
     async updateDocuments(uid, fieldsToUpdate, subcollectionPath = null) {

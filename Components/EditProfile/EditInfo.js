@@ -10,6 +10,7 @@ import EditAvatar from './EditAvatar';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { auth } from '../../firebase-files/FirebaseSetup';
+import { ActivityIndicator } from 'react-native';
 
 export default function EditInfo() {
     const { avatarUri } = getUpdatedUserData();
@@ -24,6 +25,7 @@ export default function EditInfo() {
     const [hasPasswordError, setHasPasswordError] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [editProfilePressed, setEditProfilePressed] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const user = auth.currentUser;
 
     useEffect(() => {
@@ -54,40 +56,61 @@ export default function EditInfo() {
     }
 
     const toggleEditProfile = async () => {
-        console.log("Edit Profile Pressed: ", editProfilePressed);
-        setEditProfilePressed(!editProfilePressed);
         if (editProfilePressed) {
             if (usernameError || emailError || passwordError) {
-                Alert.alert("Please correct the errors before saving.");
+                Alert.alert("Error", "Please correct the errors before saving.");
                 return;
             }
+
+            let isEmailAlreadyExists = false;
             try {
                 const userData = await FirestoreService.getUserData(user.uid);
-                const currentUsername = userData.username;
-                const currentEmail = userData.email;
 
-                const fieldsToUpdate = {
-                    username: username,
-                    email: email
-                };
+                let fieldsToUpdate = {};
+                let hasChanges = false;
+
+                if (userData.username !== username) {
+                    fieldsToUpdate.username = username;
+                    hasChanges = true;
+                }
+
+                if (userData.email !== email) {
+                    const emailExists = await FirestoreService.doesEmailExist(email);
+                    if (emailExists) {
+                        setEmailError("Email already exists. Please choose a different one.");
+                        isEmailAlreadyExists = true;
+                        return;
+                    }
+                    setIsUploading(true);
+                    await FirestoreService.updateEmailForUser(user.uid, email);
+                    // fieldsToUpdate.email = email;
+                    hasChanges = true;
+                }
 
                 if (password !== "**********") {
                     fieldsToUpdate.password = password;
+                    hasChanges = true;
                 }
 
-                if (currentUsername !== username || currentEmail !== email || password !== "**********") {
+                if (hasChanges) {
                     await FirestoreService.updateDocuments(user.uid, fieldsToUpdate);
-                    Alert.alert("Your data updated successfully.");
+                    Alert.alert("Success", "Your data updated successfully.");
                 } else {
-                    Alert.alert("No changes.");
+                    Alert.alert("Info", "No changes.");
                 }
             } catch (error) {
-                console.log("Error updating user data: ", error);
+                console.error("Error updating user data: ", error);
+                Alert.alert("Error", "An error occurred while updating your data.");
+            } finally {
+                if (!isEmailAlreadyExists && !usernameError && !emailError && !passwordError) {
+                    setEditProfilePressed(false);
+                    setIsUploading(false);
+                }
             }
         } else {
             setEditProfilePressed(true);
         }
-    }
+    };
 
     return (
         <View style={styles.modalContent}>
@@ -110,8 +133,8 @@ export default function EditInfo() {
                 onChange={setEmail}
                 error={emailError}
                 setError={newError => {
-                    setUsernameError(newError);
-                    setHasUsernameError(!!newError);
+                    setEmailError(newError);
+                    setHasEmailError(!!newError);
                 }}
                 editProfilePressed={editProfilePressed}
             />
@@ -145,6 +168,11 @@ export default function EditInfo() {
                 onCancel={toggleCamera}
                 onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
                 type={'avatar'} />
+            {isUploading &&
+                <View style={styles.waitingView}>
+                    <ActivityIndicator size="large" color={Colors.DEEP_RED} />
+                </View>
+            }
         </View>
     )
 }
@@ -177,5 +205,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
         justifyContent: 'center',
+    },
+    waitingView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 })

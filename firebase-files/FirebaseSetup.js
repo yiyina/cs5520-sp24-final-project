@@ -5,9 +5,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { initializeAuth, getAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeAuth, updateEmail, getAuth, getReactNativePersistence } from 'firebase/auth';
 import { apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId } from "@env";
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: apiKey,
@@ -31,4 +30,4 @@ const storage = getStorage(app);
 
 console.log('Firebase Storage initialized', storage);
 
-export { firestore, auth, storage };
+export { firestore, auth, storage, updateEmail };
