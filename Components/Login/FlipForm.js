@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { View, Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import LoginForm from './LoginForm';
 
 const FlipForm = () => {
-    // 设置动画初始值
     const [flipAnimation, setFlipAnimation] = useState(new Animated.Value(0));
 
-    // 处理翻转动画
     const toggleFlip = () => {
-        // 根据当前状态确定将要转到的值
         const toValue = flipAnimation._value >= 90 ? 0 : 180;
 
-        // 开始动画
         Animated.spring(flipAnimation, {
             toValue: toValue,
             friction: 8,
@@ -18,7 +15,6 @@ const FlipForm = () => {
         }).start();
     };
 
-    // 插值，用于计算翻转角度
     const frontInterpolate = flipAnimation.interpolate({
         inputRange: [0, 180],
         outputRange: ['0deg', '180deg'],
@@ -29,7 +25,6 @@ const FlipForm = () => {
         outputRange: ['180deg', '360deg'],
     });
 
-    // 设置前后视图的样式
     const frontAnimatedStyle = {
         transform: [{ rotateY: frontInterpolate }],
     };
@@ -40,10 +35,10 @@ const FlipForm = () => {
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
-                {/* 登录表单 */}
-                <TouchableOpacity onPress={toggleFlip}>
+                <LoginForm toggleFlip={toggleFlip}/>
+                {/* <TouchableOpacity onPress={toggleFlip}>
                     <Text>Login Form</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </Animated.View>
 
             <Animated.View style={[backAnimatedStyle, styles.flipCard, styles.flipCardBack]}>
@@ -60,11 +55,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        top: 300,
     },
     flipCard: {
-        width: 300,
-        height: 300,
         alignItems: 'center',
         justifyContent: 'center',
         backfaceVisibility: 'hidden',

@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, ImageBackground } from 'react-native'
 import React from 'react'
 import Colors from '../Shared/Colors'
 import LoginForm from '../Components/Login/LoginForm'
+import FlipForm from '../Components/Login/FlipForm'
 
 export default function LoginRegister() {
 
@@ -12,7 +13,8 @@ export default function LoginRegister() {
             <Text style={styles.welcome}>Spin To</Text>
             <Text style={styles.welcome}>Explore</Text>
             <View style={styles.overlay}></View>
-            <LoginForm />
+            {/* <LoginForm /> */}
+            <FlipForm />
         </ImageBackground>
     )
 }

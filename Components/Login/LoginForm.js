@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase-files/FirebaseSetup';
 
-export default function LoginForm({ navigation }) {
+export default function LoginForm({ navigation, toggleFlip }) {
     const [usernameEmail, setUsernameEmail] = useState('')
     const [password, setPassword] = useState('')
     const [nameEmailError, setNameEmailError] = useState('')
@@ -76,12 +76,13 @@ export default function LoginForm({ navigation }) {
     };
 
     const handleRegisterPress = () => {
-        setRegisterPressed(!registerPressed)
-        navigation.navigate('Register')
+        // setRegisterPressed(!registerPressed)
+        // navigation.navigate('Register')
+        toggleFlip();
     }
 
     return (
-        <View intensity={10} tint="dark" style={styles.blurViewContainer}>
+        <View intensity={10} tint="dark" style={styles.container}>
             <View style={styles.inputContainer}>
                 <Text style={styles.text}>Email:</Text>
                 <Input text={usernameEmail} handleInput={handleNameEmailInput} />
@@ -129,9 +130,8 @@ export default function LoginForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    blurViewContainer: {
+    container: {
         position: 'absolute',
-        top: 300,
         paddingVertical: '10%',
         borderRadius: 20,
         width: '80%',
