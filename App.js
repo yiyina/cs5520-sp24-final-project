@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Colors from './Shared/Colors';
-import Login from './Screens/Login';
+import LoginRegister from './Screens/LoginRegister';
 import Register from './Screens/Register';
 import TabNavigation from './Components/TabNavigation';
 
@@ -25,7 +25,7 @@ export default function App() {
 
   const AuthStack = (
     <>
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="LoginRegister" component={LoginRegister} />
       <Stack.Screen name="Register" component={Register}
         options={{
           headerShown: true,
