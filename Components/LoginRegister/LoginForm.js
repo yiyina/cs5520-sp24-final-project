@@ -14,7 +14,6 @@ export default function LoginForm({ navigation, toggleFlip }) {
     const [passwordError, setPasswordError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [loginPressed, setLoginPressed] = useState(false)
-    const [registerPressed, setRegisterPressed] = useState(false)
 
 
     useEffect(() => {
@@ -76,8 +75,6 @@ export default function LoginForm({ navigation, toggleFlip }) {
     };
 
     const handleRegisterPress = () => {
-        // setRegisterPressed(!registerPressed)
-        // navigation.navigate('Register')
         toggleFlip();
     }
 
@@ -132,6 +129,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
+        left: -170,
         paddingVertical: '10%',
         borderRadius: 20,
         width: '80%',
@@ -171,7 +169,6 @@ const styles = StyleSheet.create({
     },
     pressloginButton: {
         width: '80%',
-        borderWidth: 1,
         borderRadius: 10,
         backgroundColor: Colors.DARK_YELLOW,
         shadowColor: Colors.BLACK,
@@ -185,7 +182,6 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         width: '80%',
-        borderWidth: 1,
         borderRadius: 10,
         backgroundColor: Colors.LIGHT_YELLOW,
         shadowColor: Colors.BLACK,
@@ -205,5 +201,4 @@ const styles = StyleSheet.create({
     registerText: {
         textDecorationLine: 'underline',
     },
-
 })

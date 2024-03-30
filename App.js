@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Colors from './Shared/Colors';
 import LoginRegister from './Screens/LoginRegister';
-import Register from './Screens/Register';
 import TabNavigation from './Components/TabNavigation';
 
 import { onAuthStateChanged } from 'firebase/auth'
@@ -24,17 +23,7 @@ export default function App() {
   }, []);
 
   const AuthStack = (
-    <>
-      <Stack.Screen name="LoginRegister" component={LoginRegister} />
-      <Stack.Screen name="Register" component={Register}
-        options={{
-          headerShown: true,
-          headerTitle: "",
-          headerBackTitleVisible: true,
-          headerStyle: { backgroundColor: Colors.TRANSPARENT },
-        }}
-      />
-    </>
+    <Stack.Screen name="LoginRegister" component={LoginRegister} />
   )
   const AppStack = (
     <>

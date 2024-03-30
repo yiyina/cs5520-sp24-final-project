@@ -19,7 +19,7 @@ export default function Input({ text, handleInput, secureTextEntry }) {
 
 const styles = StyleSheet.create({
     container: {
-        borderWidth: 2,
+        borderWidth: 1,
         height: 30,
         borderRadius: 10,
         justifyContent: 'center',
