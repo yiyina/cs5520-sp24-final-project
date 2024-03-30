@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../firebase-files/FirebaseSetup';
 import { BlurView } from 'expo-blur';
+import FlipForm from '../Components/Login/FlipForm'
 
 export default function Login({ navigation }) {
     const [usernameEmail, setUsernameEmail] = useState('')
@@ -14,6 +15,7 @@ export default function Login({ navigation }) {
     const [nameEmailError, setNameEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const [loginPressed, setLoginPressed] = useState(false)
     const [registerPressed, setRegisterPressed] = useState(false)
 
     useEffect(() => {
@@ -34,6 +36,7 @@ export default function Login({ navigation }) {
     const handleLoginPress = async () => {
         setNameEmailError("");
         setPasswordError("");
+        setLoginPressed(!loginPressed);
 
         if (!usernameEmail || !password) {
             if (!usernameEmail) setNameEmailError("Username or Email could not be empty");
@@ -68,12 +71,13 @@ export default function Login({ navigation }) {
             } else if (error.code === 'auth/missing-password') {
                 setPasswordError("Password could not be empty");
             }
+        } finally {
+            setLoginPressed(!loginPressed);
         }
     };
 
     const handleRegisterPress = () => {
         setRegisterPressed(!registerPressed)
-        console.log("register pressed", registerPressed)
         navigation.navigate('Register')
     }
 
@@ -113,17 +117,22 @@ export default function Login({ navigation }) {
                         text="Login"
                         textColor={Colors.BLACK}
                         buttonPress={handleLoginPress}
-                        containerStyle={styles.loginButton} />
+                        defaultStyle={styles.loginButton}
+                        pressedStyle={styles.pressloginButton}
+                        containerStyle={styles.loginButton}
+                    />
                     <View style={styles.registerContainer}>
                         <Text>Don't have an account?</Text>
                         <Button
-                        text="Register"
-                        textColor={Colors.BLUE}
-                        buttonPress={handleRegisterPress} 
-                        textStyle={styles.registerText}/>
+                            text="Register"
+                            textColor={Colors.BLUE}
+                            buttonPress={handleRegisterPress}
+                            textStyle={styles.registerText}
+                        />
                     </View>
                 </View>
             </View>
+            {/* <FlipForm /> */}
         </ImageBackground>
     )
 }
@@ -173,6 +182,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         paddingHorizontal: '5%',
+        marginBottom: 10,
     },
     text: {
         fontSize: 20,
@@ -192,6 +202,20 @@ const styles = StyleSheet.create({
     buttonContainer: {
         alignItems: 'center',
         justifyContent: 'space-evenly',
+    },
+    pressloginButton: {
+        width: '80%',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: Colors.DARK_YELLOW,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 10,
     },
     loginButton: {
         width: '80%',

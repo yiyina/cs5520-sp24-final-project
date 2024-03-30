@@ -1,7 +1,8 @@
 import { StyleSheet, Text, Pressable } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 
-export default function Button({ text, textColor, buttonPress, containerStyle, textStyle }) {
+export default function Button({ text, textColor, buttonPress, containerStyle, textStyle, defaultStyle, pressedStyle }) {
+    const [isPressed, setIsPressed] = useState(false);
 
     const buttonClick = () => {
         buttonPress()
@@ -17,9 +18,11 @@ export default function Button({ text, textColor, buttonPress, containerStyle, t
             color: textColor,
         }
     })
-
+    
     return (
-        <Pressable style={containerStyle ? [containerStyle, styles.container] : styles.container} onPress={buttonClick}>
+        <Pressable
+            style={({ pressed }) => pressed ? [styles.container, pressedStyle] : [styles.container, defaultStyle]}
+            onPress={buttonClick}>
             <Text style={textStyle? [textStyle, styles.text] : styles.text}>{text}</Text>
         </Pressable>
     )
