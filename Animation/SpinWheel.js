@@ -5,6 +5,7 @@ import tinycolor from 'tinycolor2';
 // import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
+import Card from '../Shared/Card';
 
 const WheelGame = () => {
   const [result, setResult] = useState('');
@@ -114,7 +115,7 @@ const WheelGame = () => {
       const index = Math.floor((adjustedDegrees / 360) * options.length);
       const safeIndex = index < options.length ? index : 0;
       const selectedOption = options[safeIndex];
-      console.log("selectedOption: ", selectedOption);
+      console.log("Width: ", Dimensions.get('window').width);
       setResult(selectedOption);
       setIsSpinning(false);
     });
@@ -122,11 +123,7 @@ const WheelGame = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.upperSection}>
-        <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
-          <Entypo name="triangle-down" size={80} color="white" />
-        </TouchableOpacity>
-      </View>
+      <Card newStyle={styles.card} />
       <View>
         <Animated.View style={{ transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }}>
           <Svg height={viewBoxSize} width={viewBoxSize} viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}>
@@ -144,10 +141,13 @@ const WheelGame = () => {
             </G>
           </Svg>
         </Animated.View>
+        <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
+          <Entypo name="triangle-down" size={80} color="white" />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={spinWheel}
           style={styles.startButton}>
-          <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>Start</Text>
+          <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
       </View>
       <Text style={{ fontSize: 20, margin: 20 }}>Selected: {result}</Text>
@@ -157,7 +157,7 @@ const WheelGame = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: Dimensions.get('window').width,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -184,11 +184,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   selectTriangle: {
+    position: 'absolute',
+    left: 116,
+    top: -40,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 4,
     elevation: 4,
+  },
+  card: {
+    position: 'absolute',
+    height: Dimensions.get('window').height / 2,
+    top: '25%',
   }
 });
 

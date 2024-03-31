@@ -27,12 +27,15 @@ export default function LoginRegister() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: Colors.WHITE,
         opacity: 0.4,
         top: 100,
+        height: Dimensions.get('window').height,
     },
     welcome: {
         fontSize: 50,
@@ -44,12 +47,11 @@ const styles = StyleSheet.create({
         textShadowRadius: 5,
     },
     mainContent: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
-        borderColor: 'white',
-        position: 'absolute',
-        top: 150,
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: '20%',
     },
 })

@@ -2,10 +2,10 @@ import { StyleSheet, View, Dimensions } from 'react-native'
 import React from 'react'
 import Colors from './Colors'
 
-export default function LoginForm({ children }) {
+export default function LoginForm({ children, newStyle }) {
 
     return (
-        <View intensity={10} tint="dark" style={styles.container}>
+        <View intensity={10} tint="dark" style={[styles.container, newStyle]}>
             {children}
         </View>
     )
@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 10,
+            height: 5,
         },
-        shadowOpacity: 0.5,
+        shadowOpacity: 0.3,
         shadowRadius: 5,
         elevation: 10,
     }
