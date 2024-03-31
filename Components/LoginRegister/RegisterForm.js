@@ -8,6 +8,7 @@ import Button from '../../Shared/Button'
 import Colors from '../../Shared/Colors'
 import { validateUsername, validateEmail, validatePassword } from '../../Shared/InformationValidation';
 import { Ionicons } from '@expo/vector-icons'
+import Card from '../../Shared/Card'
 
 export default function LoginForm({ navigation, toggleFlip }) {
     const [username, setUsername] = useState('')
@@ -101,8 +102,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
     };
 
     return (
-        <View intensity={10} tint="dark" style={styles.container}>
-            {/* <Text style={styles.title}>Register</Text> */}
+        <Card>
             <View style={styles.inputContainer}>
                 <Text style={styles.text}>Username:</Text>
                 <Input text={username} handleInput={handleUsernameInput} />
@@ -153,26 +153,11 @@ export default function LoginForm({ navigation, toggleFlip }) {
                     textStyle={styles.registerText}
                 />
             </View>
-        </View>
+        </Card>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        paddingVertical: '10%',
-        borderRadius: 20,
-        width: Dimensions.get('window').width*0.8,
-        backgroundColor: Colors.WHITE,
-        opacity: 0.9,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 10,
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 5,
-        elevation: 10,
-    },
     inputContainer: {
         paddingHorizontal: '5%',
         marginBottom: 10,

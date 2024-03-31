@@ -6,6 +6,7 @@ import Colors from '../../Shared/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase-files/FirebaseSetup';
+import Card from '../../Shared/Card'
 
 export default function LoginForm({ navigation, toggleFlip }) {
     const [usernameEmail, setUsernameEmail] = useState('')
@@ -79,7 +80,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
     }
 
     return (
-        <View intensity={10} tint="dark" style={styles.container}>
+        <Card>
             <View style={styles.inputContainer}>
                 <Text style={styles.text}>Email:</Text>
                 <Input text={usernameEmail} handleInput={handleNameEmailInput} />
@@ -122,7 +123,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
                     />
                 </View>
             </View>
-        </View>
+        </Card>
     )
 }
 
