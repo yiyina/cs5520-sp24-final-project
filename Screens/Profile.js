@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, Text } from 'react-native'
+import { StyleSheet, Pressable, View, Text, Alert } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
 import { auth } from '../firebase-files/FirebaseSetup';
@@ -13,12 +13,25 @@ export default function Profile() {
   const [showProfile, setShowProfile] = useState(false);
 
   const handleLogout = async () => {
-    try {
-      await auth.signOut()
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
-  }
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Logout Cancelled"),
+        style: "cancel"
+      },
+      {
+        text: "Logout", 
+        onPress: async () => {
+          try {
+            await auth.signOut();
+          } catch (error) {
+            console.error("Error signing out: ", error);
+          }
+        },
+        style: "destructive"
+      }
+    ]);
+  };
 
   const toggleEditProfile = () => {
     console.log("Edit Profile Pressed: ", showProfile);

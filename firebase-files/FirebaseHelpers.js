@@ -29,23 +29,23 @@ const FirestoreService = {
         }
     },
 
-    async getEmailByUsername(username) {
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
-            if (!querySnapshot.empty) {
-                const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data();
-                console.log("Found user data: ", userData);
-                return userData.email;
-            } else {
-                console.log("No user found for username: ", username);
-                return null;
-            }
-        } catch (error) {
-            console.error("Error getting email by username: ", error);
-            throw error;
-        }
-    },
+    // async getEmailByUsername(username) {
+    //     try {
+    //         const querySnapshot = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
+    //         if (!querySnapshot.empty) {
+    //             const userDoc = querySnapshot.docs[0];
+    //             const userData = userDoc.data();
+    //             console.log("Found user data: ", userData);
+    //             return userData.email;
+    //         } else {
+    //             console.log("No user found for username: ", username);
+    //             return null;
+    //         }
+    //     } catch (error) {
+    //         console.error("Error getting email by username: ", error);
+    //         throw error;
+    //     }
+    // },
 
     async getUserData(uid) {
         try {
