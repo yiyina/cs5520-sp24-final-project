@@ -2,14 +2,14 @@ import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
 import Svg, { G, Path, Text as SvgText, Circle, Line } from 'react-native-svg';
 import tinycolor from 'tinycolor2';
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 
 const WheelGame = () => {
   const [result, setResult] = useState('');
   const spinValue = useRef(new Animated.Value(0)).current;
-  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
+  const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
   const wheelSize = 300;
   const strokeSize = 5; // the thinkness of the wheel's white border
   const viewBoxSize = wheelSize + strokeSize * 2;
@@ -46,6 +46,8 @@ const WheelGame = () => {
 
   // render sector 
   const renderSector = (option, index) => {
+    const maxCharLimit = 10; // limit the number of characters to display
+    const displayText = option.length > maxCharLimit ? `${option.substring(0, maxCharLimit)}...` : option; // truncate the text if it's too long
     const startAngle = (index * 360) / options.length;
     const endAngle = ((index + 1) * 360) / options.length;
     const midAngle = (startAngle + endAngle) / 2;
@@ -71,7 +73,7 @@ const WheelGame = () => {
           textAnchor="middle"
           fontSize="20"
         >
-          {option}
+          {displayText}
         </SvgText>
         {/* the start line */}
         <Line
@@ -121,7 +123,7 @@ const WheelGame = () => {
   return (
     <View style={styles.container}>
       <View style={styles.upperSection}>
-        <TouchableOpacity onPress={spinWheel}>
+        <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
           <Entypo name="triangle-down" size={80} color="white" />
         </TouchableOpacity>
       </View>
@@ -181,6 +183,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: 'white',
   },
+  selectTriangle: {
+    shadowColor: 'rgba(0, 0, 0, 0.5)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.9,
+    shadowRadius: 4,
+    elevation: 4,
+  }
 });
 
 export default WheelGame;
