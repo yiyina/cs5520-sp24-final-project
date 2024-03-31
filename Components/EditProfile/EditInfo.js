@@ -81,7 +81,6 @@ export default function EditInfo() {
                         isEmailAlreadyExists = true;
                         return;
                     }
-                    setIsUploading(true);
                     await FirestoreService.updateEmailForUser(user.uid, email);
                     // fieldsToUpdate.email = email;
                     hasChanges = true;
@@ -93,6 +92,7 @@ export default function EditInfo() {
                 }
 
                 if (hasChanges) {
+                    setIsUploading(true);
                     await FirestoreService.updateDocuments(user.uid, fieldsToUpdate);
                     Alert.alert("Success", "Your data updated successfully.");
                 } else {

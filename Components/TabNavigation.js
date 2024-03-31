@@ -9,7 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Home from '../Screens/Home'
 import Search from '../Screens/Search'
 import Profile from '../Screens/Profile'
-import Game from '../Screens/Game'
+import Spin from '../Screens/Spin'
 import CameraScreen from '../Screens/CameraScreen';
 
 
@@ -96,9 +96,9 @@ export default function TabNavigation() {
                         ),
                     }}
                 />
-                <Tab.Screen name="Game" component={Game}
+                <Tab.Screen name="Spin" component={Spin}
                     options={{
-                        tabBarLabel: 'Game',
+                        tabBarLabel: 'Spin',
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
                         ),
