@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
 import Svg, { G, Path, Text as SvgText, Circle, Line } from 'react-native-svg';
 import tinycolor from 'tinycolor2';
 import { FontAwesome } from '@expo/vector-icons';
@@ -109,7 +109,6 @@ const WheelGame = () => {
       const degrees = randomSpin % 360;
       let adjustedDegrees = (360 - degrees - 90) % 360;
       adjustedDegrees = adjustedDegrees < 0 ? adjustedDegrees + 360 : adjustedDegrees;
-      console.log("adjustedDegrees: ", adjustedDegrees);
       const index = Math.floor((adjustedDegrees / 360) * options.length);
       const safeIndex = index < options.length ? index : 0;
       const selectedOption = options[safeIndex];
@@ -137,46 +136,16 @@ const WheelGame = () => {
                 cy="0"
                 r={wheelRadius}
                 fill="none"
-                stroke="white"
+                stroke={Colors.WHITE}
                 strokeWidth={strokeSize * 2}
               />
             </G>
           </Svg>
-          {/* 开始按钮 */}
-          {/* <TouchableOpacity
-            onPress={spinWheel}
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              width: 40,  // 按钮宽度
-              height: 40,  // 按钮高度
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginLeft: -20,  // 宽度的一半
-              marginTop: -20,  // 高度的一半
-              borderRadius: 20,  // 使其成为圆形
-              backgroundColor: 'white',
-            }}>
-            <Text style={{ color: 'black' }}>Start</Text>
-          </TouchableOpacity> */}
         </Animated.View>
         <TouchableOpacity
           onPress={spinWheel}
-          style={{
-            position: 'absolute',
-            left: 150,
-            top: 150,
-            width: 50,
-            height: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: -20,
-            marginTop: -20,
-            borderRadius: 50,
-            backgroundColor: 'white',
-          }}>
-          <Text style={{ color: 'black' }}>Start</Text>
+          style={styles.startButton}>
+          <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>Start</Text>
         </TouchableOpacity>
       </View>
       <Text style={{ fontSize: 20, margin: 20 }}>Selected: {result}</Text>
@@ -194,10 +163,23 @@ const styles = StyleSheet.create({
   },
   upperSection: {
     position: 'absolute',
-    top: 240,
+    top: Dimensions.get('window').height / 4,
     flexDirection: 'row',
     alignItems: 'center',
     zIndex: 1,
+  },
+  startButton: {
+    position: 'absolute',
+    left: 150,
+    top: 150,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: -20,
+    marginTop: -20,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
 });
 
