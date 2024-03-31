@@ -10,7 +10,8 @@ import Card from '../Shared/Card';
 const WheelGame = () => {
   const [result, setResult] = useState('');
   const spinValue = useRef(new Animated.Value(0)).current;
-  const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
+  // const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
+  const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4'];
   const wheelSize = 300;
   const strokeSize = 5; // the thinkness of the wheel's white border
   const viewBoxSize = wheelSize + strokeSize * 2;
@@ -48,20 +49,23 @@ const WheelGame = () => {
 
   // render sector 
   const renderSector = (option, index) => {
-    const maxCharLimit = 10; // limit the number of characters to display
-    const displayText = option.length > maxCharLimit ? `${option.substring(0, maxCharLimit)}...` : option; // truncate the text if it's too long
-    const startAngle = (index * 360) / options.length;
-    const endAngle = ((index + 1) * 360) / options.length;
-    const midAngle = (startAngle + endAngle) / 2;
+    const maxCharLimit = 10;
+    const displayText = option.length > maxCharLimit ? `${option.substring(0, maxCharLimit)}...` : option;
+    const startAngle = index * 360 / options.length;
+    const endAngle = (index + 1) * 360 / options.length;
+    const midAngle = startAngle + (endAngle - startAngle) / 2;
 
-    // calculate the text position
+    // 计算中心线上的位置
+    const textRadius = wheelRadius * 0.95
+    const textX = textRadius * Math.cos(midAngle * Math.PI / 180);
+    const textY = textRadius * Math.sin(midAngle * Math.PI / 180);
+
     // calculate the start line
     const startX = wheelRadius * Math.cos(2 * Math.PI * startAngle / 360);
     const startY = wheelRadius * Math.sin(2 * Math.PI * startAngle / 360);
-
-    // calculate the end line
     const endX = wheelRadius * Math.cos(2 * Math.PI * endAngle / 360);
     const endY = wheelRadius * Math.sin(2 * Math.PI * endAngle / 360);
+    
     const pathD = `M 0 0 L ${wheelSize / 2} 0 A ${wheelSize / 2} ${wheelSize / 2} 0 0 1 ${wheelSize / 2 * Math.cos(2 * Math.PI / options.length)} ${wheelSize / 2 * Math.sin(2 * Math.PI / options.length)} Z`;
 
     return (
@@ -71,9 +75,9 @@ const WheelGame = () => {
           x={wheelSize / 3.5}
           y="20"
           fill="black"
-          transform={`rotate(${(360 / options.length) / 3})`}
+          transform={`rotate(${(360 / options.length)} ${wheelSize / 12} 30)`}
           textAnchor="middle"
-          fontSize="20"
+          fontSize="16"
         >
           {displayText}
         </SvgText>
@@ -124,7 +128,7 @@ const WheelGame = () => {
 
   return (
     <View style={styles.container}>
-      <Card newStyle={styles.card} />
+      {/* <Card newStyle={styles.card} /> */}
       <View style={styles.mainSpin}>
         {/* spin */}
         <Animated.View style={{ transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }}>
@@ -181,14 +185,12 @@ const styles = StyleSheet.create({
   },
   startButton: {
     position: 'absolute',
-    left: 150,
-    top: 150,
-    width: 50,
-    height: 50,
+    left: 115,
+    top: 115,
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: -20,
-    marginTop: -20,
     borderRadius: 50,
     backgroundColor: 'white',
   },
