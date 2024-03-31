@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Input from '../../Shared/Input'
 import Button from '../../Shared/Button'
@@ -128,11 +128,9 @@ export default function LoginForm({ navigation, toggleFlip }) {
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
-        left: -170,
         paddingVertical: '10%',
         borderRadius: 20,
-        width: '80%',
+        width: Dimensions.get('window').width*0.8,
         backgroundColor: Colors.WHITE,
         opacity: 0.9,
         shadowColor: '#000',
