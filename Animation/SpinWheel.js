@@ -16,6 +16,7 @@ const WheelGame = () => {
   const viewBoxSize = wheelSize + strokeSize * 2;
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disabled state
 
   // color options
   const springFlowerColors = ['#F294AD', '#F2D7B6', '#D9C5D2', '#F2DCEB', '#D93280'];
@@ -83,7 +84,7 @@ const WheelGame = () => {
           x2={startX}
           y2={startY}
           stroke="white"
-          strokeWidth="2"
+          strokeWidth="1"
         />
         {/* the end line */}
         <Line
@@ -92,7 +93,7 @@ const WheelGame = () => {
           x2={endX}
           y2={endY}
           stroke="white"
-          strokeWidth="2"
+          strokeWidth="1"
         />
       </G>
     );
@@ -100,8 +101,8 @@ const WheelGame = () => {
 
   // spin wheel
   const spinWheel = () => {
-    if (isSpinning) return;
     setResult('');
+    setIsButtonDisabled(true);
     const randomSpin = Math.floor(Math.random() * 364 * 4 + 1440);
 
     Animated.timing(spinValue, {
@@ -115,16 +116,17 @@ const WheelGame = () => {
       const index = Math.floor((adjustedDegrees / 360) * options.length);
       const safeIndex = index < options.length ? index : 0;
       const selectedOption = options[safeIndex];
-      console.log("Width: ", Dimensions.get('window').width);
       setResult(selectedOption);
       setIsSpinning(false);
+      setIsButtonDisabled(false);
     });
   };
 
   return (
     <View style={styles.container}>
       <Card newStyle={styles.card} />
-      <View>
+      <View style={styles.mainSpin}>
+        {/* spin */}
         <Animated.View style={{ transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }}>
           <Svg height={viewBoxSize} width={viewBoxSize} viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}>
             <G y={viewBoxSize / 2} x={viewBoxSize / 2}>
@@ -141,16 +143,23 @@ const WheelGame = () => {
             </G>
           </Svg>
         </Animated.View>
+        {/* shadow circle */}
+        <View style={[styles.shadowCircle, { left: viewBoxSize / 2 - 150, top: viewBoxSize / 2 - 150 }]}>
+          <Animated.View style={[styles.circle, { transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }]} />
+        </View>
         <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
           <Entypo name="triangle-down" size={80} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={spinWheel}
-          style={styles.startButton}>
+          style={[styles.startButton, isButtonDisabled && { opacity: 0.4 }]} // Disable button style when isButtonDisabled is true
+          disabled={isButtonDisabled}>
           <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
+        <View style={styles.result}>
+          <Text style={{ fontSize: 20, margin: 20 }}>Selected: {result}</Text>
+        </View>
       </View>
-      <Text style={{ fontSize: 20, margin: 20 }}>Selected: {result}</Text>
     </View>
   );
 };
@@ -197,7 +206,33 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: Dimensions.get('window').height / 2,
     top: '25%',
-  }
+  },
+  mainSpin: {
+    position: 'absolute',
+  },
+  result: {
+    position: 'absolute',
+    bottom: -70,
+    left: 50,
+  },
+  shadowCircle: {
+    position: 'absolute',
+    zIndex: -1,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default WheelGame;
