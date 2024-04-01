@@ -7,6 +7,8 @@ import { AntDesign } from '@expo/vector-icons';
 import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
 import { getUpdatedUserData } from '../Shared/updateUserData';
+import NotificationManager from '../Services/NotificationManager';
+import LoginForm from '../Shared/Card';
 
 export default function Profile() {
   const { avatarUri } = getUpdatedUserData();
@@ -56,6 +58,11 @@ export default function Profile() {
         </View>
       </View>
       <View style={styles.body}>
+        
+         <LoginForm newStyle={{ alignItems: 'center', justifyContent: 'center' }}>
+        <NotificationManager />
+        </LoginForm>
+        
       </View>
       <EditProfile
         showProfile={showProfile}
