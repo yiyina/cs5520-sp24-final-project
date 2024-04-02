@@ -12,7 +12,7 @@ const WheelGame = () => {
   const spinValue = useRef(new Animated.Value(0)).current;
   // const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
   const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4'];
-  const wheelSize = 300;
+  const wheelSize = 350;
   const strokeSize = 5; // the thinkness of the wheel's white border
   const viewBoxSize = wheelSize + strokeSize * 2;
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
   },
   startButton: {
     position: 'absolute',
-    left: 115,
-    top: 115,
+    left: 140,
+    top: 140,
     width: 80,
     height: 80,
     justifyContent: 'center',
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   selectTriangle: {
     position: 'absolute',
-    left: 116,
+    left: 140,
     top: -40,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 2 },
