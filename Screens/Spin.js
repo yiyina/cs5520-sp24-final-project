@@ -9,7 +9,6 @@ import { auth } from '../firebase-files/FirebaseSetup'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
 
 export default function Spin() {
-  const [selectedSpin, setSelectedSpin] = useState('')
 
   const originalSpin = {
     spinName: 'FOOD',
@@ -22,7 +21,6 @@ export default function Spin() {
       const spinsCollection = await FirestoreService.getSpinsCollection();
       if (spinsCollection.length === 0) {
         await FirestoreService.addSpinToUser(originalSpin)
-        setSelectedSpin(originalSpin.spinName)
       }
     }
     fetchData()
@@ -30,7 +28,7 @@ export default function Spin() {
 
   return (
     <View style={styles.container}>
-      <Header />
+      <Header/>
       <SpinWheel />
       <Footer />
     </View>
@@ -40,6 +38,5 @@ export default function Spin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
   },
 })

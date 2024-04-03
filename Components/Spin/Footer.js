@@ -10,7 +10,7 @@ export default function Footer() {
     
     return (
         <Pressable style={styles.container} onPress={editHandler}>
-            <EvilIcons name="pencil" size={60} color="white" />
+            <EvilIcons name="pencil" size={60} color={Colors.WHITE} />
         </Pressable>
     )
 }
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         height: 60,
         width: 60,
-        backgroundColor: 'lightblue',
+        backgroundColor: Colors.BLUE,
         alignItems: 'center',
         justifyContent: 'center',
     },

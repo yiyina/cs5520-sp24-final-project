@@ -165,8 +165,6 @@ const WheelGame = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    width: Dimensions.get('window').width,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
