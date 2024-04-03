@@ -10,6 +10,7 @@ import {
     doc,
     getFirestore,
     deleteField,
+    setDoc
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
@@ -263,6 +264,21 @@ const FirestoreService = {
             }
         }
     },
+
+    async addSpinToUser(spin) {
+
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            if (!userDocId) {
+                throw new Error("User document not found for UID: " + uid);
+            }
+            const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
+            await addDoc(spinsCollectionRef, spin);
+        } catch (error) {
+            console.error("Error adding spin to user: ", error);
+            throw error;
+        }
+    }
 
 }
 

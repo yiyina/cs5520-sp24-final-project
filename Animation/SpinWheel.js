@@ -1,32 +1,27 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
 import Svg, { G, Path, Text as SvgText, Circle, Line } from 'react-native-svg';
 import tinycolor from 'tinycolor2';
-// import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
+import { springFlowerColors } from '../Components/Spin/DefaultColorSet';
+import { defaultSpin } from '../Components/Spin/DefaultSpin';
 
 const WheelGame = () => {
+  const [options, setOptions] = useState(defaultSpin); // State to store the options [default: defaultSpin
+  const [colorSet, setColorSet] = useState(springFlowerColors); // State to store the color set [default: springFlowerColors
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disabled state
   const [result, setResult] = useState('');
   const spinValue = useRef(new Animated.Value(0)).current;
-  // const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
-  const options = ['Option 1 tishsdahklshda', 'Option 2', 'Option 3', 'Option 4'];
   const wheelSize = 350;
   const strokeSize = 5; // the thinkness of the wheel's white border
   const viewBoxSize = wheelSize + strokeSize * 2;
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disabled state
 
-  // color options
-  const springFlowerColors = ['#F294AD', '#F2D7B6', '#D9C5D2', '#F2DCEB', '#D93280'];
-  const neutralBaseColors = ['#C0C4B6', '#EADFDB', '#AEAFB1', '#D8C2B5', '#F2CFB3'];
-  const kittenBaseColors = ['#BF6989', '#D9C2AD', '#8C5230', '#A6836F', '#F2F2F2'];
-  const cuteBaseColors = ['#90B8DB', '#4389C4', '#FF677C', '#FDBDCB', '#FFFFFF'];
-  const energeBaseColors = ['#9EBF24', '#F2C84B', '#F2B263', '#F2620F', '#8C1D04'];
-  const chocolateColors = ['#A65F37', '#D98D62', '#73341D', '#A66963'];
-  const woodColors = ['#736656', '#A69580', '#593E25', '#A68263', '#D9B9A7'];
+  useEffect(() => {
+  }, [options]);
 
   // generate colors 
   const generateLighterColors = (baseColors, numberOfOptions) => {
@@ -45,7 +40,7 @@ const WheelGame = () => {
     return colors.slice(0, numberOfOptions);
   };
 
-  const colors = generateLighterColors(kittenBaseColors, options.length);
+  const colors = generateLighterColors(colorSet, options.length);
 
   // render sector 
   const renderSector = (option, index) => {
@@ -149,7 +144,7 @@ const WheelGame = () => {
         </Animated.View>
         {/* shadow circle */}
         <View style={[styles.shadowCircle, { left: viewBoxSize / 2 - 150, top: viewBoxSize / 2 - 150 }]}>
-          <Animated.View style={[styles.circle, { transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }]} />
+          <Animated.View style={{ transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }} />
         </View>
         <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
           <Entypo name="triangle-down" size={80} color="white" />
@@ -170,6 +165,7 @@ const WheelGame = () => {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
     width: Dimensions.get('window').width,
     flex: 1,
     justifyContent: 'center',
