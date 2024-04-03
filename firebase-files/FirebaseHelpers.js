@@ -266,7 +266,6 @@ const FirestoreService = {
     },
 
     async addSpinToUser(spin) {
-
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
             if (!userDocId) {
@@ -276,6 +275,22 @@ const FirestoreService = {
             await addDoc(spinsCollectionRef, spin);
         } catch (error) {
             console.error("Error adding spin to user: ", error);
+            throw error;
+        }
+    },
+
+    async getSpinsCollection() {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            if (!userDocId) {
+                throw new Error("User document not found for UID: " + auth.currentUser.uid);
+            }
+            const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
+            const querySnapshot = await getDocs(spinsCollectionRef);
+            const spinData = querySnapshot.docs.map(doc => doc.data());
+            return spinData;
+        } catch (error) {
+            console.error("Error getting spin collection: ", error);
             throw error;
         }
     }

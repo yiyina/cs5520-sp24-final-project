@@ -19,9 +19,8 @@ export default function Spin() {
 
   useEffect(() => {
     async function fetchData() {
-      const user = await FirestoreService.getUserData(auth.currentUser.uid)
-      console.log("Spin user: ", user)
-      if (!user.spins) {
+      const spinsCollection = await FirestoreService.getSpinsCollection();
+      if (spinsCollection.length === 0) {
         await FirestoreService.addSpinToUser(originalSpin)
         setSelectedSpin(originalSpin.spinName)
       }
