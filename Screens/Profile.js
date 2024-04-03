@@ -8,11 +8,12 @@ import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import NotificationManager from '../Services/NotificationManager';
-import LoginForm from '../Shared/Card';
+
 
 export default function Profile() {
   const { avatarUri } = getUpdatedUserData();
   const [showProfile, setShowProfile] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false); 
 
   const handleLogout = async () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -56,12 +57,23 @@ export default function Profile() {
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
         </View>
+         <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.logout}>
+            <Text style={styles.text}>Schedule a Notification</Text>
+        </Pressable>
+        {isModalVisible && (
+        <View style={styles.notificationContainer}>
+          <NotificationManager onCancel={() => setIsModalVisible(false)} />
+          <Pressable onPress={() => setIsModalVisible(false)} style={styles.dismissButton}>
+          <Text style={styles.text}>Save Notification Setting.</Text>
+        </Pressable>
+          </View>
+          )}
       </View>
+     
+
       <View style={styles.body}>
         
-         <LoginForm newStyle={{ alignItems: 'center', justifyContent: 'center' }}>
-        <NotificationManager />
-        </LoginForm>
+        
         
       </View>
       <EditProfile
@@ -131,4 +143,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  notificationContainer: {
+  position: 'absolute', // Overlay on the screen
+  width: '90%', // Width of the container
+  maxHeight: '80%', // Max height to allow scrolling within
+  backgroundColor: Colors.LIGHT_YELLOW, // Background color
+  padding: 20, // Padding around the content
+  borderRadius: 10, // Rounded corners
+  alignItems: 'center', // Center items horizontally
+  justifyContent: 'center', // Center items vertically
+    marginTop: 180, // Push down from the top of the screen
+  
+},
+
 })

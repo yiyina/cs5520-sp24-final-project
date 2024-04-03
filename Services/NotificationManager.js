@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Switch, Button, Platform, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import Colors from '../Shared/Colors';
 
 export default function NotificationManager() {
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
@@ -28,7 +29,7 @@ export default function NotificationManager() {
   let body;
   
   if (type === 'lunch') {
-    time.setHours(12, 0, 0);
+    time.setHours(12, 32, 0);
     title = "Lunch Time";
     body = "It's time for lunch!";
   } else if (type === 'dinner') {
@@ -94,7 +95,7 @@ export default function NotificationManager() {
       {isPermissionGranted ? (
         <>
           <View style={styles.settingContainer}>
-            <Text>Schedule Lunch Notification at 12pm</Text>
+            <Text style={styles.text}>Schedule Lunch Notification at 12pm</Text>
             <Switch
               value={isLunchScheduled}
               onValueChange={newValue => {
@@ -107,7 +108,7 @@ export default function NotificationManager() {
             />
           </View>
           <View style={styles.settingContainer}>
-            <Text>Schedule Dinner Notification at 6pm</Text>
+            <Text style={styles.text}>Schedule Dinner Notification at 6pm</Text>
             <Switch
               value={isDinnerScheduled}
               onValueChange={newValue => {
@@ -119,12 +120,12 @@ export default function NotificationManager() {
               }}
             />
           </View>
-          <Button title="Request Permissions" onPress={requestPermissions} />
+          <Button color = {Colors.DEEP_RED} title="Do you want to receive notifications? " onPress={requestPermissions} />
         </>
       ) : (
         <View style={styles.centeredView}>
           <Text style={styles.warningText}>Notifications permission is not granted.</Text>
-          <Button title="Request Permission" onPress={requestPermissions} />
+          <Button title="Do you want to receive notifications?" onPress={requestPermissions} />
         </View>
       )}
     </View>
@@ -139,8 +140,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
+    color: Colors.DEEP_RED,
     fontSize: 22,
     fontWeight: 'bold',
+    marginBottom: 30,
   },
   settingContainer: {
     flexDirection: 'row',
@@ -154,6 +157,11 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     alignItems: 'center',
+  },
+  text: {
+    color: Colors.DEEP_RED,
+    fontSize: 16,
+    paddingHorizontal: 5,
   },
 
 });
