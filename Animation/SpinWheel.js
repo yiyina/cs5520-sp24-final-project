@@ -5,14 +5,12 @@ import tinycolor from 'tinycolor2';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
-// import { springFlowerColors } from '../Components/Spin/DefaultColorSet';
-// import { defaultSpin } from '../Components/Spin/DefaultSpin';
+import { getUpdatedUserSpin } from '../Shared/updateUserSpin';
 
-const WheelGame = ({ spinItems, spinColor}) => {
-  console.log("WheelGame spinItems: ", spinItems)
-  console.log("WheelGame spinColor: ", spinColor)
-  const [options, setOptions] = useState(spinItems); // State to store the options [default: defaultSpin
-  const [colorSet, setColorSet] = useState([]); // State to store the color set [default: springFlowerColors
+const WheelGame = ({ spinItems, spinColor }) => {
+  const { spins } = getUpdatedUserSpin();
+  const options = spins ? spins[0].spinItems : spinItems;
+  const colorSet = spins ? spins[0].spinColor : spinColor;
   const [isSpinning, setIsSpinning] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disabled state
   const [result, setResult] = useState('');
@@ -23,8 +21,6 @@ const WheelGame = ({ spinItems, spinColor}) => {
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
 
   useEffect(() => {
-    setColorSet(spinColor);
-    setOptions(spinItems);
   }, [spinColor, spinItems]);
 
   // generate colors 
@@ -54,7 +50,7 @@ const WheelGame = ({ spinItems, spinColor}) => {
     const endAngle = (index + 1) * 360 / options.length;
     const midAngle = startAngle + (endAngle - startAngle) / 2;
 
-    // 计算中心线上的位置
+    // calculate the text position
     const textRadius = wheelRadius * 0.95
     const textX = textRadius * Math.cos(midAngle * Math.PI / 180);
     const textY = textRadius * Math.sin(midAngle * Math.PI / 180);
@@ -64,7 +60,7 @@ const WheelGame = ({ spinItems, spinColor}) => {
     const startY = wheelRadius * Math.sin(2 * Math.PI * startAngle / 360);
     const endX = wheelRadius * Math.cos(2 * Math.PI * endAngle / 360);
     const endY = wheelRadius * Math.sin(2 * Math.PI * endAngle / 360);
-    
+
     const pathD = `M 0 0 L ${wheelSize / 2} 0 A ${wheelSize / 2} ${wheelSize / 2} 0 0 1 ${wheelSize / 2 * Math.cos(2 * Math.PI / options.length)} ${wheelSize / 2 * Math.sin(2 * Math.PI / options.length)} Z`;
 
     return (
@@ -194,7 +190,7 @@ const styles = StyleSheet.create({
   },
   selectTriangle: {
     position: 'absolute',
-    left: 145,
+    left: 140,
     top: -40,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 2 },
@@ -232,8 +228,8 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: -25, // 使用负的 marginLeft 和 marginTop 来正确定位阴影
-  marginTop: -25,
+    marginLeft: -25,
+    marginTop: -25,
   },
 });
 

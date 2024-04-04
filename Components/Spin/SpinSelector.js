@@ -5,7 +5,6 @@ import { getUpdatedUserSpin } from '../../Shared/updateUserSpin'
 
 export default function SpinSelector({ spinSelectHandler }) {
   const { spins } = getUpdatedUserSpin();
-  console.log("SpinSelector spins: ", spins)
   const [selectedSpin, setSelectedSpin] = useState('')
   const [itemId, setItemId] = useState([])
   const [spinNames, setSpinNames] = useState([])

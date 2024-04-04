@@ -11,14 +11,11 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [themes, setThemes] = useState(ColorThemes);
     const [inputs, setInputs] = useState(['']);
     const [selectedTheme, setSelectedTheme] = useState('');
-    console.log('Themes:', themes["chocolate"]);
 
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
-    console.log('Theme Options:', selectedTheme);
 
     const handleThemeSelect = (item) => {
         setSelectedTheme(item);
-        console.log('Selected Theme:', item);
     }
 
     const addInput = () => {

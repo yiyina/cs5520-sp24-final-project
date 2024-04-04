@@ -9,7 +9,6 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
     const [items, setItems] = useState([])
 
     useEffect(() => {
-        console.log("DropDownList listItems: ", listItems)
         if (listItems && Array.isArray(listItems)) {
             const transformedList = listItems.map(item => ({
                 label: item[1], value: item[0]
