@@ -4,11 +4,13 @@ import { Octicons } from '@expo/vector-icons';
 import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
 import DropDownList from '../../Shared/DropDownList';
+import FirestoreService from '../../firebase-files/FirebaseHelpers';
 
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
+    const [spinName, setSpinName] = useState('');
+    const [themes, setThemes] = useState(ColorThemes);
     const [inputs, setInputs] = useState(['']);
     const [selectedTheme, setSelectedTheme] = useState('');
-    const [themes, setThemes] = useState(ColorThemes);
     console.log('Themes:', themes["chocolate"]);
 
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
@@ -23,14 +25,24 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
         setInputs([...inputs, ''])
     };
 
+    const handleSpinName = (text) => {
+        setSpinName(text);
+    }
+
     const handleInputChange = (text, index) => {
         const newInputs = [...inputs];
         newInputs[index] = text;
         setInputs(newInputs);
     };
 
-    const saveInputs = () => {
+    const saveInputs = async () => {
         console.log('Inputs:', inputs);
+        const spin = {
+            spinColor: selectedTheme,
+            spinItems: inputs,
+            spinName: spinName,
+        }
+        await FirestoreService.addSpinToUser(spin);
     }
 
     const onCancelModified = () => {
@@ -53,7 +65,6 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <Text>Add Spin</Text>
                     <Text>Select Theme</Text>
                     <DropDownList
-                        placeholder="Select a Theme"
                         listItems={themeOptions}
                         handleItemSelect={handleThemeSelect}
                         selectedSpin={selectedTheme} />
@@ -63,15 +74,14 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                         ))}
                     </ScrollView>
                     <Text>Name of Spin</Text>
-                    <Input placeholder="Spin Name" />
+                    <Input value={spinName} handleInput={handleSpinName}/>
                     <Text>Spin Items</Text>
                     {
                         inputs.map((input, index) => (
                             <Input
                                 key={index}
-                                placeholder="Spin Item"
-                                value={inputs[index]}
-                                onChangeText={(text) => handleInputChange(text, index)}
+                                value={inputs}
+                                handleInput={(text) => handleInputChange(text, index)}
                             />
                         ))
                     }
