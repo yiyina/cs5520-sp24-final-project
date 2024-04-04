@@ -1,5 +1,5 @@
-import { StyleSheet, Text, Modal, View, Pressable, ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, Modal, View, Pressable, ScrollView, Alert } from 'react-native'
+import React, { useState } from 'react'
 import { Octicons } from '@expo/vector-icons';
 import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
@@ -19,6 +19,12 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     }
 
     const addInput = () => {
+        const hasEmptyInput = inputs.some(input => input.trim() === '');
+
+        if (hasEmptyInput) {
+            Alert.alert('Alert', 'Please fill out all empty fields');
+            return;
+        }
         setInputs([...inputs, ''])
     };
 
@@ -33,19 +39,29 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     };
 
     const saveInputs = async () => {
+        console.log('selectedTheme:', selectedTheme);
+        console.log('spinName:', spinName);
         console.log('Inputs:', inputs);
+        const hasEmptyInput = inputs.some(input => input.trim() === '');
+
+        if (!selectedTheme || !spinName || hasEmptyInput) {
+            Alert.alert('Alert', 'Please fill out all fields');
+            return;
+        };
+
         const spin = {
             spinColor: selectedTheme,
             spinItems: inputs,
             spinName: spinName,
         }
         await FirestoreService.addSpinToUser(spin);
+        setShowAddSpinModal(false);
     }
 
     const onCancelModified = () => {
-        setShowAddSpinModal(false);  
-        setInputs(['']);            
-        setSelectedTheme('');        
+        setShowAddSpinModal(false);
+        setInputs(['']);
+        setSelectedTheme('');
     }
 
     return (
@@ -71,7 +87,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                         ))}
                     </ScrollView>
                     <Text>Name of Spin</Text>
-                    <Input value={spinName} handleInput={handleSpinName}/>
+                    <Input value={spinName} handleInput={handleSpinName} />
                     <Text>Spin Items</Text>
                     {
                         inputs.map((input, index) => (
@@ -79,6 +95,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                                 key={index}
                                 value={inputs}
                                 handleInput={(text) => handleInputChange(text, index)}
+                                onSubmitEditing={addInput}
                             />
                         ))
                     }
@@ -117,8 +134,8 @@ const styles = StyleSheet.create({
         maxHeight: 50,
     },
     colorBox: {
-        width: 50,
-        height: 50,
+        width: 70,
+        height: 25,
         marginRight: 10,
         borderRadius: 5,
     },

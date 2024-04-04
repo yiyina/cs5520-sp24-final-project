@@ -5,12 +5,10 @@ import tinycolor from 'tinycolor2';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
-import { getUpdatedUserSpin } from '../Shared/updateUserSpin';
 
 const WheelGame = ({ spinItems, spinColor }) => {
-  const { spins } = getUpdatedUserSpin();
-  const options = spins ? spins[0].spinItems : spinItems;
-  const colorSet = spins ? spins[0].spinColor : spinColor;
+  const [options, setOptions] = useState(spinItems);
+  const [colorSet, setColorSet] = useState(spinColor);
   const [isSpinning, setIsSpinning] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disabled state
   const [result, setResult] = useState('');
@@ -21,6 +19,8 @@ const WheelGame = ({ spinItems, spinColor }) => {
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
 
   useEffect(() => {
+    setColorSet(spinColor);
+    setOptions(spinItems);
   }, [spinColor, spinItems]);
 
   // generate colors 

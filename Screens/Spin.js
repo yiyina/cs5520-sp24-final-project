@@ -8,7 +8,6 @@ import { defaultSpin } from '../Components/Spin/DefaultSpin'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
 
 export default function Spin() {
-  const [selectedSpin, setSelectedSpin] = useState('')
   const [spinItems, setSpinItems] = useState([])
   const [spinColor, setSpinColor] = useState([])
 
