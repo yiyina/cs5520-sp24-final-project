@@ -5,11 +5,14 @@ import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
 import DropDownList from '../../Shared/DropDownList';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import { Feather } from '@expo/vector-icons';
+import Button from '../../Shared/Button';
+import Colors from '../../Shared/Colors';
 
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [spinName, setSpinName] = useState('');
     const [themes, setThemes] = useState(ColorThemes);
-    const [inputs, setInputs] = useState(['']);
+    const [inputs, setInputs] = useState([{ value: '' }]);
     const [selectedTheme, setSelectedTheme] = useState('');
 
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
@@ -19,41 +22,53 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     }
 
     const addInput = () => {
-        const hasEmptyInput = inputs.some(input => input.trim() === '');
+        const hasEmptyInput = inputs.some(input => input.value.trim() === '');
+        if (inputs.length >= 10) {
+            Alert.alert('Alert', 'You can only have 10 items');
+            return;
+        }
 
         if (hasEmptyInput) {
             Alert.alert('Alert', 'Please fill out all empty fields');
             return;
         }
-        setInputs([...inputs, ''])
+        const newId = Date.now() + Math.random();
+        console.log('newId:', newId);
+        setInputs(inputs => [...inputs, { id: newId, value: '' }]);
     };
 
     const handleSpinName = (text) => {
         setSpinName(text);
     }
 
-    const handleInputChange = (text, index) => {
-        const newInputs = [...inputs];
-        newInputs[index] = text;
-        setInputs(newInputs);
+    const handleInputChange = (text, id) => {
+        // const newInputs = [...inputs];
+        // newInputs[index] = text;
+        // setInputs(newInputs);
+        setInputs(inputs => inputs.map(input => 
+            input.id === id ? { ...input, value: text } : input
+        ));
     };
 
     const saveInputs = async () => {
         console.log('selectedTheme:', selectedTheme);
         console.log('spinName:', spinName);
         console.log('Inputs:', inputs);
-        const hasEmptyInput = inputs.some(input => input.trim() === '');
+        // const hasEmptyInput = inputs.some(input => input.trim() === '');
+        const hasEmptyInput = inputs.some(input => input.value.trim() === '');
 
         if (!selectedTheme || !spinName || hasEmptyInput) {
             Alert.alert('Alert', 'Please fill out all fields');
             return;
         };
 
+        const spinItems = inputs.map(input => input.value);
         const spin = {
             spinColor: selectedTheme,
-            spinItems: inputs,
+            spinItems: spinItems,
             spinName: spinName,
         }
+
         await FirestoreService.addSpinToUser(spin);
         setShowAddSpinModal(false);
     }
@@ -90,21 +105,19 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <Input value={spinName} handleInput={handleSpinName} />
                     <Text>Spin Items</Text>
                     {
-                        inputs.map((input, index) => (
+                        inputs.map((input) => (
                             <Input
-                                key={index}
+                                key={input.id}
                                 value={inputs}
-                                handleInput={(text) => handleInputChange(text, index)}
+                                handleInput={(text) => handleInputChange(text, input.id)}
                                 onSubmitEditing={addInput}
                             />
                         ))
                     }
-                    <Pressable onPress={addInput}>
-                        <Text>+</Text>
+                    <Pressable onPress={addInput} style={styles.plusButton}>
+                        <Feather name="plus-square" size={36} color="black" />
                     </Pressable>
-                    <Pressable onPress={saveInputs}>
-                        <Text>Save</Text>
-                    </Pressable>
+                        <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed}/>
                 </View>
             </View>
         </Modal>
@@ -138,5 +151,22 @@ const styles = StyleSheet.create({
         height: 25,
         marginRight: 10,
         borderRadius: 5,
+    },
+    plusButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    saveButtonDefault: {
+        backgroundColor: Colors.LIGHT_YELLOW,
+        width: '50%',
+        alignSelf: 'center',
+        borderRadius: 10,
+    },
+    saveButtonPressed: {
+        backgroundColor: Colors.DARK_YELLOW,
+        width: '50%',
+        alignSelf: 'center',
+        borderRadius: 10,
     },
 })

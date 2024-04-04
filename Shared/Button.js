@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Pressable } from 'react-native'
 import React, { useState } from 'react'
 
-export default function Button({ text, textColor, buttonPress, containerStyle, textStyle, defaultStyle, pressedStyle }) {
+export default function Button({ text, textColor, buttonPress, textStyle, defaultStyle, pressedStyle }) {
     // const [isPressed, setIsPressed] = useState(false);
 
     const buttonClick = () => {

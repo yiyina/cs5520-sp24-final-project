@@ -64,7 +64,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
     const pathD = `M 0 0 L ${wheelSize / 2} 0 A ${wheelSize / 2} ${wheelSize / 2} 0 0 1 ${wheelSize / 2 * Math.cos(2 * Math.PI / options.length)} ${wheelSize / 2 * Math.sin(2 * Math.PI / options.length)} Z`;
 
     return (
-      <G key={option} rotation={(index * 360) / options.length}>
+      <G key={`${option}-${index}`} rotation={(index * 360) / options.length}>
         <Path d={pathD} fill={colors[index % colors.length]} />
         <SvgText
           x={wheelSize / 3.5}
