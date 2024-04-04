@@ -8,9 +8,11 @@ import Card from '../Shared/Card';
 import { springFlowerColors } from '../Components/Spin/DefaultColorSet';
 import { defaultSpin } from '../Components/Spin/DefaultSpin';
 
-const WheelGame = () => {
-  const [options, setOptions] = useState(defaultSpin); // State to store the options [default: defaultSpin
-  const [colorSet, setColorSet] = useState(springFlowerColors); // State to store the color set [default: springFlowerColors
+const WheelGame = ({ spinItems, spinColor}) => {
+  console.log("WheelGame spinItems: ", spinItems)
+  console.log("WheelGame spinColor: ", spinColor)
+  const [options, setOptions] = useState(spinItems); // State to store the options [default: defaultSpin
+  const [colorSet, setColorSet] = useState([]); // State to store the color set [default: springFlowerColors
   const [isSpinning, setIsSpinning] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // State to control button disabled state
   const [result, setResult] = useState('');
@@ -21,7 +23,9 @@ const WheelGame = () => {
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
 
   useEffect(() => {
-  }, [options]);
+    setColorSet(spinColor);
+    setOptions(spinItems);
+  }, [spinColor, spinItems]);
 
   // generate colors 
   const generateLighterColors = (baseColors, numberOfOptions) => {
@@ -214,9 +218,9 @@ const styles = StyleSheet.create({
   shadowCircle: {
     position: 'absolute',
     zIndex: -1,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
+    width: 350,
+    height: 350,
+    borderRadius: 175,
     backgroundColor: '#FFF',
     shadowColor: '#000',
     shadowOffset: {
@@ -228,6 +232,8 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: -25, // 使用负的 marginLeft 和 marginTop 来正确定位阴影
+  marginTop: -25,
   },
 });
 

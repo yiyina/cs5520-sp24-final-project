@@ -9,12 +9,15 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
     const [items, setItems] = useState([])
 
     useEffect(() => {
+        console.log("DropDownList items: ", items)
+    }, [])
+
+    useEffect(() => {
         console.log("DropDownList listItems: ", listItems)
         if (listItems && Array.isArray(listItems)) {
             const transformedList = listItems.map(item => ({
                 label: item[1], value: item[0]
             }))
-            console.log("DropDownList transformedList: ", transformedList)
             setItems(transformedList)
         }
     }, [])
@@ -26,7 +29,6 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
     // }, [])
 
     const handleValueChange = (itemValue) => {
-        console.log("DropDownList handleValueChange: ", items)
         if (itemValue && itemValue != '') {
             setValue(itemValue)
             handleItemSelect(items)

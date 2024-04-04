@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import DropDownList from '../../Shared/DropDownList';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 
-export default function SpinSelector({  }) {
+export default function SpinSelector({ spinSelectHandler }) {
   const [selectedSpin, setSelectedSpin] = useState('')
   const [spins, setSpins] = useState([])
   const [itemId, setItemId] = useState([])
@@ -12,7 +12,6 @@ export default function SpinSelector({  }) {
     async function fetchData() {
       const spinsCollection = await FirestoreService.getSpinsCollection();
       const userSpins = spinsCollection.map(spin => [spin.id, spin.spinName])
-      console.log("userSpins", userSpins)
       setSpins(userSpins)
       setSelectedSpin(userSpins[0][1])
     }
@@ -20,9 +19,9 @@ export default function SpinSelector({  }) {
   }, [])
 
   const handleItemSelect = (items) => {
-    console.log("SpinSelector handleItemSelect: ", items.label, items.value)
     setSelectedSpin(items.label)
     setItemId(items.value)
+    spinSelectHandler(items)
   }
 
   return (

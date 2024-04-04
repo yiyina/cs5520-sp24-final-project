@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../Shared/Colors';
 import AddSpin from './AddSpin';
 
-export default function Header() {
+export default function Header({ spinSelectHandler }) {
   const [showAddSpinModal, setShowAddSpinModal] = React.useState(false)
 
   const handleAddSpinModal = () => {
@@ -20,7 +20,7 @@ export default function Header() {
   return (
     <View style={styles.container}>
       <Feather name="settings" size={24} color={Colors.BLUE} />
-      <SpinSelector />
+      <SpinSelector spinSelectHandler={spinSelectHandler} />
       <Pressable onPress={handleAddSpinModal}>
         <AntDesign name="pluscircleo" size={24} color={Colors.BLUE} />
       </Pressable>
