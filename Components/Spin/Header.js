@@ -13,10 +13,6 @@ export default function Header({ spinSelectHandler }) {
     setShowAddSpinModal(true)
   }
 
-  const onCancel = () => {
-    setShowAddSpinModal(false)
-  }
-
   return (
     <View style={styles.container}>
       <Feather name="settings" size={24} color={Colors.BLUE} />
@@ -24,7 +20,7 @@ export default function Header({ spinSelectHandler }) {
       <Pressable onPress={handleAddSpinModal}>
         <AntDesign name="pluscircleo" size={24} color={Colors.BLUE} />
       </Pressable>
-      <AddSpin showAddSpinModal={showAddSpinModal} onCancel={onCancel} />
+      <AddSpin showAddSpinModal={showAddSpinModal} setShowAddSpinModal={setShowAddSpinModal} />
     </View>
   )
 }

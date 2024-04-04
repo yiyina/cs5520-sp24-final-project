@@ -5,14 +5,13 @@ import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
 import DropDownList from '../../Shared/DropDownList';
 
-export default function AddSpin({ showAddSpinModal, onCancel }) {
+export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [inputs, setInputs] = useState(['']);
     const [selectedTheme, setSelectedTheme] = useState('');
     const [themes, setThemes] = useState(ColorThemes);
     console.log('Themes:', themes["chocolate"]);
 
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
-    const selectedThemeColors = themes[selectedTheme];
     console.log('Theme Options:', selectedTheme);
 
     const handleThemeSelect = (item) => {
@@ -34,15 +33,21 @@ export default function AddSpin({ showAddSpinModal, onCancel }) {
         console.log('Inputs:', inputs);
     }
 
+    const onCancelModified = () => {
+        setShowAddSpinModal(false);  
+        setInputs(['']);            
+        setSelectedTheme('');        
+    }
+
     return (
         <Modal
             visible={showAddSpinModal}
             animationType="slide"
             transparent={true}
-            onRequestClose={onCancel}>
+            onRequestClose={onCancelModified}>
             <View style={styles.modalBackground}>
                 <View style={styles.modalContainer}>
-                    <Pressable onPress={onCancel} style={styles.fold}>
+                    <Pressable onPress={onCancelModified} style={styles.fold}>
                         <Octicons name="chevron-down" size={50} color="black" />
                     </Pressable>
                     <Text>Add Spin</Text>
