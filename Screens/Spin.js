@@ -32,11 +32,11 @@ export default function Spin() {
     fetchData()
   }, [])
 
-  const spinSelectHandler = async (spin) => {
+  const spinSelectHandler = async (spinId) => {
     const spins = await FirestoreService.getSpinsCollection();
-    console.log("Spin spins: ", spin, spins)
+    console.log("spinId spins: ", spinId, spins)
 
-    const selectedSpin = spins.find(s => s.id === spin[0].value)
+    const selectedSpin = spins.find(s => s.id === spinId)
     console.log("Spin selectedSpin: ", selectedSpin)
     setSpinItems(selectedSpin.spinItems)
     setSpinColor(selectedSpin.spinColor)

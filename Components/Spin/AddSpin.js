@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Modal, View, Pressable } from 'react-native'
+import { StyleSheet, Text, Modal, View, Pressable, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Octicons } from '@expo/vector-icons';
 import Input from '../../Shared/Input'
@@ -12,10 +12,12 @@ export default function AddSpin({ showAddSpinModal, onCancel }) {
     console.log('Themes:', themes["chocolate"]);
 
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
-    console.log('Theme Options:', themeOptions);
+    const selectedThemeColors = themes[selectedTheme];
+    console.log('Theme Options:', selectedTheme);
 
     const handleThemeSelect = (item) => {
-        setSelectedTheme(item.value);
+        setSelectedTheme(item);
+        console.log('Selected Theme:', item);
     }
 
     const addInput = () => {
@@ -50,6 +52,11 @@ export default function AddSpin({ showAddSpinModal, onCancel }) {
                         listItems={themeOptions}
                         handleItemSelect={handleThemeSelect}
                         selectedSpin={selectedTheme} />
+                    <ScrollView horizontal style={styles.colorPalette}>
+                        {selectedTheme && selectedTheme.map((color, index) => (
+                            <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
+                        ))}
+                    </ScrollView>
                     <Text>Name of Spin</Text>
                     <Input placeholder="Spin Name" />
                     <Text>Spin Items</Text>
@@ -92,5 +99,15 @@ const styles = StyleSheet.create({
     fold: {
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    colorPalette: {
+        marginTop: 10,
+        maxHeight: 50,
+    },
+    colorBox: {
+        width: 50,
+        height: 50,
+        marginRight: 10,
+        borderRadius: 5,
+    },
 })

@@ -21,7 +21,7 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
     const handleValueChange = (itemValue) => {
         if (itemValue && itemValue != '') {
             setValue(itemValue)
-            handleItemSelect(items)
+            handleItemSelect(itemValue)
         }
     }
 
