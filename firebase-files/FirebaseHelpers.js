@@ -288,14 +288,13 @@ const FirestoreService = {
             const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
             const querySnapshot = await getDocs(spinsCollectionRef);
 
-            const spinData = [];
-            querySnapshot.forEach((doc) => {
-                const docId = doc.id;
-                const docData = doc.data();
-                docData.id = docId;
-                spinData.push(docData);
+            const spinsData = querySnapshot.docs.map(doc => {
+                return {
+                    id: doc.id, 
+                    ...doc.data() 
+                };
             });
-            return spinData;
+            return spinsData;
         } catch (error) {
             console.error("Error getting spin collection: ", error);
             throw error;

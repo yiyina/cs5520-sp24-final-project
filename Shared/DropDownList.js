@@ -9,10 +9,6 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
     const [items, setItems] = useState([])
 
     useEffect(() => {
-        console.log("DropDownList items: ", items)
-    }, [])
-
-    useEffect(() => {
         console.log("DropDownList listItems: ", listItems)
         if (listItems && Array.isArray(listItems)) {
             const transformedList = listItems.map(item => ({
@@ -20,13 +16,7 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
             }))
             setItems(transformedList)
         }
-    }, [])
-
-    // useEffect(() => {
-    //     if (selectedSpin != value && selectedSpin) {
-    //         setValue(selectedSpin);
-    //     }
-    // }, [])
+    }, [listItems])
 
     const handleValueChange = (itemValue) => {
         if (itemValue && itemValue != '') {

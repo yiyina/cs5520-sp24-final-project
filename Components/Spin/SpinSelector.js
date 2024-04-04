@@ -1,24 +1,27 @@
 import { StyleSheet, Dimensions, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DropDownList from '../../Shared/DropDownList';
-import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import { getUpdatedUserSpin } from '../../Shared/updateUserSpin'
 
 export default function SpinSelector({ spinSelectHandler }) {
+  const { spins } = getUpdatedUserSpin();
+  console.log("SpinSelector spins: ", spins)
   const [selectedSpin, setSelectedSpin] = useState('')
-  const [spins, setSpins] = useState([])
   const [itemId, setItemId] = useState([])
+  const [spinNames, setSpinNames] = useState([])
 
   useEffect(() => {
-    async function fetchData() {
-      const spinsCollection = await FirestoreService.getSpinsCollection();
-      const userSpins = spinsCollection.map(spin => [spin.id, spin.spinName])
-      setSpins(userSpins)
-      setSelectedSpin(userSpins[0][1])
+    if (spins) {
+      setSpinNames(spins.map(spin => [spin.id, spin.spinName]))
     }
-    fetchData()
-  }, [])
+  }, [spins])
+
+  useEffect(() => {
+    console.log("SpinSelector spinNames: ", spinNames)
+  }, [spinNames])
 
   const handleItemSelect = (items) => {
+    console.log("handleItemSelect items: ", items)
     setSelectedSpin(items.label)
     setItemId(items.value)
     spinSelectHandler(items)
@@ -26,7 +29,11 @@ export default function SpinSelector({ spinSelectHandler }) {
 
   return (
     <View style={styles.container}>
-      <DropDownList placeholder={selectedSpin} listItems={spins} handleItemSelect={handleItemSelect} selectedSpin={selectedSpin} />
+      <DropDownList
+        placeholder={spins ? spins[0].spinName : ""}
+        listItems={spinNames}
+        handleItemSelect={handleItemSelect}
+        selectedSpin={selectedSpin} />
     </View>
   )
 }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import SpinWheel from '../Animation/SpinWheel'
 import Header from '../Components/Spin/Header'
 import Footer from '../Components/Spin/Footer'
-import { springFlowerColors } from '../Components/Spin/DefaultColorSet'
+import ColorThemes from '../Components/Spin/DefaultColorSet'
 import { defaultSpin } from '../Components/Spin/DefaultSpin'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
 
@@ -14,9 +14,9 @@ export default function Spin() {
 
 
   const originalSpin = {
-    spinName: 'FOOD',
+    spinColor: ColorThemes.SPRINGFLOWER,
     spinItems: defaultSpin,
-    spinColor: springFlowerColors
+    spinName: 'FOOD',
   }
 
   useEffect(() => {
@@ -35,13 +35,11 @@ export default function Spin() {
   const spinSelectHandler = async (spin) => {
     const spins = await FirestoreService.getSpinsCollection();
     console.log("Spin spins: ", spin, spins)
-    console.log(typeof spin.value, " spin.value: ", spin[0].value); // 查看 spin.value 的类型
 
     const selectedSpin = spins.find(s => s.id === spin[0].value)
     console.log("Spin selectedSpin: ", selectedSpin)
     setSpinItems(selectedSpin.spinItems)
     setSpinColor(selectedSpin.spinColor)
-
   }
 
   return (

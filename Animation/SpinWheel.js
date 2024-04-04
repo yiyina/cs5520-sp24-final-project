@@ -5,8 +5,8 @@ import tinycolor from 'tinycolor2';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
-import { springFlowerColors } from '../Components/Spin/DefaultColorSet';
-import { defaultSpin } from '../Components/Spin/DefaultSpin';
+// import { springFlowerColors } from '../Components/Spin/DefaultColorSet';
+// import { defaultSpin } from '../Components/Spin/DefaultSpin';
 
 const WheelGame = ({ spinItems, spinColor}) => {
   console.log("WheelGame spinItems: ", spinItems)
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   selectTriangle: {
     position: 'absolute',
-    left: 140,
+    left: 145,
     top: -40,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 2 },
