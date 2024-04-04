@@ -108,7 +108,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                         inputs.map((input) => (
                             <Input
                                 key={input.id}
-                                value={inputs}
+                                value={input.value}
                                 handleInput={(text) => handleInputChange(text, input.id)}
                                 onSubmitEditing={addInput}
                             />
