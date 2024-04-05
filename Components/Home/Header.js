@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { auth } from '../../firebase-files/FirebaseSetup'
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
 import { getUpdatedUserData } from '../../Shared/updateUserData'
@@ -19,36 +18,11 @@ const getGreetingBasedOnTime = () => {
 
 export default function Header() {
     const { username, avatarUri } = getUpdatedUserData();
-    const [user, setUser] = useState(auth.currentUser || null);
     const [greeting, setGreeting] = useState('');
-    // const [username, setUsername] = useState(null);
-    // const [avatarUri, setAvatarUri] = useState(null);
+    
     useEffect(() => {
         setGreeting(getGreetingBasedOnTime());
     }, []);
-
-    // useEffect(() => {
-    //     const unsubscribe = onSnapshot(
-    //         query(
-    //             collection(firestore, "users"),
-    //             where("uid", "==", auth.currentUser.uid)
-    //         ),
-    //         (querySnapshot) => {
-    //             if (querySnapshot.empty) {
-    //                 console.log("Cannot find user data in firestore.");
-    //                 return;
-    //             }
-    //             setAvatarUri({ uri: querySnapshot.docs[0].data().avatar });
-    //             setUsername(querySnapshot.docs[0].data().username);
-    //         },
-    //         (error) => {
-    //             console.error(error.message);
-    //         }
-    //     );
-    //     return () => {
-    //         unsubscribe();
-    //     };
-    // }, []);
 
     return (
         <View style={styles.container}>
@@ -70,8 +44,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     avatarContainer: {
-        borderWidth: 5,
-        borderColor: Colors.WHITE,
+        // borderWidth: 5,
+        // borderColor: Colors.WHITE,
         borderRadius: 100,
         marginRight: 10,
     },

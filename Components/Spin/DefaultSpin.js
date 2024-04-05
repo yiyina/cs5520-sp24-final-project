@@ -1,0 +1,1 @@
+export const defaultSpin = ['CHINESE', 'JAPANESE', 'GERMAN', 'MEXICAN', 'ITALIAN', 'AMERICAN', 'THAI', 'VIETNAMESE'];

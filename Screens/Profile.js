@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: Colors.WHITE,
     borderRadius: 100,
+    backgroundColor: Colors.WHITE, 
   },
   avatar: {
     width: 100,

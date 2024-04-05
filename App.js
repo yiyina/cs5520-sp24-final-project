@@ -10,6 +10,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './firebase-files/FirebaseSetup'
 
 const Stack = createStackNavigator();
+// AppRegistry.registerComponent('main', () => App);
 
 export default function App() {
   const [userloggedIn, setUserloggedIn] = useState(false);
