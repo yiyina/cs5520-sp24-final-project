@@ -21,7 +21,6 @@ export default function EditSpin({ spinId, spinColorName }) {
         async function fetchData() {
             const spinsCollection = await FirestoreService.getSpinsCollection()
             const selectedSpin = spinsCollection.find(s => s.id === spinId)
-            console.log('selectedSpin:', selectedSpin)
             if (selectedSpin) {
                 setSpinName(selectedSpin.spinName)
                 setSpinItems(selectedSpin.spinItems)
@@ -42,23 +41,22 @@ export default function EditSpin({ spinId, spinColorName }) {
             <Pressable style={styles.container} onPress={editHandler}>
                 <EvilIcons name="pencil" size={60} color={Colors.WHITE} />
             </Pressable>
-            {spinId &&
-                <Modal
-                    visible={showEditSpinModal}>
-                    <View style={styles.modalContainer}>
-                        <Text>Edit Spin</Text>
-                        <Text>Spin Name</Text>
-                        <Input text={spinName} inputChange={setSpinName} />
-                        <Text>Spin Colors</Text>
-                        <DropdownList
-                            placeholder={spinColorName}
-                            listItems={themeOptions}
-                            handleItemSelect={setSpinColor}
-                            selectedSpin={setColorName}
-                        />
-                        <Button text="Close" buttonPress={() => setShowEditSpinModal(false)} />
-                    </View>
-                </Modal>}
+            <Modal
+                visible={showEditSpinModal}>
+                <View style={styles.modalContainer}>
+                    <Text>Edit Spin</Text>
+                    <Text>Spin Name</Text>
+                    <Input text={spinName} inputChange={setSpinName} />
+                    <Text>Spin Colors</Text>
+                    <DropdownList
+                        placeholder={spinColorName}
+                        listItems={themeOptions}
+                        handleItemSelect={setSpinColor}
+                        selectedSpin={setColorName}
+                    />
+                    <Button text="Close" buttonPress={() => setShowEditSpinModal(false)} />
+                </View>
+            </Modal>
         </View>
     )
 }
