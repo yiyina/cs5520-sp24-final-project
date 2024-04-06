@@ -156,7 +156,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
         <View style={styles.result}>
-          <Text style={{ fontSize: 20, margin: 20 }}>Selected: {result}</Text>
+          <Text style={{ fontSize: 25, margin: 20 }}>Selected: {result}</Text>
         </View>
       </View>
     </View>
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   result: {
     position: 'absolute',
-    bottom: -70,
+    top: -100,
     left: 50,
   },
   shadowCircle: {

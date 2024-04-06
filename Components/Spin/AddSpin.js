@@ -54,7 +54,6 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
         console.log('selectedTheme:', selectedTheme);
         console.log('spinName:', spinName);
         console.log('Inputs:', inputs);
-        // const hasEmptyInput = inputs.some(input => input.trim() === '');
         const hasEmptyInput = inputs.some(input => input.value.trim() === '');
 
         if (!selectedTheme || !spinName || hasEmptyInput) {
@@ -91,7 +90,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                         <Octicons name="chevron-down" size={50} color="black" />
                     </Pressable>
                     <Text>Add Spin</Text>
-                    <Text>Select Theme</Text>
+                    <Text>Choose Theme</Text>
                     <DropDownList
                         listItems={themeOptions}
                         handleItemSelect={handleThemeSelect}

@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import SpinWheel from '../Animation/SpinWheel'
 import Header from '../Components/Spin/Header'
-import Footer from '../Components/Spin/Footer'
+import EditSpin from '../Components/Spin/EditSpin'
 import ColorThemes from '../Components/Spin/DefaultColorSet'
 import { defaultSpin } from '../Components/Spin/DefaultSpin'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
@@ -10,7 +10,8 @@ import FirestoreService from '../firebase-files/FirebaseHelpers'
 export default function Spin() {
   const [spinItems, setSpinItems] = useState([])
   const [spinColor, setSpinColor] = useState([])
-
+  const [spinColorName, setSpinColorName] = useState('')
+  const [spinId, setSpinId] = useState('')
 
   const originalSpin = {
     spinColor: ColorThemes.SPRINGFLOWER,
@@ -24,28 +25,29 @@ export default function Spin() {
       if (spinsCollection.length === 0) {
         await FirestoreService.addSpinToUser(originalSpin)
       }
-      const userSpin = await FirestoreService.getSpinsCollection();
-      setSpinItems(userSpin[0].spinItems)
-      setSpinColor(userSpin[0].spinColor)
+      setSpinId(spinsCollection[0].id)
+      setSpinItems(spinsCollection[0].spinItems)
+      setSpinColor(spinsCollection[0].spinColor)
+      setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(spinsCollection[0].spinColor)))
     }
     fetchData()
   }, [])
 
   const spinSelectHandler = async (spinId) => {
     const spins = await FirestoreService.getSpinsCollection();
-    console.log("spinId spins: ", spinId, spins)
-
     const selectedSpin = spins.find(s => s.id === spinId)
     console.log("Spin selectedSpin: ", selectedSpin)
+    setSpinId(selectedSpin.id)
     setSpinItems(selectedSpin.spinItems)
     setSpinColor(selectedSpin.spinColor)
+    setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)))
   }
 
   return (
     <View style={styles.container}>
       <Header spinSelectHandler={spinSelectHandler} />
       <SpinWheel spinItems={spinItems} spinColor={spinColor} />
-      <Footer />
+      <EditSpin spinId={spinId} spinColorName={spinColorName} />
     </View>
   )
 }
