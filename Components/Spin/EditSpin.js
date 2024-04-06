@@ -8,9 +8,13 @@ import Input from '../../Shared/Input';
 import DropdownList from '../../Shared/DropDownList';
 import ColorThemes from './DefaultColorSet';
 import generateUUID from '../../Shared/GenerateUUID';
+import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function EditSpin({ spinId, spinColorName }) {
+    const [initialName, setInitialName] = useState('')
     const [spinName, setSpinName] = useState('')
+    const [initialItems, setInitialItems] = useState([])
     const [spinItems, setSpinItems] = useState([])
     const [initialTheme, setInitialTheme] = useState('');
     const [selectedTheme, setSelectedTheme] = useState('')
@@ -33,10 +37,12 @@ export default function EditSpin({ spinId, spinColorName }) {
             const selectedSpin = spinsCollection.find(s => s.id === spinId)
             console.log('selectedSpin:', selectedSpin)
             if (selectedSpin) {
+                setInitialName(selectedSpin.spinName)
                 setSpinName(selectedSpin.spinName)
+                setInitialItems(selectedSpin.spinItems)
+                setSelectedTheme(selectedSpin.spinColor)
                 setSpinItems(selectedSpin.spinItems)
-                setSelectedTheme(selectedSpin.spinColor);
-                setInitialTheme(selectedSpin.spinColor);
+                setInitialTheme(selectedSpin.spinColor)
                 const newInputs = selectedSpin.spinItems.map(async (item) => {
                     const newId = await generateUUID();
                     return { id: newId, value: item };
@@ -74,6 +80,15 @@ export default function EditSpin({ spinId, spinColorName }) {
         setShowEditSpinModal(true)
     }
 
+    const removeInput = (idToRemove) => {
+        if (inputs.length > 1 || inputs.find(input => input.id === idToRemove).value.trim() !== '') {
+            const updatedInputs = inputs.filter(input => input.id !== idToRemove);
+            setInputs(updatedInputs);
+        } else {
+            Alert.alert('Warning', 'Cannot remove the last input.');
+        }
+    };
+
     const saveInputs = async () => {
         console.log('selectedTheme:', selectedTheme);
         console.log('spinName:', spinName);
@@ -100,7 +115,14 @@ export default function EditSpin({ spinId, spinColorName }) {
 
     const handleCloseModal = () => {
         setShowEditSpinModal(false);
+        setSpinName(initialName);
         setSelectedTheme(initialTheme);
+        setSpinItems(initialItems);
+
+        const resetInputs = initialItems.map(item => {
+            return { id: Date.now() + Math.random(), value: item };
+        });
+        setInputs(resetInputs);
     }
 
     return (
@@ -115,7 +137,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                     <View style={styles.modalContainer}>
                         <Text>Edit Spin</Text>
                         <Text>Spin Name</Text>
-                        <Input text={spinName} inputChange={setSpinName} />
+                        <Input text={spinName} handleInput={setSpinName} />
                         <Text>Spin Colors</Text>
                         <DropdownList
                             placeholder={spinColorName}
@@ -130,14 +152,22 @@ export default function EditSpin({ spinId, spinColorName }) {
                         </ScrollView>
                         {
                             inputs.map((input) => (
-                                <Input
-                                    key={input.id}
-                                    text={input.value}
-                                    handleInput={(value) => handleInputChange(value, input.id)}
-                                    onSubmitEditing={addInput}
-                                />
+                                <View style={styles.inputItem}>
+                                    <Input
+                                        key={input.id}
+                                        text={input.value}
+                                        handleInput={(value) => handleInputChange(value, input.id)}
+                                        onSubmitEditing={addInput}
+                                    />
+                                    <Pressable onPress={() => removeInput(input.id)}>
+                                        <AntDesign name="minuscircleo" size={24} color="black" />
+                                    </Pressable>
+                                </View>
                             ))
                         }
+                        <Pressable onPress={addInput} style={styles.plusButton}>
+                            <Feather name="plus-square" size={36} color="black" />
+                        </Pressable>
                         <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
                         <Button text="Close" buttonPress={handleCloseModal} />
                     </View>
@@ -179,6 +209,16 @@ const styles = StyleSheet.create({
         height: 25,
         marginRight: 10,
         borderRadius: 5,
+    },
+    inputItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    plusButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
     },
     saveButtonDefault: {
         backgroundColor: Colors.LIGHT_YELLOW,

@@ -5,6 +5,7 @@ import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
 import DropDownList from '../../Shared/DropDownList';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import Button from '../../Shared/Button';
 import Colors from '../../Shared/Colors';
@@ -35,6 +36,16 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             return;
         }
         setInputs(inputs => [...inputs, { id: generateUUID(), value: '' }]);
+    };
+
+    const removeInput = (idToRemove) => {
+        const inputToRemove = inputs.find(input => input.id === idToRemove);
+        if (inputToRemove && (inputs.length > 1 || (inputToRemove.value && inputToRemove.value.trim() !== ''))) {
+            const updatedInputs = inputs.filter(input => input.id !== idToRemove);
+            setInputs(updatedInputs);
+        } else {
+            Alert.alert('Warning', 'Cannot remove the last input.');
+        }
     };
 
     const handleInputChange = (text, id) => {
@@ -101,12 +112,17 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <Text>Spin Items</Text>
                     {
                         inputs.map((input) => (
-                            <Input
-                                key={input.id}
-                                text={input.value}
-                                handleInput={(text) => handleInputChange(text, input.id)}
-                                onSubmitEditing={addInput}
-                            />
+                            <View style={styles.inputItem}>
+                                <Input
+                                    key={input.id}
+                                    text={input.value}
+                                    handleInput={(text) => handleInputChange(text, input.id)}
+                                    onSubmitEditing={addInput}
+                                />
+                                <Pressable onPress={() => removeInput(input.id)}>
+                                    <AntDesign name="minuscircleo" size={24} color="black" />
+                                </Pressable>
+                            </View>
                         ))
                     }
                     <Pressable onPress={addInput} style={styles.plusButton}>
@@ -146,6 +162,11 @@ const styles = StyleSheet.create({
         height: 25,
         marginRight: 10,
         borderRadius: 5,
+    },
+    inputItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     plusButton: {
         justifyContent: 'center',
