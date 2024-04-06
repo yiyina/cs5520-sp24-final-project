@@ -6,6 +6,7 @@ import EditSpin from '../Components/Spin/EditSpin'
 import ColorThemes from '../Components/Spin/DefaultColorSet'
 import { defaultSpin } from '../Components/Spin/DefaultSpin'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
+import AddEditSpin from '../Components/Spin/AddEditSpin'
 
 export default function Spin() {
   const [spinItems, setSpinItems] = useState([])
@@ -48,6 +49,7 @@ export default function Spin() {
       <Header spinSelectHandler={spinSelectHandler} />
       <SpinWheel spinItems={spinItems} spinColor={spinColor} />
       <EditSpin spinId={spinId} spinColorName={spinColorName} />
+      {/* <AddEditSpin spinId={spinId} spinColorName={spinColorName} /> */}
     </View>
   )
 }

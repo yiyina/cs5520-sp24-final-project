@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, Dimensions, Modal, Text } from 'react-native'
+import { StyleSheet, Pressable, View, Dimensions, Modal, Text, ScrollView, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { EvilIcons } from '@expo/vector-icons';
 import Colors from '../../Shared/Colors'
@@ -7,54 +7,140 @@ import Button from '../../Shared/Button';
 import Input from '../../Shared/Input';
 import DropdownList from '../../Shared/DropDownList';
 import ColorThemes from './DefaultColorSet';
+import generateUUID from '../../Shared/GenerateUUID';
 
 export default function EditSpin({ spinId, spinColorName }) {
     const [spinName, setSpinName] = useState('')
     const [spinItems, setSpinItems] = useState([])
-    const [spinColor, setSpinColor] = useState([])
-    const [colorName, setColorName] = useState(spinColorName)
-    const [themes, setThemes] = useState(ColorThemes);
+    const [initialTheme, setInitialTheme] = useState('');
+    const [selectedTheme, setSelectedTheme] = useState('')
     const [showEditSpinModal, setShowEditSpinModal] = useState(false)
-    const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
+    const [inputs, setInputs] = useState([{ value: '' }]);
+
+    const themeOptions = Object.keys(ColorThemes).map(key => ([ColorThemes[key], key]));
+
+    const handleThemeSelect = (theme) => {
+        setSelectedTheme(theme);
+    }
+
+    useEffect(() => {
+        console.log('EditSpin selectedTheme:', selectedTheme)
+    }, [])
 
     useEffect(() => {
         async function fetchData() {
             const spinsCollection = await FirestoreService.getSpinsCollection()
             const selectedSpin = spinsCollection.find(s => s.id === spinId)
+            console.log('selectedSpin:', selectedSpin)
             if (selectedSpin) {
                 setSpinName(selectedSpin.spinName)
                 setSpinItems(selectedSpin.spinItems)
-                setSpinColor(selectedSpin.spinColor)
+                setSelectedTheme(selectedSpin.spinColor);
+                setInitialTheme(selectedSpin.spinColor);
+                const newInputs = selectedSpin.spinItems.map(async (item) => {
+                    const newId = await generateUUID();
+                    return { id: newId, value: item };
+                });
+                setInputs(await Promise.all(newInputs));
+                console.log('selectedSpin.spinColor:', selectedSpin.spinColor);
             }
         }
         fetchData()
     }, [spinId])
 
+    const addInput = () => {
+        const hasEmptyInput = inputs.some(input => input.value.trim() === '');
+        if (inputs.length >= 10) {
+            Alert.alert('Alert', 'You can only have 10 items');
+            return;
+        }
+
+        if (hasEmptyInput) {
+            Alert.alert('Alert', 'Please fill out all empty fields');
+            return;
+        }
+        const newId = Date.now() + Math.random();
+        console.log('newId:', newId);
+        setInputs(inputs => [...inputs, { id: newId, value: '' }]);
+    };
+
+    const handleInputChange = (text, id) => {
+        setInputs(inputs => inputs.map(input =>
+            input.id === id ? { ...input, value: text } : input
+        ));
+    }
+
     const editHandler = () => {
-        console.log('Edit button clicked')
-        console.log('spinId:', spinId)
         setShowEditSpinModal(true)
+    }
+
+    const saveInputs = async () => {
+        console.log('selectedTheme:', selectedTheme);
+        console.log('spinName:', spinName);
+        console.log('Inputs:', inputs);
+        const hasEmptyInput = inputs.some(input => input.value.trim() === '');
+
+        if (!selectedTheme || !spinName || hasEmptyInput) {
+            Alert.alert('Alert', 'Please fill out all fields');
+            return;
+        };
+
+        const spinItems = inputs.map(input => input.value);
+        const spin = {
+            spinColor: selectedTheme,
+            spinItems: spinItems,
+            spinName: spinName,
+        }
+
+        console.log('EditSpin.js spin:', spin, spinId);
+
+        await FirestoreService.addSpinToUser(spin, spinId);
+        setShowEditSpinModal(false);
+    }
+
+    const handleCloseModal = () => {
+        setShowEditSpinModal(false);
+        setSelectedTheme(initialTheme);
     }
 
     return (
         <View>
-            <Pressable style={styles.container} onPress={editHandler}>
+            <Pressable style={styles.editButton} onPress={editHandler}>
                 <EvilIcons name="pencil" size={60} color={Colors.WHITE} />
             </Pressable>
             <Modal
-                visible={showEditSpinModal}>
-                <View style={styles.modalContainer}>
-                    <Text>Edit Spin</Text>
-                    <Text>Spin Name</Text>
-                    <Input text={spinName} inputChange={setSpinName} />
-                    <Text>Spin Colors</Text>
-                    <DropdownList
-                        placeholder={spinColorName}
-                        listItems={themeOptions}
-                        handleItemSelect={setSpinColor}
-                        selectedSpin={setColorName}
-                    />
-                    <Button text="Close" buttonPress={() => setShowEditSpinModal(false)} />
+                visible={showEditSpinModal}
+                animationType="slide">
+                <View style={styles.modalBackground}>
+                    <View style={styles.modalContainer}>
+                        <Text>Edit Spin</Text>
+                        <Text>Spin Name</Text>
+                        <Input text={spinName} inputChange={setSpinName} />
+                        <Text>Spin Colors</Text>
+                        <DropdownList
+                            placeholder={spinColorName}
+                            listItems={themeOptions}
+                            handleItemSelect={handleThemeSelect}
+                            selectedSpin={selectedTheme}
+                        />
+                        <ScrollView horizontal style={styles.colorPalette}>
+                            {selectedTheme && selectedTheme.map((color, index) => (
+                                <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
+                            ))}
+                        </ScrollView>
+                        {
+                            inputs.map((input) => (
+                                <Input
+                                    key={input.id}
+                                    text={input.value}
+                                    handleInput={(value) => handleInputChange(value, input.id)}
+                                    onSubmitEditing={addInput}
+                                />
+                            ))
+                        }
+                        <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
+                        <Button text="Close" buttonPress={handleCloseModal} />
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -62,7 +148,7 @@ export default function EditSpin({ spinId, spinColorName }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    editButton: {
         right: Dimensions.get('window').width * 0.1,
         bottom: Dimensions.get('window').height * 0.2,
         position: 'absolute',
@@ -73,9 +159,37 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    modalContainer: {
+    modalBackground: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    modalContainer: {
+        backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        padding: 20,
+    },
+    colorPalette: {
+        marginTop: 10,
+        maxHeight: 50,
+    },
+    colorBox: {
+        width: 70,
+        height: 25,
+        marginRight: 10,
+        borderRadius: 5,
+    },
+    saveButtonDefault: {
+        backgroundColor: Colors.LIGHT_YELLOW,
+        width: '50%',
+        alignSelf: 'center',
+        borderRadius: 10,
+    },
+    saveButtonPressed: {
+        backgroundColor: Colors.DARK_YELLOW,
+        width: '50%',
+        alignSelf: 'center',
+        borderRadius: 10,
     },
 })

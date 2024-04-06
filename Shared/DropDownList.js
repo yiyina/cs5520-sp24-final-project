@@ -4,8 +4,9 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import Colors from './Colors'
 
 export default function DropDownList({ placeholder, listItems, handleItemSelect, selectedSpin }) {
+    // console.log("DropDownList selectedSpin: ", selectedSpin)
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState(selectedSpin || null)
+    const [value, setValue] = useState(null)
     const [items, setItems] = useState([])
 
     useEffect(() => {
@@ -14,10 +15,15 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
                 label: item[1], value: item[0]
             }))
             setItems(transformedList)
+            // console.log("DropDownList transformedList: ", transformedList);
+        } else {
+            setItems([]);
+            console.log("listItems is not an array:", listItems);
         }
     }, [listItems])
 
     const handleValueChange = (itemValue) => {
+        console.log("DropDownList itemValue: ", itemValue)
         if (itemValue && itemValue != '') {
             setValue(itemValue)
             handleItemSelect(itemValue)

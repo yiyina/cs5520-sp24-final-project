@@ -265,14 +265,28 @@ const FirestoreService = {
         }
     },
 
-    async addSpinToUser(spin) {
+    async addSpinToUser(spin, spinId) {
         try {
-            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            const uid = auth.currentUser.uid; 
+            if (!uid) {
+                throw new Error("User is not authenticated.");
+            }
+            const userDocId = await this.getUserDocId(uid);
             if (!userDocId) {
                 throw new Error("User document not found for UID: " + uid);
             }
+
             const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
-            await addDoc(spinsCollectionRef, spin);
+            console.log("spin ID: ", spinId)
+            console.log("spin: ", spin)
+
+            if (spinId) {
+                const spinDocRef = doc(spinsCollectionRef, spinId);
+                console.log("Updating spin: ", spinDocRef);
+                await updateDoc(spinDocRef, spin);
+            } else {
+                await addDoc(spinsCollectionRef, spin);
+            }
         } catch (error) {
             console.error("Error adding spin to user: ", error);
             throw error;
@@ -290,8 +304,8 @@ const FirestoreService = {
 
             const spinsData = querySnapshot.docs.map(doc => {
                 return {
-                    id: doc.id, 
-                    ...doc.data() 
+                    id: doc.id,
+                    ...doc.data()
                 };
             });
             return spinsData;
