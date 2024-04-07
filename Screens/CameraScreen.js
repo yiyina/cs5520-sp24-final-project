@@ -24,13 +24,23 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
         setIsUploading(true);
         try {
             const uid = auth.currentUser.uid;
-            if (type === 'avatar') {
-                await FirestoreService.updateUserAvatar(uid, imageUri);
-                Alert.alert('Your avatar has been successfully updated!');
-            } else if (type === 'gallery') {
-                await FirestoreService.addPhotoToGallery(uid, imageUri);
-                Alert.alert('Your avatar has been successfully updated!');
-            }
+            let url = imageUri;
+            // If the type is 'gallery', upload the image first to get a public URL
+        if (type === 'gallery') {
+            url = await FirestoreService.uploadToStorage(uid, imageUri, 'gallery');
+        } else if (type === 'avatar') {
+            url = await FirestoreService.uploadToStorage(uid, imageUri, 'avatar');
+        }
+
+        // Use the URL from storage if 'gallery', or direct URI if 'avatar' (assuming avatars are handled differently)
+        if (type === 'gallery') {
+            await FirestoreService.addPhotoToGallery(uid, url);
+            Alert.alert('Your gallery has been successfully updated!');
+        } else if (type === 'avatar') {
+            await FirestoreService.updateUserAvatar(uid, url);
+            Alert.alert('Your avatar has been successfully updated!');
+        }
+
             onCancel();
             onImageCaptured(imageUri);
         } catch (error) {

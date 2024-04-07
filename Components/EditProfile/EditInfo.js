@@ -166,7 +166,7 @@ export default function EditInfo() {
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
-                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
+                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri,'avatar')}
                 type={'avatar'} />
             {isUploading &&
                 <View style={styles.waitingView}>
