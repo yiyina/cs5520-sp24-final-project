@@ -75,13 +75,18 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             spinName: spinName,
         }
 
-        await FirestoreService.addSpinToUser(spin);
-        onCancelModified();
+        try {
+            await FirestoreService.addSpinToUser(spin);
+            onCancelModified();
+        } catch (error) {
+            console.error("Error saving spin: ", error);
+            Alert.alert('Error', 'Failed to save the spin');
+        }
     }
 
     const onCancelModified = () => {
         setShowAddSpinModal(false);
-        setInputs(['']);
+        setInputs([{ value: '' }]);
         setSelectedTheme('');
     }
 
@@ -90,7 +95,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             visible={showAddSpinModal}
             animationType="slide"
             transparent={true}
-            onRequestClose={onCancelModified}>
+        >
             <View style={styles.modalBackground}>
                 <View style={styles.modalContainer}>
                     <Pressable onPress={onCancelModified} style={styles.fold}>
@@ -112,9 +117,8 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <Text>Spin Items</Text>
                     {
                         inputs.map((input) => (
-                            <View style={styles.inputItem}>
+                            <View key={input.id} style={styles.inputItem}>
                                 <Input
-                                    key={input.id}
                                     text={input.value}
                                     handleInput={(text) => handleInputChange(text, input.id)}
                                     onSubmitEditing={addInput}

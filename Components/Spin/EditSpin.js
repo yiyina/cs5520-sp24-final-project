@@ -15,7 +15,7 @@ export default function EditSpin({ spinId, spinColorName }) {
     const [initialName, setInitialName] = useState('')
     const [spinName, setSpinName] = useState('')
     const [initialItems, setInitialItems] = useState([])
-    const [spinItems, setSpinItems] = useState([])
+    // const [spinItems, setSpinItems] = useState([])
     const [initialTheme, setInitialTheme] = useState('');
     const [selectedTheme, setSelectedTheme] = useState('')
     const [showEditSpinModal, setShowEditSpinModal] = useState(false)
@@ -28,8 +28,8 @@ export default function EditSpin({ spinId, spinColorName }) {
     }
 
     useEffect(() => {
-        console.log('EditSpin selectedTheme:', selectedTheme)
-    }, [])
+        console.log('EditSpin inputs:', inputs)
+    }, [inputs])
 
     const fetchData = async () => {
         const spinsCollection = await FirestoreService.getSpinsCollection()
@@ -38,16 +38,20 @@ export default function EditSpin({ spinId, spinColorName }) {
         if (selectedSpin) {
             setInitialName(selectedSpin.spinName)
             setSpinName(selectedSpin.spinName)
-            setInitialItems(selectedSpin.spinItems)
             setSelectedTheme(selectedSpin.spinColor)
-            setSpinItems(selectedSpin.spinItems)
             setInitialTheme(selectedSpin.spinColor)
+            // if (!inputs) {
+            //     const newInputs = selectedSpin.spinItems.map((item) => {
+            //         return { id: generateUUID(), value: item };
+            //     });
+            //     setInputs(newInputs);
+            //     setInitialItems(newInputs);
+            // }
             const newInputs = selectedSpin.spinItems.map(async (item) => {
-                const newId = await generateUUID();
-                return { id: newId, value: item };
+                return { id: generateUUID(), value: item };
             });
             setInputs(await Promise.all(newInputs));
-            console.log('selectedSpin.spinColor:', selectedSpin.spinColor);
+            setInitialItems(await Promise.all(newInputs))
         }
     }
 
@@ -118,12 +122,7 @@ export default function EditSpin({ spinId, spinColorName }) {
         setShowEditSpinModal(false);
         setSpinName(initialName);
         setSelectedTheme(initialTheme);
-        setSpinItems(initialItems);
-
-        const resetInputs = initialItems.map(item => {
-            return { id: Date.now() + Math.random(), value: item };
-        });
-        setInputs(resetInputs);
+        setInputs(initialItems);
     }
 
     const handleDeleteSpin = async () => {
@@ -132,9 +131,27 @@ export default function EditSpin({ spinId, spinColorName }) {
             Alert.alert('Warning', 'You cannot delete the last spin');
             return;
         } else {
-            await FirestoreService.deleteSpin(spinId);
-            setShowEditSpinModal(false);
-            fetchData();
+            Alert.alert(
+                'Warning',
+                'Are you sure you want to delete this spin?',
+                [
+                    {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel'
+                    },
+                    {
+                        text: 'DELETE', 
+                        onPress: async () => {
+                            await FirestoreService.deleteSpin(spinId);
+                            setShowEditSpinModal(false);
+                            fetchData();
+                        },
+                        style: 'destructive',
+                    }
+                ],
+                { cancelable: false }
+            );
         }
     }
 
@@ -165,9 +182,8 @@ export default function EditSpin({ spinId, spinColorName }) {
                         </ScrollView>
                         {
                             inputs.map((input) => (
-                                <View style={styles.inputItem}>
+                                <View style={styles.inputItem} key={input.id}>
                                     <Input
-                                        key={input.id}
                                         text={input.value}
                                         handleInput={(value) => handleInputChange(value, input.id)}
                                         onSubmitEditing={addInput}

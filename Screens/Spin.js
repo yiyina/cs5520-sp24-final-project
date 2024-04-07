@@ -38,7 +38,7 @@ export default function Spin() {
 
   const spinSelectHandler = async (spinId) => {
     const spins = await FirestoreService.getSpinsCollection();
-    const selectedSpin = spins.find(s => s.id === spinId)
+    const selectedSpin = spins.find(s => s.id === spinId);
     if (selectedSpin) {
       console.log("Spin selectedSpin: ", selectedSpin);
       setSpinId(selectedSpin.id);
