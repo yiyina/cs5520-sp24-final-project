@@ -10,7 +10,7 @@ import {
     doc,
     getFirestore,
     deleteField,
-    setDoc
+    deleteDoc
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
@@ -311,6 +311,17 @@ const FirestoreService = {
             return spinsData;
         } catch (error) {
             console.error("Error getting spin collection: ", error);
+            throw error;
+        }
+    },
+    
+    async deleteSpin(spinId) {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            const spinDocRef = doc(firestore, "users", userDocId, "spins", spinId);
+            await deleteDoc(spinDocRef);
+        } catch (error) {
+            console.error("Error deleting spin: ", error);
             throw error;
         }
     }

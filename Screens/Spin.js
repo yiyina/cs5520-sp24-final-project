@@ -19,28 +19,35 @@ export default function Spin() {
     spinName: 'FOOD',
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      const spinsCollection = await FirestoreService.getSpinsCollection();
-      if (spinsCollection.length === 0) {
-        await FirestoreService.addSpinToUser(originalSpin)
-      }
-      setSpinId(spinsCollection[0].id)
-      setSpinItems(spinsCollection[0].spinItems)
-      setSpinColor(spinsCollection[0].spinColor)
-      setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(spinsCollection[0].spinColor)))
+  const fetchData = async () => {
+    const spinsCollection = await FirestoreService.getSpinsCollection();
+    if (spinsCollection.length === 0) {
+      await FirestoreService.addSpinToUser(originalSpin);
+    } else {
+      const firstSpin = spinsCollection[0];
+      setSpinId(firstSpin.id);
+      setSpinItems(firstSpin.spinItems);
+      setSpinColor(firstSpin.spinColor);
+      setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(firstSpin.spinColor)));
     }
-    fetchData()
-  }, [])
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const spinSelectHandler = async (spinId) => {
     const spins = await FirestoreService.getSpinsCollection();
     const selectedSpin = spins.find(s => s.id === spinId)
-    console.log("Spin selectedSpin: ", selectedSpin)
-    setSpinId(selectedSpin.id)
-    setSpinItems(selectedSpin.spinItems)
-    setSpinColor(selectedSpin.spinColor)
-    setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)))
+    if (selectedSpin) {
+      console.log("Spin selectedSpin: ", selectedSpin);
+      setSpinId(selectedSpin.id);
+      setSpinItems(selectedSpin.spinItems);
+      setSpinColor(selectedSpin.spinColor);
+      setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)));
+    } else {
+      fetchData();
+    }
   }
 
   return (

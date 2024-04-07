@@ -31,26 +31,27 @@ export default function EditSpin({ spinId, spinColorName }) {
         console.log('EditSpin selectedTheme:', selectedTheme)
     }, [])
 
-    useEffect(() => {
-        async function fetchData() {
-            const spinsCollection = await FirestoreService.getSpinsCollection()
-            const selectedSpin = spinsCollection.find(s => s.id === spinId)
-            console.log('selectedSpin:', selectedSpin)
-            if (selectedSpin) {
-                setInitialName(selectedSpin.spinName)
-                setSpinName(selectedSpin.spinName)
-                setInitialItems(selectedSpin.spinItems)
-                setSelectedTheme(selectedSpin.spinColor)
-                setSpinItems(selectedSpin.spinItems)
-                setInitialTheme(selectedSpin.spinColor)
-                const newInputs = selectedSpin.spinItems.map(async (item) => {
-                    const newId = await generateUUID();
-                    return { id: newId, value: item };
-                });
-                setInputs(await Promise.all(newInputs));
-                console.log('selectedSpin.spinColor:', selectedSpin.spinColor);
-            }
+    const fetchData = async () => {
+        const spinsCollection = await FirestoreService.getSpinsCollection()
+        const selectedSpin = spinsCollection.find(s => s.id === spinId)
+        console.log('selectedSpin:', selectedSpin)
+        if (selectedSpin) {
+            setInitialName(selectedSpin.spinName)
+            setSpinName(selectedSpin.spinName)
+            setInitialItems(selectedSpin.spinItems)
+            setSelectedTheme(selectedSpin.spinColor)
+            setSpinItems(selectedSpin.spinItems)
+            setInitialTheme(selectedSpin.spinColor)
+            const newInputs = selectedSpin.spinItems.map(async (item) => {
+                const newId = await generateUUID();
+                return { id: newId, value: item };
+            });
+            setInputs(await Promise.all(newInputs));
+            console.log('selectedSpin.spinColor:', selectedSpin.spinColor);
         }
+    }
+
+    useEffect(() => {
         fetchData()
     }, [spinId])
 
@@ -125,6 +126,18 @@ export default function EditSpin({ spinId, spinColorName }) {
         setInputs(resetInputs);
     }
 
+    const handleDeleteSpin = async () => {
+        const spins = await FirestoreService.getSpinsCollection();
+        if (spins.length === 1) {
+            Alert.alert('Warning', 'You cannot delete the last spin');
+            return;
+        } else {
+            await FirestoreService.deleteSpin(spinId);
+            setShowEditSpinModal(false);
+            fetchData();
+        }
+    }
+
     return (
         <View>
             <Pressable style={styles.editButton} onPress={editHandler}>
@@ -169,6 +182,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                             <Feather name="plus-square" size={36} color="black" />
                         </Pressable>
                         <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
+                        <Button text={'DELETE'} buttonPress={handleDeleteSpin} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
                         <Button text="Close" buttonPress={handleCloseModal} />
                     </View>
                 </View>

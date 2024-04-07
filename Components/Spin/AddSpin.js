@@ -76,7 +76,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
         }
 
         await FirestoreService.addSpinToUser(spin);
-        setShowAddSpinModal(false);
+        onCancelModified();
     }
 
     const onCancelModified = () => {
