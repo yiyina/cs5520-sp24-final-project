@@ -12,6 +12,7 @@ export default function Spin() {
   const [spinColor, setSpinColor] = useState([])
   const [spinColorName, setSpinColorName] = useState('')
   const [spinId, setSpinId] = useState('')
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const originalSpin = {
     spinColor: ColorThemes.SPRINGFLOWER,
@@ -20,41 +21,57 @@ export default function Spin() {
   }
 
   const fetchData = async () => {
-    const spinsCollection = await FirestoreService.getSpinsCollection();
-    if (spinsCollection.length === 0) {
-      await FirestoreService.addSpinToUser(originalSpin);
-    } else {
-      const firstSpin = spinsCollection[0];
-      setSpinId(firstSpin.id);
-      setSpinItems(firstSpin.spinItems);
-      setSpinColor(firstSpin.spinColor);
-      setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(firstSpin.spinColor)));
+    try {
+      const spinsCollection = await FirestoreService.getSpinsCollection();
+      if (spinsCollection.length === 0) {
+        await FirestoreService.addSpinToUser(originalSpin);
+      } else {
+        const firstSpin = spinsCollection[0];
+        setSpinId(firstSpin.id);
+        setSpinItems(firstSpin.spinItems);
+        setSpinColor(firstSpin.spinColor);
+        setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(firstSpin.spinColor)));
+      }
+      setDataLoaded(true);
+    } catch (error) {
+      console.log("Error fetching data: ", error);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-
+  
   const spinSelectHandler = async (spinId) => {
-    const spins = await FirestoreService.getSpinsCollection();
-    const selectedSpin = spins.find(s => s.id === spinId);
-    if (selectedSpin) {
-      console.log("Spin selectedSpin: ", selectedSpin);
-      setSpinId(selectedSpin.id);
-      setSpinItems(selectedSpin.spinItems);
-      setSpinColor(selectedSpin.spinColor);
-      setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)));
-    } else {
-      fetchData();
+    try {
+      const spins = await FirestoreService.getSpinsCollection();
+      const selectedSpin = spins.find(s => s.id === spinId);
+      if (selectedSpin) {
+        console.log("Spin selectedSpin: ", selectedSpin);
+        setSpinId(selectedSpin.id);
+        setSpinItems(selectedSpin.spinItems);
+        setSpinColor(selectedSpin.spinColor);
+        setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)));
+        setDataLoaded(true);
+      } else {
+        fetchData();
+      }
+    } catch (error) {
+      console.log("Error selecting spin: ", error);
     }
   }
 
+  console.log("Spin dataLoaded: ", dataLoaded);
+
   return (
     <View style={styles.container}>
-      <Header spinSelectHandler={spinSelectHandler} />
-      <SpinWheel spinItems={spinItems} spinColor={spinColor} />
-      <EditSpin spinId={spinId} spinColorName={spinColorName} />
+      {dataLoaded && (
+        <>
+          <Header spinSelectHandler={spinSelectHandler} />
+          <SpinWheel spinItems={spinItems} spinColor={spinColor} />
+          <EditSpin spinId={spinId} spinColorName={spinColorName} />
+        </>
+      )}
     </View>
   )
 }

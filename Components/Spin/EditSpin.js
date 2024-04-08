@@ -15,7 +15,6 @@ export default function EditSpin({ spinId, spinColorName }) {
     const [initialName, setInitialName] = useState('')
     const [spinName, setSpinName] = useState('')
     const [initialItems, setInitialItems] = useState([])
-    // const [spinItems, setSpinItems] = useState([])
     const [initialTheme, setInitialTheme] = useState('');
     const [selectedTheme, setSelectedTheme] = useState('')
     const [showEditSpinModal, setShowEditSpinModal] = useState(false)
@@ -134,7 +133,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                         style: 'cancel'
                     },
                     {
-                        text: 'DELETE', 
+                        text: 'DELETE',
                         onPress: async () => {
                             await FirestoreService.deleteSpin(spinId);
                             setShowEditSpinModal(false);
@@ -176,11 +175,13 @@ export default function EditSpin({ spinId, spinColorName }) {
                         {
                             inputs.map((input) => (
                                 <View style={styles.inputItem} key={input.id}>
-                                    <Input
-                                        text={input.value}
-                                        handleInput={(value) => handleInputChange(value, input.id)}
-                                        onSubmitEditing={addInput}
-                                    />
+                                    <View style={styles.inputText}>
+                                        <Input
+                                            text={input.value}
+                                            handleInput={(value) => handleInputChange(value, input.id)}
+                                            onSubmitEditing={addInput}
+                                        />
+                                    </View>
                                     <Pressable onPress={() => removeInput(input.id)}>
                                         <AntDesign name="minuscircleo" size={24} color="black" />
                                     </Pressable>
@@ -221,14 +222,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 20,
+        padding: 40,
     },
     colorPalette: {
         marginTop: 10,
         maxHeight: 50,
     },
     colorBox: {
-        width: 70,
+        width: 60,
         height: 25,
         marginRight: 10,
         borderRadius: 5,
@@ -237,6 +238,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    inputText: {
+        width: '90%',
     },
     plusButton: {
         justifyContent: 'center',

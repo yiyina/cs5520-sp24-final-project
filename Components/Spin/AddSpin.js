@@ -118,11 +118,13 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     {
                         inputs.map((input) => (
                             <View key={input.id} style={styles.inputItem}>
-                                <Input
-                                    text={input.value}
-                                    handleInput={(text) => handleInputChange(text, input.id)}
-                                    onSubmitEditing={addInput}
-                                />
+                                <View style={styles.inputText}>
+                                    <Input
+                                        text={input.value}
+                                        handleInput={(text) => handleInputChange(text, input.id)}
+                                        onSubmitEditing={addInput}
+                                    />
+                                </View>
                                 <Pressable onPress={() => removeInput(input.id)}>
                                     <AntDesign name="minuscircleo" size={24} color="black" />
                                 </Pressable>
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 20,
+        padding: 40,
     },
     fold: {
         justifyContent: 'center',
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
         maxHeight: 50,
     },
     colorBox: {
-        width: 70,
+        width: 60,
         height: 25,
         marginRight: 10,
         borderRadius: 5,
@@ -171,6 +173,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    inputText: {
+        width: '90%',
     },
     plusButton: {
         justifyContent: 'center',
