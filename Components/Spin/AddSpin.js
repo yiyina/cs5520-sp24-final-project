@@ -5,9 +5,12 @@ import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
 import DropDownList from '../../Shared/DropDownList';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
+import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import Button from '../../Shared/Button';
 import Colors from '../../Shared/Colors';
+import generateUUID from '../../Shared/GenerateUUID';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [spinName, setSpinName] = useState('');
@@ -18,6 +21,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
 
     const handleThemeSelect = (item) => {
+        console.log('AddSpin item:', item);
         setSelectedTheme(item);
     }
 
@@ -32,20 +36,24 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             Alert.alert('Alert', 'Please fill out all empty fields');
             return;
         }
-        const newId = Date.now() + Math.random();
-        console.log('newId:', newId);
-        setInputs(inputs => [...inputs, { id: newId, value: '' }]);
+        setInputs(inputs => [...inputs, { id: generateUUID(), value: '' }]);
     };
 
-    const handleSpinName = (text) => {
-        setSpinName(text);
-    }
+    const removeInput = (idToRemove) => {
+        const inputToRemove = inputs.find(input => input.id === idToRemove);
+        if (inputToRemove && (inputs.length > 1 || (inputToRemove.value && inputToRemove.value.trim() !== ''))) {
+            const updatedInputs = inputs.filter(input => input.id !== idToRemove);
+            setInputs(updatedInputs);
+        } else {
+            Alert.alert('Warning', 'Cannot remove the last input.');
+        }
+    };
 
     const handleInputChange = (text, id) => {
         // const newInputs = [...inputs];
         // newInputs[index] = text;
         // setInputs(newInputs);
-        setInputs(inputs => inputs.map(input => 
+        setInputs(inputs => inputs.map(input =>
             input.id === id ? { ...input, value: text } : input
         ));
     };
@@ -68,13 +76,19 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             spinName: spinName,
         }
 
-        await FirestoreService.addSpinToUser(spin);
-        setShowAddSpinModal(false);
+        try {
+            await FirestoreService.addSpinToUser(spin);
+            Alert.alert('Success', 'Spin successfully created!');
+            onCancelModified();
+        } catch (error) {
+            console.error("Error saving spin: ", error);
+            Alert.alert('Error', 'Failed to save the spin');
+        }
     }
 
     const onCancelModified = () => {
         setShowAddSpinModal(false);
-        setInputs(['']);
+        setInputs([{ value: '' }]);
         setSelectedTheme('');
     }
 
@@ -83,40 +97,67 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             visible={showAddSpinModal}
             animationType="slide"
             transparent={true}
-            onRequestClose={onCancelModified}>
+        >
             <View style={styles.modalBackground}>
                 <View style={styles.modalContainer}>
-                    <Pressable onPress={onCancelModified} style={styles.fold}>
-                        <Octicons name="chevron-down" size={50} color="black" />
-                    </Pressable>
-                    <Text>Add Spin</Text>
-                    <Text>Choose Theme</Text>
+                    <Text style={styles.title}>Add Spin</Text>
+                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={styles.subTitile}>Choose Theme</Text>
+                        <Ionicons name="color-palette-outline" size={24} color="black" style={styles.palette} />
+                    </View>
                     <DropDownList
                         listItems={themeOptions}
                         handleItemSelect={handleThemeSelect}
                         selectedSpin={selectedTheme} />
-                    <ScrollView horizontal style={styles.colorPalette}>
-                        {selectedTheme && selectedTheme.map((color, index) => (
-                            <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
-                        ))}
-                    </ScrollView>
-                    <Text>Name of Spin</Text>
-                    <Input value={spinName} handleInput={handleSpinName} />
-                    <Text>Spin Items</Text>
-                    {
-                        inputs.map((input) => (
-                            <Input
-                                key={input.id}
-                                value={input.value}
-                                handleInput={(text) => handleInputChange(text, input.id)}
-                                onSubmitEditing={addInput}
-                            />
-                        ))
+                    {selectedTheme &&
+                        <ScrollView horizontal style={styles.colorPalette}>
+                            {selectedTheme && selectedTheme.map((color, index) => (
+                                <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
+                            ))}
+                        </ScrollView>
                     }
-                    <Pressable onPress={addInput} style={styles.plusButton}>
-                        <Feather name="plus-square" size={36} color="black" />
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.subTitile}>Name of Spin</Text>
+                    </View>
+                    <Input value={spinName} handleInput={setSpinName} />
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.subTitile}>Spin Items</Text>
+                    </View>
+                    <ScrollView style={{ minHeight: 50, maxHeight: 250 }}>
+                        {
+                            inputs.map((input) => (
+                                <View key={input.id} style={styles.inputItem}>
+                                    <View style={styles.inputText}>
+                                        <Input
+                                            text={input.value}
+                                            handleInput={(text) => handleInputChange(text, input.id)}
+                                        // onSubmitEditing={addInput}
+                                        />
+                                    </View>
+                                    <View style={styles.removeIcon}>
+                                        <Pressable onPress={() => removeInput(input.id)}>
+                                            <AntDesign name="minuscircleo" size={24} color="red" />
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            ))
+                        }
+                    </ScrollView>
+                    <Pressable
+                        onPress={addInput}
+                        style={({ pressed }) => [
+                            styles.plusButton,
+                            pressed ? { backgroundColor: Colors.LIGHT_YELLOW } : { backgroundColor: Colors.WHITE }
+                        ]}>
+                        <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
                     </Pressable>
-                        <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed}/>
+                    <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
+                    <View>
+                        <Text style={styles.subTitile}>------------------------------------------</Text>
+                    </View>
+                    <Pressable onPress={onCancelModified} style={styles.fold}>
+                        <Octicons name="chevron-down" size={50} color="black" />
+                    </Pressable>
                 </View>
             </View>
         </Modal>
@@ -135,21 +176,49 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 20,
+        padding: 40,
+        alignItems: 'center',
     },
     fold: {
+        marginTop: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    colorPalette: {
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginVertical: 20,
+    },
+    subTitile: {
+        fontSize: 18,
+        fontWeight: 'bold',
         marginTop: 10,
-        maxHeight: 50,
+    },
+    palette: {
+        marginHorizontal: 5,
+    },
+    colorPalette: {
+        maxHeight: 25,
     },
     colorBox: {
-        width: 70,
+        width: 60,
         height: 25,
         marginRight: 10,
         borderRadius: 5,
+        borderWidth: 1,
+    },
+    inputItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    inputText: {
+        width: '90%',
+    },
+    removeIcon: {
+        width: '10%',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
     },
     plusButton: {
         justifyContent: 'center',

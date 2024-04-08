@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker'
 import Colors from './Colors'
 
-export default function DropDownList({ placeholder, listItems, handleItemSelect, selectedSpin }) {
+export default function DropDownList({ placeholder, listItems, handleItemSelect }) {
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState(selectedSpin || null)
+    const [value, setValue] = useState(null)
     const [items, setItems] = useState([])
 
     useEffect(() => {
@@ -14,6 +14,10 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect,
                 label: item[1], value: item[0]
             }))
             setItems(transformedList)
+            // console.log("DropDownList transformedList: ", transformedList);
+        } else {
+            setItems([]);
+            console.log("listItems is not an array:", listItems);
         }
     }, [listItems])
 
@@ -48,6 +52,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE,
     },
     dropDown: {
-        height: 50
+        height: 50,
+        marginVertical: 10,
     },
 })
