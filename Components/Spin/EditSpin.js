@@ -40,13 +40,6 @@ export default function EditSpin({ spinId, spinColorName }) {
             setSpinName(selectedSpin.spinName)
             setSelectedTheme(selectedSpin.spinColor)
             setInitialTheme(selectedSpin.spinColor)
-            // if (!inputs) {
-            //     const newInputs = selectedSpin.spinItems.map((item) => {
-            //         return { id: generateUUID(), value: item };
-            //     });
-            //     setInputs(newInputs);
-            //     setInitialItems(newInputs);
-            // }
             const newInputs = selectedSpin.spinItems.map(async (item) => {
                 return { id: generateUUID(), value: item };
             });
