@@ -1,20 +1,21 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import Button from '../Shared/Button'
-import Colors from '../Shared/Colors'
-import Input from '../Shared/Input'
+import Input from '../../Shared/Input'
+import Button from '../../Shared/Button'
+import Colors from '../../Shared/Colors'
 import { Ionicons } from '@expo/vector-icons'
-import FirestoreService from '../firebase-files/FirebaseHelpers'
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../firebase-files/FirebaseSetup';
+import { auth } from '../../firebase-files/FirebaseSetup';
+import Card from '../../Shared/Card'
 
-export default function Login({ navigation }) {
+export default function LoginForm({ navigation, toggleFlip }) {
     const [usernameEmail, setUsernameEmail] = useState('')
     const [password, setPassword] = useState('')
     const [nameEmailError, setNameEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-    const [registerPressed, setRegisterPressed] = useState(false)
+    const [loginPressed, setLoginPressed] = useState(false)
+
 
     useEffect(() => {
         if (usernameEmail) setNameEmailError('')
@@ -31,11 +32,12 @@ export default function Login({ navigation }) {
         setPassword(password)
     }
 
-     const handleLoginPress = async () => {
+    const handleLoginPress = async () => {
         setNameEmailError("");
         setPasswordError("");
+        setLoginPressed(!loginPressed);
 
-        if(!usernameEmail || !password) {
+        if (!usernameEmail || !password) {
             if (!usernameEmail) setNameEmailError("Username or Email could not be empty");
             if (!password) setPasswordError("Password could not be empty");
             return;
@@ -43,9 +45,8 @@ export default function Login({ navigation }) {
         try {
             let email = usernameEmail;
             if (!email.includes('@')) {
-                console.log("Email: ", email);
-                email = await FirestoreService.getEmailByUsername(usernameEmail);
-                console.log("Email from Firestore: ", email);
+                Alert.alert("Please enter a valid email address");
+                return;
             }
 
             if (email) {
@@ -69,23 +70,19 @@ export default function Login({ navigation }) {
             } else if (error.code === 'auth/missing-password') {
                 setPasswordError("Password could not be empty");
             }
+        } finally {
+            setLoginPressed(!loginPressed);
         }
     };
 
     const handleRegisterPress = () => {
-        setRegisterPressed(!registerPressed)
-        console.log("register pressed", registerPressed)
-        navigation.navigate('Register')
+        toggleFlip();
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.welcom}>Welcome To</Text>
-            <Image
-                source={require('../assets/SpinLogo.png')}
-                style={styles.logo} />
+        <Card>
             <View style={styles.inputContainer}>
-                <Text style={styles.text}>Username / Email:</Text>
+                <Text style={styles.text}>Email:</Text>
                 <Input text={usernameEmail} handleInput={handleNameEmailInput} />
                 <Text style={styles.errorText}>
                     {nameEmailError ? nameEmailError : ""}
@@ -108,33 +105,47 @@ export default function Login({ navigation }) {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <Button text="Register" textColor={Colors.BLUE} buttonPress={handleRegisterPress} />
-                <Button text="Login" textColor={Colors.BLACK} buttonPress={handleLoginPress} />
+                <Button
+                    text="Login"
+                    textColor={Colors.BLACK}
+                    buttonPress={handleLoginPress}
+                    defaultStyle={styles.loginButton}
+                    pressedStyle={styles.pressloginButton}
+                    containerStyle={styles.loginButton}
+                />
+                <View style={styles.registerContainer}>
+                    <Text>Don't have an account?</Text>
+                    <Button
+                        text="Register"
+                        textColor={Colors.BLUE}
+                        buttonPress={handleRegisterPress}
+                        textStyle={styles.registerText}
+                    />
+                </View>
             </View>
-        </View>
+        </Card>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingTop: 100,
-        alignItems: 'center',
-    },
-    welcom: {
-        fontSize: 60,
-        textAlign: 'center',
-        margin: 10,
-        fontWeight: 'bold',
-    },
-    logo: {
-        width: 300,
-        height: 100,
+        paddingVertical: '10%',
+        borderRadius: 20,
+        width: Dimensions.get('window').width*0.8,
+        backgroundColor: Colors.WHITE,
+        opacity: 0.9,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 10,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        elevation: 10,
     },
     inputContainer: {
-        marginTop: 100,
-        width: '100%',
         paddingHorizontal: '5%',
+        marginBottom: 10,
     },
     text: {
         fontSize: 20,
@@ -152,8 +163,41 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     buttonContainer: {
-        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-evenly',
-        width: '100%',
+    },
+    pressloginButton: {
+        width: '80%',
+        borderRadius: 10,
+        backgroundColor: Colors.DARK_YELLOW,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 10,
+    },
+    loginButton: {
+        width: '80%',
+        borderRadius: 10,
+        backgroundColor: Colors.LIGHT_YELLOW,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 10,
+    },
+    registerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    registerText: {
+        textDecorationLine: 'underline',
     },
 })

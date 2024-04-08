@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Colors from './Shared/Colors';
-import Login from './Screens/Login';
-import Register from './Screens/Register';
+import LoginRegister from './Screens/LoginRegister';
 import TabNavigation from './Components/TabNavigation';
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './firebase-files/FirebaseSetup'
 
 const Stack = createStackNavigator();
+// AppRegistry.registerComponent('main', () => App);
 
 export default function App() {
   const [userloggedIn, setUserloggedIn] = useState(false);
@@ -24,17 +24,7 @@ export default function App() {
   }, []);
 
   const AuthStack = (
-    <>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register}
-        options={{
-          headerShown: true,
-          headerTitle: "",
-          headerBackTitleVisible: true,
-          headerStyle: { backgroundColor: Colors.TRANSPARENT },
-        }}
-      />
-    </>
+    <Stack.Screen name="LoginRegister" component={LoginRegister} />
   )
   const AppStack = (
     <>

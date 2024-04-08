@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.WHITE,
         borderRadius: 100,
         marginBottom: 50,
+        backgroundColor: Colors.WHITE,
     },
     editAvatar: {
         position: 'absolute',

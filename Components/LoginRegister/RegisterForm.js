@@ -1,15 +1,16 @@
-import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import Input from '../Shared/Input'
-import Button from '../Shared/Button'
-import FirestoreService from '../firebase-files/FirebaseHelpers'
+import FirestoreService from '../../firebase-files/FirebaseHelpers'
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../firebase-files/FirebaseSetup';
-import Colors from '../Shared/Colors'
+import { auth } from '../../firebase-files/FirebaseSetup';
+import Input from '../../Shared/Input'
+import Button from '../../Shared/Button'
+import Colors from '../../Shared/Colors'
+import { validateUsername, validateEmail, validatePassword } from '../../Shared/InformationValidation';
 import { Ionicons } from '@expo/vector-icons'
-import { validateUsername, validateEmail, validatePassword } from '../Shared/InformationValidation';
+import Card from '../../Shared/Card'
 
-export default function Register({ navigation }) {
+export default function LoginForm({ navigation, toggleFlip }) {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -84,7 +85,7 @@ export default function Register({ navigation }) {
                 "Registration Successful",
                 "Let's start to Spin!",
                 [{
-                    text: "OK", onPress: () => {}
+                    text: "OK", onPress: () => { }
                 }]
             );
             await FirestoreService.addUser(userInfo);
@@ -101,8 +102,7 @@ export default function Register({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Register</Text>
+        <Card>
             <View style={styles.inputContainer}>
                 <Text style={styles.text}>Username:</Text>
                 <Input text={username} handleInput={handleUsernameInput} />
@@ -132,39 +132,35 @@ export default function Register({ navigation }) {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={handleResetPress}>
+                    <Text style={styles.resetButton}>Reset</Text>
+                </TouchableOpacity>
                 <Button
-                    text="Reset"
-                    buttonPress={handleResetPress}
-                />
-                <Button
-                    text="Confirm"
+                    text="Register and Login"
                     buttonPress={handleConfirmPress}
                     disabled={hasErrors}
-                    style={hasErrors ? styles.disabledButton : null} 
-                    textStyle={hasErrors ? styles.disabledButtonText : null} 
+                    defaultStyle={styles.RegisterButton}
+                    pressedStyle={styles.pressRegisterButton}
+                    containerStyle={styles.RegisterButton}
                 />
             </View>
-        </View>
+            <View style={styles.loginContainer}>
+                <Text>Already have an account?</Text>
+                <Button
+                    text="Login"
+                    textColor={Colors.BLUE}
+                    buttonPress={toggleFlip}
+                    textStyle={styles.registerText}
+                />
+            </View>
+        </Card>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginVertical: 100,
-        marginHorizontal: Dimensions.get('window').width * 0.05,
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 60,
-        textAlign: 'center',
-        margin: 10,
-        fontWeight: 'bold',
-    },
     inputContainer: {
-        marginTop: 100,
-        width: '100%',
         paddingHorizontal: '5%',
+        marginBottom: 10,
     },
     text: {
         fontSize: 20,
@@ -182,14 +178,45 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     buttonContainer: {
-        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-evenly',
-        width: '100%',
     },
-    disabledButton: {
-        backgroundColor: '#ccc', 
+    resetButton: {
+        color: Colors.DEEP_RED,
+        fontWeight: 'bold',
+    },  
+    pressRegisterButton: {
+        width: '80%',
+        borderRadius: 10,
+        backgroundColor: Colors.DARK_YELLOW,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 10,
     },
-    disabledButtonText: {
-        color: '#999',
+    RegisterButton: {
+        width: '80%',
+        borderRadius: 10,
+        backgroundColor: Colors.LIGHT_YELLOW,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 10,
+    },
+    loginContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    registerText: {
+        textDecorationLine: 'underline',
     },
 })

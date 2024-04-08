@@ -1,4 +1,4 @@
-import { firestore, auth, storage } from "./FirebaseSetup";
+import { firestore, auth, storage, updateEmail } from "./FirebaseSetup";
 import {
     collection,
     getDoc,
@@ -9,7 +9,8 @@ import {
     updateDoc,
     doc,
     getFirestore,
-    deleteField
+    deleteField,
+    deleteDoc
 } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
@@ -25,25 +26,6 @@ const FirestoreService = {
             return docRef.id;
         } catch (error) {
             console.error("Error adding user: ", error);
-            throw error;
-        }
-    },
-
-    async getEmailByUsername(username) {
-        console.log("Attempting to find email for username:", username);
-        try {
-            const querySnapshot = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
-            if (!querySnapshot.empty) {
-                const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data();
-                console.log("Found user data: ", userData);
-                return userData.email;
-            } else {
-                console.log("No user found for username: ", username);
-                return null;
-            }
-        } catch (error) {
-            console.error("Error getting email by username: ", error);
             throw error;
         }
     },
@@ -226,6 +208,34 @@ const FirestoreService = {
         return !querySnapshot.empty; // Returns true if an email exists, false otherwise
     },
 
+    async updateEmailForUser(uid, newEmail) {
+        console.log("Updating email for user: ", uid, newEmail);
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                try {
+                    updateEmail(user, newEmail);
+                    console.log("Email updated successfully.");
+                } catch (error) {
+                    console.error("Error updating email: ", error);
+                    throw error;
+                }
+            } else {
+                console.error("Current user is not available.");
+            }
+
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error("No user document found for UID: " + uid);
+            }
+            const userDocRef = doc(firestore, "users", userDocId);
+            await updateDoc(userDocRef, { email: newEmail });
+        } catch (error) {
+            console.error("Error updating email for user: ", error);
+            throw error;
+        }
+    },
+
     async updateDocuments(uid, fieldsToUpdate, subcollectionPath = null) {
         try {
             const userDocId = await this.getUserDocId(uid);
@@ -246,10 +256,75 @@ const FirestoreService = {
             const docRef = doc(firestore, collectionPath);
             await updateDoc(docRef, fieldsToUpdate);
         } catch (error) {
-            console.error("Error updating user data:", error);
+            if (error.code === 'auth/requires-recent-login') {
+                console.log("There is no way to reauthenticate the user from here.");
+            } else {
+                console.error("Error updating documents: ", error);
+                throw error;
+            }
+        }
+    },
+
+    async addSpinToUser(spin, spinId) {
+        try {
+            const uid = auth.currentUser.uid; 
+            if (!uid) {
+                throw new Error("User is not authenticated.");
+            }
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error("User document not found for UID: " + uid);
+            }
+
+            const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
+            console.log("spin ID: ", spinId)
+            console.log("spin: ", spin)
+
+            if (spinId) {
+                const spinDocRef = doc(spinsCollectionRef, spinId);
+                console.log("Updating spin: ", spinDocRef);
+                await updateDoc(spinDocRef, spin);
+            } else {
+                await addDoc(spinsCollectionRef, spin);
+            }
+        } catch (error) {
+            console.error("Error adding spin to user: ", error);
             throw error;
         }
     },
+
+    async getSpinsCollection() {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            if (!userDocId) {
+                throw new Error("User document not found for UID: " + auth.currentUser.uid);
+            }
+            const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
+            const querySnapshot = await getDocs(spinsCollectionRef);
+
+            const spinsData = querySnapshot.docs.map(doc => {
+                return {
+                    id: doc.id,
+                    ...doc.data()
+                };
+            });
+            return spinsData;
+        } catch (error) {
+            console.error("Error getting spin collection: ", error);
+            throw error;
+        }
+    },
+    
+    async deleteSpin(spinId) {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            const spinDocRef = doc(firestore, "users", userDocId, "spins", spinId);
+            await deleteDoc(spinDocRef);
+        } catch (error) {
+            console.error("Error deleting spin: ", error);
+            throw error;
+        }
+    }
 
 }
 
