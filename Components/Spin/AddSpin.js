@@ -10,6 +10,7 @@ import { Feather } from '@expo/vector-icons';
 import Button from '../../Shared/Button';
 import Colors from '../../Shared/Colors';
 import generateUUID from '../../Shared/GenerateUUID';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [spinName, setSpinName] = useState('');
@@ -77,6 +78,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
 
         try {
             await FirestoreService.addSpinToUser(spin);
+            Alert.alert('Success', 'Spin successfully created!');
             onCancelModified();
         } catch (error) {
             console.error("Error saving spin: ", error);
@@ -98,41 +100,64 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
         >
             <View style={styles.modalBackground}>
                 <View style={styles.modalContainer}>
-                    <Pressable onPress={onCancelModified} style={styles.fold}>
-                        <Octicons name="chevron-down" size={50} color="black" />
-                    </Pressable>
-                    <Text>Add Spin</Text>
-                    <Text>Choose Theme</Text>
+                    <Text style={styles.title}>Add Spin</Text>
+                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={styles.subTitile}>Choose Theme</Text>
+                        <Ionicons name="color-palette-outline" size={24} color="black" style={styles.palette} />
+                    </View>
                     <DropDownList
                         listItems={themeOptions}
                         handleItemSelect={handleThemeSelect}
                         selectedSpin={selectedTheme} />
-                    <ScrollView horizontal style={styles.colorPalette}>
-                        {selectedTheme && selectedTheme.map((color, index) => (
-                            <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
-                        ))}
-                    </ScrollView>
-                    <Text>Name of Spin</Text>
-                    <Input value={spinName} handleInput={setSpinName} />
-                    <Text>Spin Items</Text>
-                    {
-                        inputs.map((input) => (
-                            <View key={input.id} style={styles.inputItem}>
-                                <Input
-                                    text={input.value}
-                                    handleInput={(text) => handleInputChange(text, input.id)}
-                                    onSubmitEditing={addInput}
-                                />
-                                <Pressable onPress={() => removeInput(input.id)}>
-                                    <AntDesign name="minuscircleo" size={24} color="black" />
-                                </Pressable>
-                            </View>
-                        ))
+                    {selectedTheme &&
+                        <ScrollView horizontal style={styles.colorPalette}>
+                            {selectedTheme && selectedTheme.map((color, index) => (
+                                <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
+                            ))}
+                        </ScrollView>
                     }
-                    <Pressable onPress={addInput} style={styles.plusButton}>
-                        <Feather name="plus-square" size={36} color="black" />
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.subTitile}>Name of Spin</Text>
+                    </View>
+                    <Input value={spinName} handleInput={setSpinName} />
+                    <View style={{ width: '100%' }}>
+                        <Text style={styles.subTitile}>Spin Items</Text>
+                    </View>
+                    <ScrollView style={{ minHeight: 50, maxHeight: 250 }}>
+                        {
+                            inputs.map((input) => (
+                                <View key={input.id} style={styles.inputItem}>
+                                    <View style={styles.inputText}>
+                                        <Input
+                                            text={input.value}
+                                            handleInput={(text) => handleInputChange(text, input.id)}
+                                        // onSubmitEditing={addInput}
+                                        />
+                                    </View>
+                                    <View style={styles.removeIcon}>
+                                        <Pressable onPress={() => removeInput(input.id)}>
+                                            <AntDesign name="minuscircleo" size={24} color="red" />
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            ))
+                        }
+                    </ScrollView>
+                    <Pressable
+                        onPress={addInput}
+                        style={({ pressed }) => [
+                            styles.plusButton,
+                            pressed ? { backgroundColor: Colors.LIGHT_YELLOW } : { backgroundColor: Colors.WHITE }
+                        ]}>
+                        <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
                     </Pressable>
                     <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
+                    <View>
+                        <Text style={styles.subTitile}>------------------------------------------</Text>
+                    </View>
+                    <Pressable onPress={onCancelModified} style={styles.fold}>
+                        <Octicons name="chevron-down" size={50} color="black" />
+                    </Pressable>
                 </View>
             </View>
         </Modal>
@@ -151,26 +176,49 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 20,
+        padding: 40,
+        alignItems: 'center',
     },
     fold: {
+        marginTop: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    colorPalette: {
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginVertical: 20,
+    },
+    subTitile: {
+        fontSize: 18,
+        fontWeight: 'bold',
         marginTop: 10,
-        maxHeight: 50,
+    },
+    palette: {
+        marginHorizontal: 5,
+    },
+    colorPalette: {
+        maxHeight: 25,
     },
     colorBox: {
-        width: 70,
+        width: 60,
         height: 25,
         marginRight: 10,
         borderRadius: 5,
+        borderWidth: 1,
     },
     inputItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    inputText: {
+        width: '90%',
+    },
+    removeIcon: {
+        width: '10%',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
     },
     plusButton: {
         justifyContent: 'center',
