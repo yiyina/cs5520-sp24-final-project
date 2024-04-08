@@ -172,22 +172,24 @@ export default function EditSpin({ spinId, spinColorName }) {
                                 <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
                             ))}
                         </ScrollView>
-                        {
-                            inputs.map((input) => (
-                                <View style={styles.inputItem} key={input.id}>
-                                    <View style={styles.inputText}>
-                                        <Input
-                                            text={input.value}
-                                            handleInput={(value) => handleInputChange(value, input.id)}
-                                            onSubmitEditing={addInput}
-                                        />
+                        <ScrollView style={{ maxHeight: 400 }}>
+                            {
+                                inputs.map((input) => (
+                                    <View style={styles.inputItem} key={input.id}>
+                                        <View style={styles.inputText}>
+                                            <Input
+                                                text={input.value}
+                                                handleInput={(value) => handleInputChange(value, input.id)}
+                                                onSubmitEditing={addInput}
+                                            />
+                                        </View>
+                                        <Pressable onPress={() => removeInput(input.id)}>
+                                            <AntDesign name="minuscircleo" size={24} color="black" />
+                                        </Pressable>
                                     </View>
-                                    <Pressable onPress={() => removeInput(input.id)}>
-                                        <AntDesign name="minuscircleo" size={24} color="black" />
-                                    </Pressable>
-                                </View>
-                            ))
-                        }
+                                ))
+                            }
+                        </ScrollView>
                         <Pressable onPress={addInput} style={styles.plusButton}>
                             <Feather name="plus-square" size={36} color="black" />
                         </Pressable>

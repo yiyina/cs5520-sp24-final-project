@@ -6,6 +6,8 @@ import EditSpin from '../Components/Spin/EditSpin'
 import ColorThemes from '../Components/Spin/DefaultColorSet'
 import { defaultSpin } from '../Components/Spin/DefaultSpin'
 import FirestoreService from '../firebase-files/FirebaseHelpers'
+import { ActivityIndicator } from 'react-native'
+import Colors from '../Shared/Colors'
 
 export default function Spin() {
   const [spinItems, setSpinItems] = useState([])
@@ -40,8 +42,8 @@ export default function Spin() {
 
   useEffect(() => {
     fetchData();
-  }, []);
-  
+  }, [dataLoaded]);
+
   const spinSelectHandler = async (spinId) => {
     try {
       const spins = await FirestoreService.getSpinsCollection();
@@ -52,7 +54,6 @@ export default function Spin() {
         setSpinItems(selectedSpin.spinItems);
         setSpinColor(selectedSpin.spinColor);
         setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)));
-        setDataLoaded(true);
       } else {
         fetchData();
       }
@@ -72,6 +73,11 @@ export default function Spin() {
           <EditSpin spinId={spinId} spinColorName={spinColorName} />
         </>
       )}
+      {!dataLoaded &&
+        <View style={styles.waitingView}>
+          <ActivityIndicator size="large" color={Colors.DEEP_RED} />
+        </View>
+      }
     </View>
   )
 }
@@ -79,5 +85,10 @@ export default function Spin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  waitingView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
   },
 })

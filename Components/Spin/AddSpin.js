@@ -115,22 +115,24 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <Text>Name of Spin</Text>
                     <Input value={spinName} handleInput={setSpinName} />
                     <Text>Spin Items</Text>
-                    {
-                        inputs.map((input) => (
-                            <View key={input.id} style={styles.inputItem}>
-                                <View style={styles.inputText}>
-                                    <Input
-                                        text={input.value}
-                                        handleInput={(text) => handleInputChange(text, input.id)}
-                                        onSubmitEditing={addInput}
-                                    />
+                    <ScrollView style={{maxHeight: 200}}>
+                        {
+                            inputs.map((input) => (
+                                <View key={input.id} style={styles.inputItem}>
+                                    <View style={styles.inputText}>
+                                        <Input
+                                            text={input.value}
+                                            handleInput={(text) => handleInputChange(text, input.id)}
+                                            onSubmitEditing={addInput}
+                                        />
+                                    </View>
+                                    <Pressable onPress={() => removeInput(input.id)}>
+                                        <AntDesign name="minuscircleo" size={24} color="black" />
+                                    </Pressable>
                                 </View>
-                                <Pressable onPress={() => removeInput(input.id)}>
-                                    <AntDesign name="minuscircleo" size={24} color="black" />
-                                </Pressable>
-                            </View>
-                        ))
-                    }
+                            ))
+                        }
+                    </ScrollView>
                     <Pressable onPress={addInput} style={styles.plusButton}>
                         <Feather name="plus-square" size={36} color="black" />
                     </Pressable>
