@@ -62,8 +62,6 @@ export default function Spin() {
     }
   }
 
-  console.log("Spin dataLoaded: ", dataLoaded);
-
   return (
     <View style={styles.container}>
       {dataLoaded && (

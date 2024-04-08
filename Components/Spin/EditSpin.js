@@ -9,7 +9,9 @@ import DropdownList from '../../Shared/DropDownList';
 import ColorThemes from './DefaultColorSet';
 import generateUUID from '../../Shared/GenerateUUID';
 import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 
 export default function EditSpin({ spinId, spinColorName }) {
     const [initialName, setInitialName] = useState('')
@@ -26,9 +28,9 @@ export default function EditSpin({ spinId, spinColorName }) {
         setSelectedTheme(theme);
     }
 
-    useEffect(() => {
-        console.log('EditSpin inputs:', inputs)
-    }, [inputs])
+    // useEffect(() => {
+    //     console.log('EditSpin inputs:', inputs)
+    // }, [inputs])
 
     const fetchData = async () => {
         const spinsCollection = await FirestoreService.getSpinsCollection()
@@ -106,8 +108,13 @@ export default function EditSpin({ spinId, spinColorName }) {
 
         console.log('EditSpin.js spin:', spin, spinId);
 
-        await FirestoreService.addSpinToUser(spin, spinId);
-        setShowEditSpinModal(false);
+        try {
+            await FirestoreService.addSpinToUser(spin, spinId);
+            Alert.alert('Success', 'Spin successfully updated!');
+            setShowEditSpinModal(false);
+        } catch (error) {
+            console.log("Error saving inputs: ", error);
+        }
     }
 
     const handleCloseModal = () => {
@@ -157,10 +164,17 @@ export default function EditSpin({ spinId, spinColorName }) {
                 animationType="slide">
                 <View style={styles.modalBackground}>
                     <View style={styles.modalContainer}>
-                        <Text>Edit Spin</Text>
-                        <Text>Spin Name</Text>
+                        <Text style={styles.title}>Edit Spin</Text>
+                        <View style={{ width: '100%' }}>
+                            <Text style={styles.subTitile}>Spin Name</Text>
+                        </View>
                         <Input text={spinName} handleInput={setSpinName} />
-                        <Text>Spin Colors</Text>
+                        <View style={{ width: '100%' }}>
+                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={styles.subTitile}>Choose Theme</Text>
+                                <Ionicons name="color-palette-outline" size={24} color="black" style={styles.palette} />
+                            </View>
+                        </View>
                         <DropdownList
                             placeholder={spinColorName}
                             listItems={themeOptions}
@@ -172,7 +186,10 @@ export default function EditSpin({ spinId, spinColorName }) {
                                 <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
                             ))}
                         </ScrollView>
-                        <ScrollView style={{ maxHeight: 400 }}>
+                        <View style={{ width: '100%' }}>
+                            <Text style={styles.subTitile}>Spin Items</Text>
+                        </View>
+                        <ScrollView style={{ minHeight: 50, maxHeight: 350 }}>
                             {
                                 inputs.map((input) => (
                                     <View style={styles.inputItem} key={input.id}>
@@ -180,22 +197,36 @@ export default function EditSpin({ spinId, spinColorName }) {
                                             <Input
                                                 text={input.value}
                                                 handleInput={(value) => handleInputChange(value, input.id)}
-                                                onSubmitEditing={addInput}
+                                            // onSubmitEditing={addInput}
                                             />
                                         </View>
-                                        <Pressable onPress={() => removeInput(input.id)}>
-                                            <AntDesign name="minuscircleo" size={24} color="black" />
-                                        </Pressable>
+                                        <View style={styles.removeIcon}>
+                                            <Pressable onPress={() => removeInput(input.id)}>
+                                                <AntDesign name="minuscircleo" size={24} color="red" />
+                                            </Pressable>
+                                        </View>
                                     </View>
                                 ))
                             }
                         </ScrollView>
-                        <Pressable onPress={addInput} style={styles.plusButton}>
-                            <Feather name="plus-square" size={36} color="black" />
+                        <Pressable 
+                            onPress={addInput} 
+                            style={({ pressed }) => [
+                                styles.plusButton,
+                                pressed ? {backgroundColor: Colors.LIGHT_YELLOW} : {backgroundColor: Colors.WHITE}
+                            ]}>
+                            <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
                         </Pressable>
-                        <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
-                        <Button text={'DELETE'} buttonPress={handleDeleteSpin} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
-                        <Button text="Close" buttonPress={handleCloseModal} />
+                        <View style={styles.buttonsContainer}>
+                            <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
+                            <Button text={'DELETE'} buttonPress={handleDeleteSpin} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
+                        </View>
+                        <View>
+                            <Text style={styles.subTitile}>------------------------------------------</Text>
+                        </View>
+                        <Pressable onPress={handleCloseModal} style={styles.fold}>
+                            <Octicons name="chevron-down" size={50} color="black" />
+                        </Pressable>
                     </View>
                 </View>
             </Modal>
@@ -217,24 +248,45 @@ const styles = StyleSheet.create({
     },
     modalBackground: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     },
     modalContainer: {
+        height: '98%',
+        width: '100%',
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: 40,
+        alignItems: 'center',
+    },
+    fold: {
+        marginTop: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginVertical: 20,
+    },
+    subTitile: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
+    },
+    palette: {
+        marginHorizontal: 5,
     },
     colorPalette: {
-        marginTop: 10,
-        maxHeight: 50,
+        height: 40,
     },
     colorBox: {
         width: 60,
         height: 25,
         marginRight: 10,
         borderRadius: 5,
+        borderWidth: 1,
     },
     inputItem: {
         flexDirection: 'row',
@@ -243,6 +295,11 @@ const styles = StyleSheet.create({
     },
     inputText: {
         width: '90%',
+    },
+    removeIcon: {
+        width: '10%',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
     },
     plusButton: {
         justifyContent: 'center',
@@ -261,4 +318,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 10,
     },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
+    }
 })
