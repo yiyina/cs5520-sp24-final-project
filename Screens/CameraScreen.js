@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import FirestoreService from '../firebase-files/FirebaseHelpers';
-import CameraService from '../Services/CameraService';
-import { auth } from '../firebase-files/FirebaseSetup';
+import CameraService from '../Services/CameraService'; // Assuming this is the correct import path
 import Colors from '../Shared/Colors';
 
 export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured }) {
@@ -12,7 +10,6 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
 
-    // ask for camera permission
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestCameraPermissionsAsync();
@@ -20,34 +17,12 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
         })();
     }, []);
 
-    const handleImageAction = async (imageUri, type) => {
-        setIsUploading(true);
-        try {
-            const uid = auth.currentUser.uid;
-            if (type === 'avatar') {
-                await FirestoreService.updateUserAvatar(uid, imageUri);
-                Alert.alert('Your avatar has been successfully updated!');
-            } else if (type === 'gallery') {
-                await FirestoreService.addPhotoToGallery(uid, imageUri);
-                Alert.alert('Your avatar has been successfully updated!');
-            }
-            onCancel();
-            onImageCaptured(imageUri);
-        } catch (error) {
-            console.error("CameraScreen handleImageAction Error updating user avatar: ", error);
-        } finally {
-            setIsUploading(false);
-        }
-    }
-
     if (hasPermission === null) {
         return <View />;
     }
-
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
-
     if (isUploading) {
         return (
             <View style={styles.waitingView}>
@@ -58,30 +33,45 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
 
     return (
         <Modal
-          visible={showCamera}
-          animationType="slide"
-          transparent={true}
+            visible={showCamera}
+            animationType="slide"
+            transparent={true}
         >
-        <View style={styles.fullscreen}>
-            <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
-                <View style={styles.controlLayer}>
-                    <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                        <FontAwesome5 name="window-close" size={36} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.captureButtonOuter} onPress={async () => CameraService.takePicture(cameraRef, type, handleImageAction)}>
-                        <View style={styles.captureButtonInner}>
-                            <FontAwesome name="camera" size={40} color="white" />
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.galleryButton} onPress={async () => CameraService.pickImage(type, handleImageAction)}>
-                        <FontAwesome name="photo" size={36} color="white" />
-                    </TouchableOpacity>
-                </View>
-            </Camera>
-        </View>
+            <View style={styles.fullscreen}>
+                <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
+                    <View style={styles.controlLayer}>
+                        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+                            <FontAwesome5 name="window-close" size={36} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.captureButtonOuter} onPress={async () => {
+                            setIsUploading(true); // Start uploading indicator
+                            await CameraService.takePicture(cameraRef, type, CameraService.handleImageAction).finally(() => {
+                                setIsUploading(false); // Stop uploading indicator
+                                onCancel(); // Optionally close the camera modal
+                            });
+                        }}>
+                            <View style={styles.captureButtonInner}>
+                                <FontAwesome name="camera" size={40} color="white" />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.galleryButton} onPress={async () => {
+                            setIsUploading(true); // Start uploading indicator
+                            await CameraService.pickImage(type, CameraService.handleImageAction).finally(() => {
+                                setIsUploading(false); // Stop uploading indicator
+                                onCancel(); // Optionally close the camera modal
+                            });
+                        }}>
+                            <FontAwesome name="photo" size={36} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                </Camera>
+            </View>
         </Modal>
     );
 }
+
+
+
 
 const styles = StyleSheet.create({
     fullscreen: {

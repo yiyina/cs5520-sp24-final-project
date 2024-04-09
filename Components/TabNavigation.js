@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable } from 'react-native'
+import { StyleSheet, View, Pressable,Modal } from 'react-native'
 import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
@@ -11,6 +11,7 @@ import Search from '../Screens/Search'
 import Profile from '../Screens/Profile'
 import Spin from '../Screens/Spin'
 import CameraScreen from '../Screens/CameraScreen';
+import CameraService from '../Services/CameraService';
 
 
 export default function TabNavigation() {
@@ -47,9 +48,9 @@ export default function TabNavigation() {
         </Pressable>
     )
 
-    // const toggleCamera = () => {
+    //  const toggleCamera = () => {
     //     setShowCamera(!showCamera);
-    // }
+    //  }
 
     return (
         <>
@@ -113,6 +114,22 @@ export default function TabNavigation() {
                     }}
                 />
             </Tab.Navigator>
+            <Modal
+                visible={showCamera}
+                animationType="slide"
+                transparent={true}
+            >
+                <CameraScreen
+                    showCamera={showCamera}
+                    onCancel={() => setShowCamera(false)}
+                    type={'gallery'} // Assume 'gallery' type for demonstration
+                    onImageCaptured={(imageUri) => {
+                     CameraService.handleImageCaptured(imageUri, 'gallery');
+                        // Here you would handle the captured image URI, such as uploading it
+                        setShowCamera(false);
+                    }}
+                />
+            </Modal>
             {/* <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
