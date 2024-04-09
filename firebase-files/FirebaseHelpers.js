@@ -130,20 +130,31 @@ const FirestoreService = {
         }
     },
 
-   async addPhotoToGallery(uid, imageUrl) {
+  async addPhotoToGallery(uid, fileUri) {
     try {
-        if (!uid || !imageUrl) {
+        // Validate the parameters
+        if (!uid || !fileUri) {
             throw new Error("Invalid parameters for addPhotoToGallery.");
         }
 
-        // Reference to the user's gallery collection
-        const galleryRef = collection(firestore, `users/${uid}/gallery`);
+        
+       const imageUrl = await this.uploadToStorage(uid, fileUri, 'gallery');
 
-        // Add a new document with the image URL and the current timestamp
-        await addDoc(galleryRef, {
+        // Reference to the user's gallery collection
+        const userDocId = await this.getUserDocId(uid);
+        if (!userDocId) {
+            throw new Error(`User document not found for UID: ${uid}`);
+        }
+
+        const galleryRef = collection(firestore, `users/${userDocId}/gallery`);
+
+        // Add a new document in the gallery collection with the image URL
+        const docRef = await addDoc(galleryRef, {
             url: imageUrl,
-            createdAt: new Date() // Timestamp for when the photo was added
+            createdAt: new Date()
         });
+
+        console.log("Gallery image added with ID:", docRef.id);
     } catch (error) {
         console.error("Error adding photo to gallery:", error);
         throw error;
@@ -328,7 +339,15 @@ const FirestoreService = {
             console.error("Error deleting spin: ", error);
             throw error;
         }
-    }
+    },
+    async getGalleryImages(userId) {
+    const galleryRef = collection(firestore, `users/${userId}/gallery`);
+    const querySnapshot = await getDocs(galleryRef);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        url: doc.data().url,
+    }));
+}
 
 }
 

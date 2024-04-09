@@ -1,167 +1,122 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Switch, Button, Platform, Alert } from 'react-native';
+import { View, Switch, Text, StyleSheet } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Colors from '../Shared/Colors';
 
-export default function NotificationManager() {
-  const [isPermissionGranted, setIsPermissionGranted] = useState(false);
-  const [isLunchScheduled, setIsLunchScheduled] = useState(false);
-  const [isDinnerScheduled, setIsDinnerScheduled] = useState(false);
-  const [lunchNotificationId, setLunchNotificationId] = useState(null);
-  const [dinnerNotificationId, setDinnerNotificationId] = useState(null);
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
-  useEffect(() => {
-    checkNotificationPermissions();
-  }, []);
+const NotificationManager = ({ settings, onSave }) => {
+  const [lunchEnabled, setLunchEnabled] = useState(settings.lunchEnabled);
+  const [dinnerEnabled, setDinnerEnabled] = useState(settings.dinnerEnabled);
+useEffect(() => {
+  // This effect is for updating parent component's state
+  onSave({ lunchEnabled, dinnerEnabled });
+}, [lunchEnabled, dinnerEnabled, onSave]);
 
-  const checkNotificationPermissions = async () => {
-    const { granted } = await Notifications.getPermissionsAsync();
-    setIsPermissionGranted(granted);
-    if (!granted) {
-        Alert.alert("Permissions required", "You need to enable notifications permissions in your settings.");
+useEffect(() => {
+  // This effect is for registering for push notifications
+  const registerNotifications = async () => {
+    await registerForPushNotificationsAsync();
+  };
+
+  registerNotifications();
+}, []); // Empty dependency array means this runs once on mount
+
+useEffect(() => {
+  // This effect handles notification scheduling
+  const manageNotifications = async () => {
+    // Cancel all previous notifications to avoid duplicates
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    
+    if (lunchEnabled) {
+      await scheduleNotification('It\'s lunch time! Let\'s Play Game!', 'Enjoy your meal!', 16, 7);
+    }
+    
+    if (dinnerEnabled) {
+      await scheduleNotification('Dinner time! Let\'s Play Game!', 'Bon appétit!', 18, 0);
     }
   };
-    
 
-  const handleScheduleNotification = async (type) => {
-  let time = new Date();
-  let title;
-  let body;
-  
-  if (type === 'lunch') {
-    time.setHours(12, 32, 0);
-    title = "Lunch Time";
-    body = "It's time for lunch!";
-  } else if (type === 'dinner') {
-    time.setHours(18, 0, 0); // Set to 6 PM instead of 17:41 for dinner
-    title = "Dinner Time";
-    body = "It's time for dinner!";
+  manageNotifications();
+}, [lunchEnabled, dinnerEnabled]); // This depends on lunchEnabled and dinnerEnabled
+
+
+  async function registerForPushNotificationsAsync() {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get permission for notifications!');
+      return;
+    }
+    console.log('Notification permission granted.',finalStatus);
   }
-
-  try {
-    const identifier = await Notifications.scheduleNotificationAsync({
+  
+  async function scheduleNotification(title, body, hour, minute) {
+    const schedulingOptions = {
       content: {
-        title: title,
-        body: body,
-        sound: true,
+        title,
+        body,
       },
       trigger: {
-        hour: time.getHours(),
-        minute: time.getMinutes(),
-        second: 0,
-        repeats: true
+        hour: Number(hour), 
+        minute: Number(minute), 
+        repeats: true,
       },
-    });
-
-    if (type === 'lunch') {
-      setIsLunchScheduled(true);
-      setLunchNotificationId(identifier);
-    } else if (type === 'dinner') {
-      setIsDinnerScheduled(true);
-      setDinnerNotificationId(identifier);
-    }
-  } catch (error) {
-    console.error("Error scheduling notification: ", error);
-    Alert.alert("Error", "Failed to schedule notification. Please try again.");
+    };
+    await Notifications.scheduleNotificationAsync(schedulingOptions);
   }
-};
-
-
-  const handleCancelNotification = async (type) => {
-    if (type === 'lunch' && lunchNotificationId) {
-      await Notifications.cancelScheduledNotificationAsync(lunchNotificationId);
-      setIsLunchScheduled(false);
-      setLunchNotificationId(null);
-    } else if (type === 'dinner' && dinnerNotificationId) {
-      await Notifications.cancelScheduledNotificationAsync(dinnerNotificationId);
-      setIsDinnerScheduled(false);
-      setDinnerNotificationId(null);
-    }
-  };
-
-  const requestPermissions = async () => {
-    const { granted } = await Notifications.requestPermissionsAsync({
-      ios: { allowBadge: true, allowSound: true, allowAlert: true },
-    });
-    setIsPermissionGranted(granted);
-    if (!granted) {
-      Alert.alert("Permission denied", "You cannot schedule notifications without permissions.");
-    }
-  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Notification Manager</Text>
-      {isPermissionGranted ? (
-        <>
-          <View style={styles.settingContainer}>
-            <Text style={styles.text}>Schedule Lunch Notification at 12pm</Text>
-            <Switch
-              value={isLunchScheduled}
-              onValueChange={newValue => {
-                if (newValue) {
-                  handleScheduleNotification('lunch');
-                } else {
-                  handleCancelNotification('lunch');
-                }
-              }}
-            />
-          </View>
-          <View style={styles.settingContainer}>
-            <Text style={styles.text}>Schedule Dinner Notification at 6pm</Text>
-            <Switch
-              value={isDinnerScheduled}
-              onValueChange={newValue => {
-                if (newValue) {
-                  handleScheduleNotification('dinner');
-                } else {
-                  handleCancelNotification('dinner');
-                }
-              }}
-            />
-          </View>
-          <Button color = {Colors.DEEP_RED} title="Do you want to receive notifications? " onPress={requestPermissions} />
-        </>
-      ) : (
-        <View style={styles.centeredView}>
-          <Text style={styles.warningText}>Notifications permission is not granted.</Text>
-          <Button title="Do you want to receive notifications?" onPress={requestPermissions} />
-        </View>
-      )}
+      <View style={styles.switchContainer}>
+        <Text style={styles.Text }>Schedule Lunch Notification at 12pm</Text>
+        <Switch
+          value={lunchEnabled}
+          onValueChange={setLunchEnabled}
+        />
+      </View>
+      <View style={styles.switchContainer}>
+        <Text style={styles.Text }>Schedule Dinner Notification at 6pm</Text>
+        <Switch
+          value={dinnerEnabled}
+          onValueChange={setDinnerEnabled}
+        />
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
-  title: {
-    color: Colors.DEEP_RED,
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 30,
-  },
-  settingContainer: {
+  switchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginVertical: 10,
+    width: '90%',
+    marginBottom: 20,
+    marginLeft: 10,
   },
-  warningText: {
-    color: 'red',
-  },
-  centeredView: {
-    alignItems: 'center',
-  },
-  text: {
+  Text: {
+    marginTop: 3,
     color: Colors.DEEP_RED,
-    fontSize: 16,
-    paddingHorizontal: 5,
-  },
+    fontSize: 15,
+    marginRight: 10,
+  
 
+  },
 });
+
+export default NotificationManager;

@@ -3,49 +3,47 @@ import FirestoreService from '../firebase-files/FirebaseHelpers';
 import { auth } from '../firebase-files/FirebaseSetup';
 
 class CameraService {
-    static async takePicture(cameraRef, type, handleImageAction) {
+    static async takePicture(cameraRef, type) {
         if (cameraRef.current) {
             let photo = await cameraRef.current.takePictureAsync();
             console.log("takePicture photo: ", photo);
-            handleImageAction(photo.uri, type);
+            await this.handleImageCaptured(photo.uri, type);
         }
     }
 
-    static async pickImage(type, handleImageAction) {
+    static async pickImage(type) {
         let photo = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
         });
         if (photo && !photo.canceled) {
             if (photo.assets && photo.assets.length > 0) {
                 let photoUri = photo.assets[0].uri;
-                handleImageAction(photoUri, type);
+                await this.handleImageCaptured(photoUri, type);
             } else {
                 console.error("No assets found in the photo response.");
             }
         }
     }
 
-   static async handleImageCaptured(imageUri, type) {
-    try {
-        const uid = auth.currentUser.uid;
-        if (!uid) throw new Error("User not authenticated");
-
-        // Now, use the 'type' to decide the next action
-        if (type === 'avatar') {
-            // Logic to update user's avatar
-            const avatarUrl = await FirestoreService.uploadToStorage(uid, imageUri, 'avatar');
-            await FirestoreService.updateUserAvatar(uid, avatarUrl);
-            console.log("Avatar updated:", avatarUrl);
-        } else if (type === 'gallery') {
-            // Logic to add an image to the user's gallery
-            const imageUrl = await FirestoreService.uploadToStorage(uid, imageUri, 'gallery');
-            await FirestoreService.addPhotoToGallery(uid, imageUrl);
-            console.log("Image added to gallery:", imageUrl);
+    static async handleImageCaptured(imageUri, type) {
+        try {
+            const uid = auth.currentUser.uid;
+            if (!uid) throw new Error("User not authenticated");
+            let url;
+            // Decide action based on type and upload image if necessary
+            if (type === 'avatar' || type === 'gallery') {
+                url = await FirestoreService.uploadToStorage(uid, imageUri, type);
+                if (type === 'avatar') {
+                    await FirestoreService.updateUserAvatar(uid, url);
+                } else if (type === 'gallery') {
+                    await FirestoreService.addPhotoToGallery(uid, url);
+                }
+            }
+            console.log(`${type} updated:`, url);
+        } catch (error) {
+            console.error(`Error in handling image capture for ${type}:`, error);
         }
-    } catch (error) {
-        console.error("Error in handleImageCaptured:", error);
     }
-}
 }
 
 export default CameraService;

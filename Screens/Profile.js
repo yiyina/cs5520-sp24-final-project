@@ -8,12 +8,14 @@ import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import NotificationManager from '../Services/NotificationManager';
+import PhotoGallery from '../Components/PhotoGallery';
 
 
 export default function Profile() {
   const { avatarUri } = getUpdatedUserData();
   const [showProfile, setShowProfile] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); 
+  const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
 
   const handleLogout = async () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -62,16 +64,22 @@ export default function Profile() {
         </Pressable>
         {isModalVisible && (
         <View style={styles.notificationContainer}>
-          <NotificationManager onCancel={() => setIsModalVisible(false)} />
+            <NotificationManager
+              onCancel={() => setIsModalVisible(false)}
+              settings={notificationSettings}
+              onSave={setNotificationSettings} 
+            />
           <Pressable onPress={() => setIsModalVisible(false)} style={styles.dismissButton}>
           <Text style={styles.text}>Save Notification Setting.</Text>
         </Pressable>
           </View>
           )}
       </View>
+      
      
 
       <View style={styles.body}>
+        <PhotoGallery />
         
         
         
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
   borderRadius: 10, // Rounded corners
   alignItems: 'center', // Center items horizontally
   justifyContent: 'center', // Center items vertically
-    marginTop: 180, // Push down from the top of the screen
+    marginTop: 180,
   
 },
 
