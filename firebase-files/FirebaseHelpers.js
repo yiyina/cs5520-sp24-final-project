@@ -132,7 +132,6 @@ const FirestoreService = {
 
   async addPhotoToGallery(uid, fileUri) {
     try {
-        // Validate the parameters
         if (!uid || !fileUri) {
             throw new Error("Invalid parameters for addPhotoToGallery.");
         }
@@ -164,6 +163,8 @@ const FirestoreService = {
     async addCurrentLocation(uid, location) {
         try {
             const userDocId = await this.getUserDocId(uid);
+          
+
             if (userDocId) {
                 const firestore = getFirestore();
                 const userDocRef = doc(firestore, "users", userDocId);
@@ -340,15 +341,26 @@ const FirestoreService = {
             throw error;
         }
     },
-    async getGalleryImages(userId) {
-    const galleryRef = collection(firestore, `users/${userId}/gallery`);
-    const querySnapshot = await getDocs(galleryRef);
-    return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        url: doc.data().url,
-    }));
-}
+    async getGalleryImages(uid) {
+        try {
+            const userDocId = await this.getUserDocId(uid);
+            const galleryCollectionRef = collection(firestore, "users", userDocId, "gallery");
+            const querySnapshot = await getDocs(galleryCollectionRef);
+             console.log("querySnapshot: ", querySnapshot);
+            
 
+             const galleryData = querySnapshot.docs.map(doc => {
+                 return {
+                     id: doc.id,
+                     ...doc.data()
+                 };}        
+            );
+            return galleryData;
+        } catch (error) {
+            console.error("Error getting galley collection: ", error);
+            throw error;
+        }
+    },
 }
 
 export default FirestoreService;

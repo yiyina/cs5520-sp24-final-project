@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Image, StyleSheet, Text } from 'react-native';
-import FirestoreService from '../firebase-files/FirebaseHelpers'; // Adjust the import path as necessary
+import FirestoreService from '../firebase-files/FirebaseHelpers'; 
 
-export default function UserGallery({ userId }) {
+export default function UserGallery({ uid }) {
     const [images, setImages] = useState([]);
 
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const galleryImages = await FirestoreService.getGalleryImages(userId);
+                const galleryImages = await FirestoreService.getGalleryImages(uid);
+                console.log("Gallery Images: ", galleryImages);
                 setImages(galleryImages);
             } catch (error) {
                 console.log(error);
@@ -16,7 +17,7 @@ export default function UserGallery({ userId }) {
         };
 
         fetchImages();
-    }, [userId]);
+    }, [uid]);
 
     return (
         <ScrollView style={styles.scrollView}>

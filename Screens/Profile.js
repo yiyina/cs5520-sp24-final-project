@@ -8,7 +8,7 @@ import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import NotificationManager from '../Services/NotificationManager';
-import PhotoGallery from '../Components/PhotoGallery';
+import UserGallery from '../Components/UserGallery';
 
 
 export default function Profile() {
@@ -16,6 +16,7 @@ export default function Profile() {
   const [showProfile, setShowProfile] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); 
   const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
+  const uid = auth.currentUser ? auth.currentUser.uid : null;
 
   const handleLogout = async () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -79,7 +80,7 @@ export default function Profile() {
      
 
       <View style={styles.body}>
-        <PhotoGallery />
+        {uid && <UserGallery uid={uid} />}
         
         
         
