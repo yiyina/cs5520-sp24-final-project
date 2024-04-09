@@ -341,26 +341,26 @@ const FirestoreService = {
             throw error;
         }
     },
-    async getGalleryImages(uid) {
-        try {
-            const userDocId = await this.getUserDocId(uid);
-            const galleryCollectionRef = collection(firestore, "users", userDocId, "gallery");
-            const querySnapshot = await getDocs(galleryCollectionRef);
-             console.log("querySnapshot: ", querySnapshot);
+    // async getGalleryImages(uid) {
+    //     try {
+    //         const userDocId = await this.getUserDocId(uid);
+    //         const galleryCollectionRef = collection(firestore, "users", userDocId, "gallery");
+    //         const querySnapshot = await getDocs(galleryCollectionRef);
+    //          console.log("querySnapshot: ", querySnapshot);
             
 
-             const galleryData = querySnapshot.docs.map(doc => {
-                 return {
-                     id: doc.id,
-                     ...doc.data()
-                 };}        
-            );
-            return galleryData;
-        } catch (error) {
-            console.error("Error getting galley collection: ", error);
-            throw error;
-        }
-    },
+    //          const galleryData = querySnapshot.docs.map(doc => {
+    //              return {
+    //                  id: doc.id,
+    //                  ...doc.data()
+    //              };}        
+    //         );
+    //         return galleryData;
+    //     } catch (error) {
+    //         console.error("Error getting galley collection: ", error);
+    //         throw error;
+    //     }
+    // },
 }
 
 export default FirestoreService;
