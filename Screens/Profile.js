@@ -45,7 +45,7 @@ export default function Profile() {
   }
 
   return (
-    <View style={styles.container}>
+     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.logoutProfile}>
           <Pressable onPress={handleLogout} style={styles.logout}>
@@ -80,8 +80,10 @@ export default function Profile() {
      
 
       <View style={styles.body}>
-        {uid && <UserGallery uid={uid} />}
-        
+      
+        <View style={styles.UserGallerycontainer}>
+          <UserGallery />
+        </View>
         
         
       </View>
@@ -164,6 +166,14 @@ const styles = StyleSheet.create({
   justifyContent: 'center', // Center items vertically
     marginTop: 180,
   
-},
+  },
+  UserGallerycontainer: {
+    flex: 1,
+    width: '100%', // Ensure the gallery container takes the full width
+    alignItems: 'center', // Center items horizontally
+    justifyContent: 'center', // Center items vertically
+    padding: 15,
+    marginTop: 50,
+  },
 
 })

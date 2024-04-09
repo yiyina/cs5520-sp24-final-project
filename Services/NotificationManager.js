@@ -35,7 +35,7 @@ useEffect(() => {
     await Notifications.cancelAllScheduledNotificationsAsync();
     
     if (lunchEnabled) {
-      await scheduleNotification('It\'s lunch time! Let\'s Play Game!', 'Enjoy your meal!', 16, 7);
+      await scheduleNotification('It\'s lunch time! Let\'s Play Game!', 'Enjoy your meal!', 12, 0);
     }
     
     if (dinnerEnabled) {
