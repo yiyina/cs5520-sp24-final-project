@@ -31,7 +31,7 @@ export default function EditInfo() {
     useEffect(() => {
         async function fetchUserData() {
             if (auth.currentUser) {
-                const userData = await FirestoreService.getUserData(auth.currentUser.uid);
+                const userData = await FirestoreService.getUserData();
                 if (userData) {
                     setUsername(userData.username || "");
                     setEmail(userData.email || "");
@@ -64,7 +64,7 @@ export default function EditInfo() {
 
             let isEmailAlreadyExists = false;
             try {
-                const userData = await FirestoreService.getUserData(user.uid);
+                const userData = await FirestoreService.getUserData();
 
                 let fieldsToUpdate = {};
                 let hasChanges = false;

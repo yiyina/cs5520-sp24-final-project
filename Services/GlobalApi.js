@@ -3,15 +3,20 @@ import { MY_API_KEY } from '@env';
 
 const API_KEY = MY_API_KEY;
 const BASE_URL = 'https://maps.googleapis.com/maps/api/place/';
+const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?'
 
-const nearByPlace =( lat, lng, type ) => axios.get(BASE_URL+
-  "nearbysearch/json?location=" +lat+ "," +lng+
+const nearByPlace = (lat, lng, type) => axios.get(BASE_URL +
+  "nearbysearch/json?location=" + lat + "," + lng +
   "&radius=1500" +
   "&type=" + type +
   "&key=" + API_KEY)
 
-const searchByText = (searchText) => axios.get(BASE_URL+ 
+const searchByText = (searchText) => axios.get(BASE_URL +
   "textsearch/json?query=" + searchText +
   "&key=" + API_KEY)
 
-export default { nearByPlace, searchByText };
+const getWeather = (lat, lon) => axios.get(WEATHER_URL +
+  "latitude=" + lat + "&longitude=" + lon +
+  "&hourly=temperature_2m,precipitation_probability")
+
+export default { nearByPlace, searchByText, getWeather };
