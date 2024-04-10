@@ -60,11 +60,12 @@ export default function Profile() {
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
         </View>
-         <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.logout}>
-            <Text style={styles.text}>Schedule a Notification</Text>
+         <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.notificationContainer}>
+          <Text style={styles.text}>Schedule a Notification</Text>
+          <AntDesign name="notification" size={24} color={Colors.DEEP_RED} />
         </Pressable>
         {isModalVisible && (
-        <View style={styles.notificationContainer}>
+        <View style={styles.notificationsettingContainer}>
             <NotificationManager
               onCancel={() => setIsModalVisible(false)}
               settings={notificationSettings}
@@ -76,12 +77,11 @@ export default function Profile() {
           </View>
           )}
       </View>
-      
-     
-
       <View style={styles.body}>
+        
       
         <View style={styles.UserGallerycontainer}>
+          <Text style={styles.userGalleryTitle}>User Gallery</Text>
           <UserGallery />
         </View>
         
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  notificationContainer: {
+  notificationsettingContainer: {
   position: 'absolute', // Overlay on the screen
   width: '90%', // Width of the container
   maxHeight: '80%', // Max height to allow scrolling within
@@ -169,11 +169,30 @@ const styles = StyleSheet.create({
   },
   UserGallerycontainer: {
     flex: 1,
-    width: '100%', // Ensure the gallery container takes the full width
-    alignItems: 'center', // Center items horizontally
-    justifyContent: 'center', // Center items vertically
-    padding: 15,
+    width: '100%', 
+    alignItems: 'center', 
+    justifyContent: 'center', 
     marginTop: 50,
+  },
+    userGalleryTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 50,
+    color: Colors.LIGHT_YELLOW, 
+
+  },
+    
+   notificationContainer: {
+     paddingVertical: 10, // Vertical padding
+    paddingHorizontal: 20, // Horizontal padding
+    borderRadius: 20, // Rounded corners
+    flexDirection: 'row', // Align icon and text horizontally
+    alignItems: 'center', // Center items vertically within the button
+    justifyContent: 'center', // Center button content
+    shadowOffset: { width: 0, height: 2 }, // Shadow settings for iOS (optional)
+      borderColor: Colors.WHITE,
+     borderWidth: 2,
+       marginTop: 10,
   },
 
 })
