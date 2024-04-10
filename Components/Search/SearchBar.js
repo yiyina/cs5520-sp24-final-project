@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Dimensions, TextInput, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import { Image, StyleSheet, Text, View, Dimensions, TextInput, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import Weather from '../../Shared/Weather';
 
 export default function SearchBar({ setSearchText }) {
     const [searchInput, setSearchInput] = useState('');
@@ -15,7 +16,7 @@ export default function SearchBar({ setSearchText }) {
             >
                 <View style={styles.header}>
                     <Text style={styles.headerTitle}>Discover</Text>
-                    {/* <Image source={require('../../assets/default_avatar.png')} style={styles.avatar} /> */}
+                    <Weather />
                 </View>
                 <View style={styles.searchContainer}>
                     <TextInput
@@ -24,10 +25,10 @@ export default function SearchBar({ setSearchText }) {
                         onChangeText={(value) => setSearchInput(value)}
                         onSubmitEditing={() => setSearchText(searchInput)}
                     />
-                    <Pressable 
+                    <Pressable
                         style={({ pressed }) => [
                             styles.searchIcon,
-                            {backgroundColor: pressed ? Colors.DARK_YELLOW : Colors.TRANSPARENT},
+                            { backgroundColor: pressed ? Colors.DARK_YELLOW : Colors.TRANSPARENT },
                         ]}
                         onPress={() => setSearchText(searchInput)}>
                         <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
