@@ -17,8 +17,8 @@ export default function GoogleMapViewFull({ placeList }) {
                     setMapRegion({
                         latitude: coords.latitude,
                         longitude: coords.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.0522,
+                        longitudeDelta: 0.0321,
                     });
                 } else {
                     const userCoords = await FirestoreService.getUserData();
@@ -36,7 +36,7 @@ export default function GoogleMapViewFull({ placeList }) {
             mapRef.animateToRegion({
                 latitude: coords.latitude,
                 longitude: coords.longitude,
-                latitudeDelta: 0.0922,
+                latitudeDelta: 0.0522,
                 longitudeDelta: 0.0421,
             }, 1000);
         }

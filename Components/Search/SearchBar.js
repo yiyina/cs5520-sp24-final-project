@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../Shared/Colors';
@@ -24,7 +24,14 @@ export default function SearchBar({ setSearchText }) {
                         onChangeText={(value) => setSearchInput(value)}
                         onSubmitEditing={() => setSearchText(searchInput)}
                     />
-                    <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
+                    <Pressable 
+                        style={({ pressed }) => [
+                            styles.searchIcon,
+                            {backgroundColor: pressed ? Colors.DARK_YELLOW : Colors.TRANSPARENT},
+                        ]}
+                        onPress={() => setSearchText(searchInput)}>
+                        <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
+                    </Pressable>
                 </View>
             </LinearGradient>
         </View>
@@ -57,7 +64,6 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
         marginTop: 10,
     },
     searchBar: {
@@ -74,5 +80,12 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 40,
         marginRight: 10,
-    }
+    },
+    searchIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
