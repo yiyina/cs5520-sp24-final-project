@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     },
     gradient: {
         padding: 20,
-        borderRadius: 10, 
     },
     header: {
         display: 'flex',
