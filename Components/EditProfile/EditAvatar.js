@@ -25,8 +25,8 @@ export default function EditAvatar({ avatarUri, toggleCamera }) {
                     onPress: async () => {
                         try {
                             if (user && user.uid) {
-                                await FirestoreService.deleteAvatarFileFromStorage(user.uid);
-                                await FirestoreService.removeAvatarFieldFromUser(user.uid);
+                                await FirestoreService.deleteAvatarFileFromStorage();
+                                await FirestoreService.removeAvatarFieldFromUser();
                             }
                         } catch (error) {
                             console.error("Error deleting avatar: ", error);

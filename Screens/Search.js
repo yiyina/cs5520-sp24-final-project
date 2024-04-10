@@ -32,8 +32,8 @@ export default function Search() {
       <View style={{ position: 'absolute', zIndex: 10 }}>
         <SearchBar setSearchText={(value) => getNearbyPlaces(value)} />
       </View>
-      <GoogleMapViewFull />
-      <View style={{ position: 'absolute', zIndex: 20, bottom: 0 }}>
+      <GoogleMapViewFull placeList={placeList}/>
+      <View style={{ position: 'absolute', zIndex: 1, bottom: 0 }}>
         <BusinessList placeList={placeList} />
       </View>
     </View>

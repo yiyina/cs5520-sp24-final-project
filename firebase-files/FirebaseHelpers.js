@@ -30,8 +30,9 @@ const FirestoreService = {
         }
     },
 
-    async getUserData(uid) {
+    async getUserData() {
         try {
+            const uid = auth.currentUser.uid;
             const userDocId = await this.getUserDocId(uid);
             const userDocRef = doc(firestore, "users", userDocId);
             const docSnapshot = await getDoc(userDocRef);
@@ -184,8 +185,9 @@ const FirestoreService = {
         }
     },
 
-    async removeAvatarFieldFromUser(uid) {
+    async removeAvatarFieldFromUser() {
         try {
+            const uid = auth.currentUser.uid;
             if (!uid) {
                 throw new Error("Invalid UID for removeAvatarFieldFromUser");
             }
@@ -204,8 +206,9 @@ const FirestoreService = {
             throw error;
         }
     },
-    async deleteAvatarFileFromStorage(uid) {
+    async deleteAvatarFileFromStorage() {
         try {
+            const uid = auth.currentUser.uid;
             const userDocData = await this.getUserData(uid);
             console.log("User data for UID:", uid, userDocData);
             if (!userDocData || !userDocData.avatar) {

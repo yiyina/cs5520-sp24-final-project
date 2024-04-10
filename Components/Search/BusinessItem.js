@@ -18,7 +18,7 @@ export default function BusinessItem({ place }) {
                 }}
                     style={styles.image} />
             ) : (
-                <Image source={require('../../assets/default_avatar.png')}
+                <Image source={require('../../assets/placeholder.jpg')}
                     style={styles.placeholderImg} />
             )}
             <Text numberOfLines={2} style={styles.name} >
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     },
     placeholderImg: {
-        width: 110,
+        width: 140,
         height: 110,
         borderRadius: 15,
     },
