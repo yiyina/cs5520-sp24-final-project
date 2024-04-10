@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   waitingView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })
