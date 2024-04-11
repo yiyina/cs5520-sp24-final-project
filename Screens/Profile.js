@@ -157,14 +157,14 @@ const styles = StyleSheet.create({
   },
   notificationsettingContainer: {
   position: 'absolute', // Overlay on the screen
-  width: '90%', // Width of the container
-  maxHeight: '80%', // Max height to allow scrolling within
+  width: '95%', // Width of the container
   backgroundColor: Colors.LIGHT_YELLOW, // Background color
   padding: 20, // Padding around the content
   borderRadius: 10, // Rounded corners
   alignItems: 'center', // Center items horizontally
   justifyContent: 'center', // Center items vertically
-    marginTop: 180,
+    marginTop: 210,
+  height: 200,
   
   },
   UserGallerycontainer: {
