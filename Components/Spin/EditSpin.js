@@ -6,6 +6,7 @@ import FirestoreService from '../../firebase-files/FirebaseHelpers'
 import Button from '../../Shared/Button';
 import Input from '../../Shared/Input';
 import DropdownList from '../../Shared/DropDownList';
+import HorizontalLine from '../../Shared/HorizontalLine';
 import ColorThemes from './DefaultColorSet';
 import generateUUID from '../../Shared/GenerateUUID';
 import { AntDesign } from '@expo/vector-icons';
@@ -209,11 +210,11 @@ export default function EditSpin({ spinId, spinColorName }) {
                                 ))
                             }
                         </ScrollView>
-                        <Pressable 
-                            onPress={addInput} 
+                        <Pressable
+                            onPress={addInput}
                             style={({ pressed }) => [
                                 styles.plusButton,
-                                pressed ? {backgroundColor: Colors.LIGHT_YELLOW} : {backgroundColor: Colors.WHITE}
+                                pressed ? { backgroundColor: Colors.LIGHT_YELLOW } : { backgroundColor: Colors.WHITE }
                             ]}>
                             <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
                         </Pressable>
@@ -221,9 +222,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                             <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
                             <Button text={'DELETE'} buttonPress={handleDeleteSpin} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
                         </View>
-                        <View>
-                            <Text style={styles.subTitile}>------------------------------------------</Text>
-                        </View>
+                        <HorizontalLine />
                         <Pressable onPress={handleCloseModal} style={styles.fold}>
                             <Octicons name="chevron-down" size={50} color="black" />
                         </Pressable>

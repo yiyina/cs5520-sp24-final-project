@@ -11,6 +11,7 @@ import Button from '../../Shared/Button';
 import Colors from '../../Shared/Colors';
 import generateUUID from '../../Shared/GenerateUUID';
 import { Ionicons } from '@expo/vector-icons';
+import HorizontalLine from '../../Shared/HorizontalLine';
 
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [spinName, setSpinName] = useState('');
@@ -21,7 +22,6 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
 
     const handleThemeSelect = (item) => {
-        console.log('AddSpin item:', item);
         setSelectedTheme(item);
     }
 
@@ -152,9 +152,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                         <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
                     </Pressable>
                     <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
-                    <View>
-                        <Text style={styles.subTitile}>------------------------------------------</Text>
-                    </View>
+                    <HorizontalLine />
                     <Pressable onPress={onCancelModified} style={styles.fold}>
                         <Octicons name="chevron-down" size={50} color="black" />
                     </Pressable>
