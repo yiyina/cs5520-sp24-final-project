@@ -137,7 +137,8 @@ In iteration 2, we've implemented notifications and a feature for users to uploa
 
 <br> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/04704b05-16ea-4c7a-874f-88432de14928" width="30%"> 
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71ca8da4-5f8a-4eca-832d-0edefbbe15de" width="30%">
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/6829bdbe-2eb4-4c67-b973-9292fdff1ed0" width="30%">
+
 
 # Contributions
 
