@@ -120,10 +120,24 @@ Explain how Create, Read, Update, and Delete (CRUD) operations are implemented i
 
 # Screenshots
 
+### Iteration 1 implementation
+
 This screenshot showcases the user profile editing screen, providing users with access to their personal information. Here, they can update or delete their avatar and make modifications to other personal details. The second image demonstrates a successful update of the user's avatar.
 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/563c73b1-e3e7-4285-b190-c79684a0f522" width="30%">
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/a8ce8618-69c7-4ef0-8aff-b63c69cf6b5c" width="30%">
+
+### Iteration 2 implementation
+
+In iteration 2, we've implemented notifications and a feature for users to upload photos to create their own photo gallery. We've also introduced a function to search for dining locations using keywords on a map, and a customized spin wheel game to let user decide which dinning option they will to pick.Also we integrated an external weather API to provide users with real-time weather updates. 
+
+
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/092df5a5-92c5-465f-8757-592310dbe02c" width="30%">
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/ef77107e-297b-4c6e-b16c-940a23cc007d" width="30%"> 
+
+<br> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/04704b05-16ea-4c7a-874f-88432de14928" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71ca8da4-5f8a-4eca-832d-0edefbbe15de" width="30%">
 
 # Contributions
 
@@ -135,3 +149,8 @@ This screenshot showcases the user profile editing screen, providing users with 
 | **Additional Features**     | Integrated Google Maps into the Home screen.                         | Implemented user information updates in the Edit Profile screen. |
 | **Firebase Configuration**  |                                                                      | Set up Firebase for Cloud Firestore and Storage.                 |
 | **Firebase Authentication** |                                                                      | Implemented secure user authentication with Firebase.            |
+| **Search Function**         | Enabled read user location and key text search functionality                               |       |
+| **Spin Wheel**              | Developed customized Spin Wheel Game                                 |       |
+| **External API**            | Integrated an external weather API                                   |       |
+| **Local Notification**      |                                                                      |   Enable User to set daily reminder    |
+| **User Photo Gallery**      |                                                                      |   Allowed user to upload photos to create their personal Photo Gallery  |
