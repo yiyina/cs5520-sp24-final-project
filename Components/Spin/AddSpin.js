@@ -16,7 +16,7 @@ import HorizontalLine from '../../Shared/HorizontalLine';
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     const [spinName, setSpinName] = useState('');
     const [themes, setThemes] = useState(ColorThemes);
-    const [inputs, setInputs] = useState([{ value: '' }]);
+    const [inputs, setInputs] = useState([{ id: generateUUID(), value: '' }]);
     const [selectedTheme, setSelectedTheme] = useState('');
 
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
@@ -69,7 +69,11 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
             return;
         };
 
-        const spinItems = inputs.map(input => input.value);
+        const spinItems = inputs.map(input => {
+            // console.log('Mapping input for save:', input);
+            return input.value;
+        });
+
         const spin = {
             spinColor: selectedTheme,
             spinItems: spinItems,
@@ -111,9 +115,13 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                         selectedSpin={selectedTheme} />
                     {selectedTheme &&
                         <ScrollView horizontal style={styles.colorPalette}>
-                            {selectedTheme && selectedTheme.map((color, index) => (
-                                <View key={index} style={[styles.colorBox, { backgroundColor: color }]}></View>
-                            ))}
+                            {selectedTheme && selectedTheme.map((color, index) => {
+                                const key = `${color}-${index}`;
+                                // console.log('Rendering color with key:', key);
+                                return (
+                                    <View key={key} style={[styles.colorBox, { backgroundColor: color }]}></View>
+                                );
+                            })}
                         </ScrollView>
                     }
                     <View style={{ width: '100%' }}>
@@ -125,22 +133,25 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     </View>
                     <ScrollView style={{ minHeight: 50, maxHeight: 250 }}>
                         {
-                            inputs.map((input) => (
-                                <View key={input.id} style={styles.inputItem}>
-                                    <View style={styles.inputText}>
-                                        <Input
-                                            text={input.value}
-                                            handleInput={(text) => handleInputChange(text, input.id)}
-                                        // onSubmitEditing={addInput}
-                                        />
+                            inputs.map((input) => {
+                                // console.log('Rendering input with id:', input.id);
+                                return (
+                                    <View key={input.id} style={styles.inputItem}>
+                                        <View style={styles.inputText}>
+                                            <Input
+                                                text={input.value}
+                                                handleInput={(text) => handleInputChange(text, input.id)}
+                                            // onSubmitEditing={addInput}
+                                            />
+                                        </View>
+                                        <View style={styles.removeIcon}>
+                                            <Pressable onPress={() => removeInput(input.id)}>
+                                                <AntDesign name="minuscircleo" size={24} color="red" />
+                                            </Pressable>
+                                        </View>
                                     </View>
-                                    <View style={styles.removeIcon}>
-                                        <Pressable onPress={() => removeInput(input.id)}>
-                                            <AntDesign name="minuscircleo" size={24} color="red" />
-                                        </Pressable>
-                                    </View>
-                                </View>
-                            ))
+                                )
+                            })
                         }
                     </ScrollView>
                     <Pressable
