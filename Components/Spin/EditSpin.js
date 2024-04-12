@@ -21,7 +21,7 @@ export default function EditSpin({ spinId, spinColorName }) {
     const [initialTheme, setInitialTheme] = useState('');
     const [selectedTheme, setSelectedTheme] = useState('')
     const [showEditSpinModal, setShowEditSpinModal] = useState(false)
-    const [inputs, setInputs] = useState([{ value: '' }]);
+    const [inputs, setInputs] = useState([{ id: generateUUID(), value: '' }]);
 
     const themeOptions = Object.keys(ColorThemes).map(key => ([ColorThemes[key], key]));
 
