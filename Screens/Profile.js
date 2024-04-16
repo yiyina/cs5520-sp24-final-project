@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, Text, Alert } from 'react-native'
+=import { StyleSheet, Pressable, View, Text, Alert } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
 import { auth } from '../firebase-files/FirebaseSetup';
@@ -78,7 +78,6 @@ export default function Profile() {
           )}
       </View>
       <View style={styles.body}>
-        
       
         <View style={styles.UserGallerycontainer}>
           <Text style={styles.userGalleryTitle}>User Gallery</Text>
@@ -97,7 +96,6 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F0F0',
     backgroundColor: Colors.LIGHT_YELLOW,
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -105,7 +103,7 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: 50,
+    top: 50,
     alignItems: 'center',
     width: '100%',
   },
@@ -133,8 +131,6 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
-    flexDirection: 'row',
-    width: '100%',
     marginTop: 150,
     marginBottom: 50,
     borderWidth: 5,
@@ -144,6 +140,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 10,
+    position: 'absolute'
   },
   text: {
     color: Colors.DEEP_RED,
@@ -163,36 +161,37 @@ const styles = StyleSheet.create({
   borderRadius: 10, // Rounded corners
   alignItems: 'center', // Center items horizontally
   justifyContent: 'center', // Center items vertically
-    marginTop: 210,
+  top: 210,
   height: 200,
   
   },
-  UserGallerycontainer: {
+ UserGallerycontainer: {
     flex: 1,
     width: '100%', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    marginTop: 50,
+    marginTop: 30, // Adjust the marginTop to increase or decrease the distance
+    padding: 10,
+    zIndex: 0,
   },
-    userGalleryTitle: {
+   userGalleryTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 50,
     color: Colors.LIGHT_YELLOW, 
-
   },
     
-   notificationContainer: {
-     paddingVertical: 10, // Vertical padding
-    paddingHorizontal: 20, // Horizontal padding
-    borderRadius: 20, // Rounded corners
-    flexDirection: 'row', // Align icon and text horizontally
-    alignItems: 'center', // Center items vertically within the button
-    justifyContent: 'center', // Center button content
-    shadowOffset: { width: 0, height: 2 }, // Shadow settings for iOS (optional)
-      borderColor: Colors.WHITE,
-     borderWidth: 2,
-       marginTop: 10,
+    notificationContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 }, 
+    borderColor: Colors.WHITE,
+    borderWidth: 2,
+    marginTop: 10,
   },
 
 })
