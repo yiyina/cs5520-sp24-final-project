@@ -14,4 +14,9 @@ export default {
     BLUE: "#65A3F0",
     TRANSPARENT: 'transparent',
     INVALID_TEXT: '#e0e0e0',
+    MAIN_BACKGROUND: '#FFFDF2',
+    DARK_BACKGROUND: '#F9F9E9',
+    TEXT_COLOR: '#545434',
+    BORDER_GOLD: '#FFFFDD',
+    BORDER_GRAY: '#DFDFD1',
 };

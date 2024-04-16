@@ -10,10 +10,10 @@ export default function SearchBar({ setSearchText }) {
 
     return (
         <View style={styles.container}>
-            <LinearGradient
+            {/* <LinearGradient
                 colors={[Colors.LIGHT_YELLOW, Colors.GRAY]}
                 style={styles.gradient}
-            >
+            > */}
                 <View style={styles.header}>
                     <Text style={styles.headerTitle}>Discover</Text>
                     <Weather />
@@ -34,7 +34,7 @@ export default function SearchBar({ setSearchText }) {
                         <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
                     </Pressable>
                 </View>
-            </LinearGradient>
+            {/* </LinearGradient> */}
         </View>
     );
 }
@@ -42,6 +42,8 @@ export default function SearchBar({ setSearchText }) {
 const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('screen').width,
+        backgroundColor: Colors.MAIN_BACKGROUND,
+        padding: 20,
     },
     gradient: {
         padding: 20,
@@ -56,7 +58,8 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: 35,
-        color: Colors.DARK_GRAY,
+        fontWeight: 'bold',
+        color: Colors.TEXT_COLOR,
     },
     avatar: {
         width: 30,
@@ -69,12 +72,12 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         backgroundColor: Colors.WHITE,
-        borderColor: Colors.LIGHT_GRAY,
+        borderColor: Colors.BORDER_GOLD,
         borderWidth: 1,
         borderRadius: 20,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.5,
         shadowRadius: 1,
         elevation: 2,
         paddingHorizontal: 10,

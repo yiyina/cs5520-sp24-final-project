@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F0F0F0',
-    backgroundColor: Colors.LIGHT_YELLOW,
+    backgroundColor: Colors.MAIN_BACKGROUND,
     alignItems: 'center',
     paddingHorizontal: 10,
   },
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     borderWidth: 5,
-    borderColor: Colors.WHITE,
+    borderColor: Colors.BORDER_GOLD,
     borderRadius: 100,
-    backgroundColor: Colors.WHITE, 
+    backgroundColor: Colors.MAIN_BACKGROUND, 
   },
   avatar: {
     width: 100,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 150,
     marginBottom: 50,
     borderWidth: 5,
-    borderColor: Colors.WHITE,
+    borderColor: Colors.BORDER_GOLD,
     backgroundColor: Colors.LIGHT_RED,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,

@@ -83,6 +83,7 @@ export default function Spin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.MAIN_BACKGROUND,
   },
   waitingView: {
     flex: 1,

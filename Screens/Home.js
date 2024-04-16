@@ -8,13 +8,13 @@ import { LinearGradient } from 'expo-linear-gradient'
 export default function Home() {
   return (
     <View style={styles.container}>
-      <LinearGradient
+      {/* <LinearGradient
         colors={[Colors.LIGHT_YELLOW, Colors.GRAY]}
         style={styles.gradient}
-      >
+      > */}
         <Header />
         <GoogleMapView />
-      </LinearGradient>
+      {/* </LinearGradient> */}
     </View>
   )
 }
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: Colors.GRAY,
+    backgroundColor: Colors.MAIN_BACKGROUND,
   },
   gradient: {
     padding: 20,

@@ -1,4 +1,4 @@
-import PlaceMarker from './PlaceMarker';
+// import PlaceMarker from './PlaceMarker';
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
         height: Dimensions.get('screen').height * 0.25,
         borderRadius: 20,
         borderWidth: 5,
-        borderColor: Colors.WHITE,
+        borderColor: Colors.BORDER_GOLD,
     }
 });

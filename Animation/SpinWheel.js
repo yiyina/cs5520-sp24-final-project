@@ -82,7 +82,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           y1="0"
           x2={startX}
           y2={startY}
-          stroke="white"
+          stroke={Colors.BORDER_GOLD}
           strokeWidth="1"
         />
         {/* the end line */}
@@ -91,7 +91,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           y1="0"
           x2={endX}
           y2={endY}
-          stroke="white"
+          stroke={Colors.BORDER_GOLD}
           strokeWidth="1"
         />
       </G>
@@ -136,7 +136,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
                 cy="0"
                 r={wheelRadius}
                 fill="none"
-                stroke={Colors.WHITE}
+                stroke={Colors.BORDER_GOLD}
                 strokeWidth={strokeSize * 2}
               />
             </G>
@@ -147,13 +147,13 @@ const WheelGame = ({ spinItems, spinColor }) => {
           <Animated.View style={{ transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }} />
         </View>
         <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
-          <Entypo name="triangle-down" size={80} color="white" />
+          <Entypo name="triangle-down" size={80} color={Colors.WHITE} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={spinWheel}
           style={[styles.startButton, isButtonDisabled && { opacity: 0.4 }]} // Disable button style when isButtonDisabled is true
           disabled={isButtonDisabled}>
-          <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>START</Text>
+          <Text style={{ color: Colors.TEXT_COLOR, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
         <View style={styles.result}>
           <Text style={{ fontSize: 25, margin: 20 }}>Selected: {result}</Text>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.GRAY,
+    backgroundColor: Colors.MAIN_BACKGROUND,
   },
   upperSection: {
     position: 'absolute',
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: Colors.BORDER_GOLD,
   },
   selectTriangle: {
     position: 'absolute',
@@ -217,14 +217,14 @@ const styles = StyleSheet.create({
     width: 350,
     height: 350,
     borderRadius: 175,
-    backgroundColor: '#FFF',
-    shadowColor: '#000',
+    backgroundColor: Colors.BLACK,
+    shadowColor: Colors.DARK_YELLOW,
     shadowOffset: {
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
     elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
