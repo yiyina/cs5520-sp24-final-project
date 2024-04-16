@@ -82,7 +82,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           y1="0"
           x2={startX}
           y2={startY}
-          stroke={Colors.BORDER_GOLD}
+          stroke={Colors.WHITE}
           strokeWidth="1"
         />
         {/* the end line */}
@@ -91,7 +91,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           y1="0"
           x2={endX}
           y2={endY}
-          stroke={Colors.BORDER_GOLD}
+          stroke={Colors.WHITE}
           strokeWidth="1"
         />
       </G>
@@ -136,7 +136,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
                 cy="0"
                 r={wheelRadius}
                 fill="none"
-                stroke={Colors.BORDER_GOLD}
+                stroke={Colors.WHITE}
                 strokeWidth={strokeSize * 2}
               />
             </G>

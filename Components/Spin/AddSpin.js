@@ -92,7 +92,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
 
     const onCancelModified = () => {
         setShowAddSpinModal(false);
-        setInputs([{ value: '' }]);
+        setInputs([{ id: generateUUID(), value: '' }]);
         setSelectedTheme('');
     }
 
