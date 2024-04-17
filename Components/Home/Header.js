@@ -27,10 +27,11 @@ export default function Header() {
     return (
         <View style={styles.container}>
             <View style={styles.avatarContainer}>
-                <Avatar avatarUri={avatarUri} size={50} />
+                <Avatar avatarUri={avatarUri} size={80} />
             </View>
             <View style={styles.greetingContainer}>
-                <Text style={styles.greetingText}>{username || 'Guest'}, {greeting} !</Text>
+                <Text style={styles.greetingText}>{username || 'Guest'}</Text>
+                <Text style={styles.greetingText}>{greeting} !</Text>
             </View>
         </View>
     )
@@ -40,17 +41,17 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         marginTop: 50,
+        marginBottom: 20,
         width: '90%',
         alignItems: 'center',
     },
     avatarContainer: {
-        // borderWidth: 5,
-        // borderColor: Colors.WHITE,
+        borderWidth: 5,
+        borderColor: Colors.BORDER_GOLD,
         borderRadius: 100,
         marginRight: 10,
     },
     greetingContainer: {
-        alignItems: 'center',
         marginRight: 10,
     },
     greetingText: {

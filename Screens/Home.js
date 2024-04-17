@@ -4,6 +4,7 @@ import Colors from '../Shared/Colors'
 import GoogleMapView from '../Components/Home/GoogleMapView'
 import Header from '../Components/Home/Header'
 import { LinearGradient } from 'expo-linear-gradient'
+import Histogram from '../Shared/Histogram'
 
 export default function Home() {
   return (
@@ -13,7 +14,8 @@ export default function Home() {
         style={styles.gradient}
       > */}
         <Header />
-        <GoogleMapView />
+        {/* <GoogleMapView /> */}
+        <Histogram />
       {/* </LinearGradient> */}
     </View>
   )
