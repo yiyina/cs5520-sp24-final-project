@@ -2,32 +2,21 @@ import { StyleSheet, Pressable, View, Text } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
 import { AntDesign } from '@expo/vector-icons';
-import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import NotificationManager from '../Services/NotificationManager';
 import UserGallery from '../Components/UserGallery';
 
 
-export default function Profile() {
+export default function Gallery() {
   const { avatarUri } = getUpdatedUserData();
-  const [showProfile, setShowProfile] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
-
-  const toggleEditProfile = () => {
-    console.log("Edit Profile Pressed: ", showProfile);
-    setShowProfile(!showProfile);
-  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.logoutProfile}>
-          <Pressable onPress={toggleEditProfile} style={styles.logout}>
-            <Text style={styles.text}>Profile</Text>
-            <AntDesign name="profile" size={24} color={Colors.DEEP_RED} />
-          </Pressable>
         </View>
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
@@ -55,9 +44,6 @@ export default function Profile() {
           <UserGallery />
         </View>
       </View>
-      <EditProfile
-        showProfile={showProfile}
-        onCancel={toggleEditProfile} />
     </View>
   )
 }

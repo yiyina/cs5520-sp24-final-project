@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
 import { getUpdatedUserData } from '../../Shared/updateUserData'
+import EditProfile from '../../Screens/EditProfile'
+import { AntDesign } from '@expo/vector-icons';
 
 const getGreetingBasedOnTime = () => {
     const date = new Date();
@@ -19,10 +21,16 @@ const getGreetingBasedOnTime = () => {
 export default function Header() {
     const { username, avatarUri } = getUpdatedUserData();
     const [greeting, setGreeting] = useState('');
-    
+    const [showProfile, setShowProfile] = useState(false);
+
     useEffect(() => {
         setGreeting(getGreetingBasedOnTime());
     }, []);
+
+    const toggleEditProfile = () => {
+        console.log("Edit Profile Pressed: ", showProfile);
+        setShowProfile(!showProfile);
+    }
 
     return (
         <View style={styles.container}>
@@ -33,6 +41,13 @@ export default function Header() {
                 <Text style={styles.greetingText}>{username || 'Guest'}</Text>
                 <Text style={styles.greetingText}>{greeting} !</Text>
             </View>
+            <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
+                <AntDesign name="profile" size={36} color={Colors.TEXT_COLOR} />
+                {/* <Text style={styles.text}>Profile</Text> */}
+            </Pressable>
+            <EditProfile
+                showProfile={showProfile}
+                onCancel={toggleEditProfile} />
         </View>
     )
 }
@@ -59,4 +74,14 @@ const styles = StyleSheet.create({
         color: Colors.TEXT_COLOR,
         fontWeight: 'bold',
     },
+    editProfile: {
+        flexDirection: 'row',
+        marginLeft: 'auto',
+    },
+    // text: {
+    //   color: Colors.DEEP_RED,
+    //   fontSize: 16,
+    //   fontWeight: 'bold',
+    //   marginTop: 5,
+    // },
 })

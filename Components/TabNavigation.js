@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { AntDesign } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Home from '../Screens/Home'
 import Search from '../Screens/Search'
-import Profile from '../Screens/Profile'
+import Gallery from '../Screens/Gallery'
 import Spin from '../Screens/Spin'
 import CameraScreen from '../Screens/CameraScreen';
 import CameraService from '../Services/CameraService';
@@ -106,11 +106,11 @@ export default function TabNavigation() {
                         ),
                     }}
                 /> */}
-                <Tab.Screen name="Profile" component={Profile}
+                <Tab.Screen name="Gallery" component={Gallery}
                     options={{
-                        tabBarLabel: 'Profile',
+                        tabBarLabel: 'Gallery',
                         tabBarIcon: ({ color, size }) => (
-                            <AntDesign name="profile" size={size} color={color} />
+                            <FontAwesome name="photo" size={size} color={color} />
                         ),
                     }}
                 />
