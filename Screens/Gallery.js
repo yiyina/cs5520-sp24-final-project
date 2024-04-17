@@ -16,8 +16,6 @@ export default function Gallery() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.logoutProfile}>
-        </View>
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
         </View>
@@ -63,12 +61,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  logoutProfile: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 10,
-  },
   avatarContainer: {
     borderWidth: 5,
     borderColor: Colors.BORDER_GOLD,
@@ -91,9 +83,9 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 150,
     marginBottom: 50,
-    borderWidth: 5,
-    borderColor: Colors.BORDER_GOLD,
-    backgroundColor: Colors.LIGHT_RED,
+    // borderWidth: 5,
+    // borderColor: Colors.BORDER_GOLD,
+    // backgroundColor: Colors.LIGHT_RED,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     alignItems: 'center',
@@ -132,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 50,
-    color: Colors.LIGHT_YELLOW,
+    color: Colors.TEXT_COLOR,
 
   },
   notificationContainer: {
