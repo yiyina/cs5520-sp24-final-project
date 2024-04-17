@@ -4,7 +4,7 @@ import { auth } from '../../firebase-files/FirebaseSetup';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Colors from '../../Shared/Colors';
 
-export default function Logout() {
+export default function Logout({ onCancel }) {
     const handleLogout = async () => {
         Alert.alert("Logout", "Are you sure you want to logout?", [
             {
@@ -16,6 +16,7 @@ export default function Logout() {
                 text: "Logout",
                 onPress: async () => {
                     try {
+                        onCancel();
                         await auth.signOut();
                     } catch (error) {
                         console.error("Error signing out: ", error);

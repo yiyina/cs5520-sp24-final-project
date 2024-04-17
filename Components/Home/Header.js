@@ -28,7 +28,6 @@ export default function Header() {
     }, []);
 
     const toggleEditProfile = () => {
-        console.log("Edit Profile Pressed: ", showProfile);
         setShowProfile(!showProfile);
     }
 

@@ -14,7 +14,7 @@ import { ActivityIndicator } from 'react-native';
 import Logout from './Logout';
 import Notification from './Notification';
 
-export default function EditInfo() {
+export default function EditInfo({ onCancel }) {
     const { avatarUri } = getUpdatedUserData();
     const [showCamera, setShowCamera] = useState(false);
     const [username, setUsername] = useState("");
@@ -166,7 +166,7 @@ export default function EditInfo() {
                     </>
                 }
             </Pressable>
-            <Logout />
+            <Logout onCancel={onCancel}/>
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
