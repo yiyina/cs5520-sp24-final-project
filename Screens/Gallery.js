@@ -1,17 +1,17 @@
 import { StyleSheet, Pressable, View, Text } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
-import { AntDesign } from '@expo/vector-icons';
+// import { AntDesign } from '@expo/vector-icons';
 import Avatar from '../Shared/Avatar';
 import { getUpdatedUserData } from '../Shared/updateUserData';
-import NotificationManager from '../Services/NotificationManager';
+// import NotificationManager from '../Services/NotificationManager';
 import UserGallery from '../Components/UserGallery';
 
 
 export default function Gallery() {
   const { avatarUri } = getUpdatedUserData();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
 
   return (
     <View style={styles.container}>
@@ -19,7 +19,7 @@ export default function Gallery() {
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
         </View>
-        <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.notificationContainer}>
+        {/* <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.notificationContainer}>
           <Text style={styles.text}>Schedule a Notification</Text>
           <AntDesign name="notification" size={24} color={Colors.DEEP_RED} />
         </Pressable>
@@ -34,7 +34,7 @@ export default function Gallery() {
               <Text style={styles.text}>Save Notification Setting.</Text>
             </Pressable>
           </View>
-        )}
+        )} */}
       </View>
       <View style={styles.body}>
         <View style={styles.UserGallerycontainer}>
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     width: '100%',
-    marginTop: 150,
+    marginTop: 100,
     marginBottom: 50,
     // borderWidth: 5,
     // borderColor: Colors.BORDER_GOLD,
@@ -101,23 +101,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  notificationsettingContainer: {
-    position: 'absolute',
-    width: '95%',
-    backgroundColor: Colors.LIGHT_YELLOW,
-    padding: 20, 
-    borderRadius: 10, 
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 210,
-    height: 200,
-
-  },
+  // notificationsettingContainer: {
+  //   position: 'absolute',
+  //   width: '95%',
+  //   backgroundColor: Colors.LIGHT_YELLOW,
+  //   padding: 20, 
+  //   borderRadius: 10, 
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   marginTop: 210,
+  //   height: 200,
+  // },
   UserGallerycontainer: {
     flex: 1,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     marginTop: 50,
   },
   userGalleryTitle: {
@@ -127,17 +126,16 @@ const styles = StyleSheet.create({
     color: Colors.TEXT_COLOR,
 
   },
-  notificationContainer: {
-    paddingVertical: 10, 
-    paddingHorizontal: 20, 
-    borderRadius: 20, 
-    flexDirection: 'row', 
-    alignItems: 'center',
-    justifyContent: 'center', 
-    shadowOffset: { width: 0, height: 2 },
-    borderColor: Colors.WHITE,
-    borderWidth: 2,
-    marginTop: 10,
-  },
-
+  // notificationContainer: {
+  //   paddingVertical: 10, 
+  //   paddingHorizontal: 20, 
+  //   borderRadius: 20, 
+  //   flexDirection: 'row', 
+  //   alignItems: 'center',
+  //   justifyContent: 'center', 
+  //   shadowOffset: { width: 0, height: 2 },
+  //   borderColor: Colors.WHITE,
+  //   borderWidth: 2,
+  //   marginTop: 10,
+  // },
 })

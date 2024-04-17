@@ -12,6 +12,7 @@ import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { auth } from '../../firebase-files/FirebaseSetup';
 import { ActivityIndicator } from 'react-native';
 import Logout from './Logout';
+import Notification from './Notification';
 
 export default function EditInfo() {
     const { avatarUri } = getUpdatedUserData();
@@ -116,6 +117,7 @@ export default function EditInfo() {
     return (
         <View style={styles.modalContent}>
             <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera} />
+            <Notification />
             <Text style={styles.title}>Edit Profile</Text>
             <EditFields
                 title="Username"
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         borderWidth: 5,
         borderColor: Colors.BORDER_GOLD,
-        overflow: 'hidden',
+        overflow: 'visible',
         alignItems: 'center',
         paddingTop: 60,
     },
