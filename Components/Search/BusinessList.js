@@ -1,8 +1,10 @@
 import { StyleSheet, View, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import BusinessItem from './BusinessItem'
+import { useNavigation } from '@react-navigation/native'
 
 export default function BusinessList({ placeList }) {
+    const navigation = useNavigation();
 
     return (
         <View>
@@ -11,9 +13,9 @@ export default function BusinessList({ placeList }) {
                 horizontal={true}
                 renderItem={({ item, index }) => index < 10 && (
                     <TouchableOpacity
-                        // onPress={() => navigation.navigate(
-                        //     'place-detail', { place: item }
-                        // )}
+                        onPress={() => navigation.navigate(
+                            'place-detail', { place: item }
+                        )}
                     >
                         <BusinessItem place={item} />
                     </TouchableOpacity>
