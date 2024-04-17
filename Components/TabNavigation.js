@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { AntDesign } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Home from '../Screens/Home'
@@ -74,15 +75,23 @@ export default function TabNavigation() {
                         ),
                     }}
                 />
+                <Tab.Screen name="Spin" component={Spin}
+                    options={{
+                        tabBarLabel: 'Spin',
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
+                        ),
+                    }}
+                />
                 <Tab.Screen name="Search" component={Search}
                     options={{
                         tabBarLabel: 'Search',
                         tabBarIcon: ({ color, size }) => (
-                            <AntDesign name="search1" size={size} color={color} />
+                            <FontAwesome5 name="search-location" size={size} color={color} />
                         ),
                     }}
                 />
-                <Tab.Screen name="Camera" component={CameraScreen}
+                {/* <Tab.Screen name="Camera" component={CameraScreen}
                     options={{
                         tabBarLabel: '',
                         tabBarIcon: ({ focused }) => (
@@ -96,15 +105,7 @@ export default function TabNavigation() {
                             <CustomTabBarButton {...props} />
                         ),
                     }}
-                />
-                <Tab.Screen name="Spin" component={Spin}
-                    options={{
-                        tabBarLabel: 'Spin',
-                        tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
-                        ),
-                    }}
-                />
+                /> */}
                 <Tab.Screen name="Profile" component={Profile}
                     options={{
                         tabBarLabel: 'Profile',

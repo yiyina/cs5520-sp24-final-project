@@ -1,8 +1,6 @@
-import { StyleSheet, Pressable, View, Text, Alert } from 'react-native'
+import { StyleSheet, Pressable, View, Text } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
-import { auth } from '../firebase-files/FirebaseSetup';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import EditProfile from './EditProfile';
 import Avatar from '../Shared/Avatar';
@@ -14,30 +12,8 @@ import UserGallery from '../Components/UserGallery';
 export default function Profile() {
   const { avatarUri } = getUpdatedUserData();
   const [showProfile, setShowProfile] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
-  const uid = auth.currentUser ? auth.currentUser.uid : null;
-
-  const handleLogout = async () => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      {
-        text: "Cancel",
-        onPress: () => console.log("Logout Cancelled"),
-        style: "cancel"
-      },
-      {
-        text: "Logout", 
-        onPress: async () => {
-          try {
-            await auth.signOut();
-          } catch (error) {
-            console.error("Error signing out: ", error);
-          }
-        },
-        style: "destructive"
-      }
-    ]);
-  };
 
   const toggleEditProfile = () => {
     console.log("Edit Profile Pressed: ", showProfile);
@@ -45,13 +21,9 @@ export default function Profile() {
   }
 
   return (
-     <View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.logoutProfile}>
-          <Pressable onPress={handleLogout} style={styles.logout}>
-            <SimpleLineIcons name="logout" size={24} color={Colors.DEEP_RED} />
-            <Text style={styles.text}>Logout</Text>
-          </Pressable>
           <Pressable onPress={toggleEditProfile} style={styles.logout}>
             <Text style={styles.text}>Profile</Text>
             <AntDesign name="profile" size={24} color={Colors.DEEP_RED} />
@@ -60,32 +32,28 @@ export default function Profile() {
         <View style={styles.avatarContainer}>
           <Avatar avatarUri={avatarUri} size={100} />
         </View>
-         <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.notificationContainer}>
+        <Pressable onPress={() => setIsModalVisible(!isModalVisible)} style={styles.notificationContainer}>
           <Text style={styles.text}>Schedule a Notification</Text>
           <AntDesign name="notification" size={24} color={Colors.DEEP_RED} />
         </Pressable>
         {isModalVisible && (
-        <View style={styles.notificationsettingContainer}>
+          <View style={styles.notificationsettingContainer}>
             <NotificationManager
               onCancel={() => setIsModalVisible(false)}
               settings={notificationSettings}
-              onSave={setNotificationSettings} 
+              onSave={setNotificationSettings}
             />
-          <Pressable onPress={() => setIsModalVisible(false)} style={styles.dismissButton}>
-          <Text style={styles.text}>Save Notification Setting.</Text>
-        </Pressable>
+            <Pressable onPress={() => setIsModalVisible(false)} style={styles.dismissButton}>
+              <Text style={styles.text}>Save Notification Setting.</Text>
+            </Pressable>
           </View>
-          )}
+        )}
       </View>
       <View style={styles.body}>
-        
-      
         <View style={styles.UserGallerycontainer}>
           <Text style={styles.userGalleryTitle}>User Gallery</Text>
           <UserGallery />
         </View>
-        
-        
       </View>
       <EditProfile
         showProfile={showProfile}
@@ -119,7 +87,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: Colors.BORDER_GOLD,
     borderRadius: 100,
-    backgroundColor: Colors.MAIN_BACKGROUND, 
+    backgroundColor: Colors.MAIN_BACKGROUND,
   },
   avatar: {
     width: 100,
@@ -156,43 +124,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   notificationsettingContainer: {
-  position: 'absolute', // Overlay on the screen
-  width: '95%', // Width of the container
-  backgroundColor: Colors.LIGHT_YELLOW, // Background color
-  padding: 20, // Padding around the content
-  borderRadius: 10, // Rounded corners
-  alignItems: 'center', // Center items horizontally
-  justifyContent: 'center', // Center items vertically
+    position: 'absolute',
+    width: '95%',
+    backgroundColor: Colors.LIGHT_YELLOW,
+    padding: 20, 
+    borderRadius: 10, 
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 210,
-  height: 200,
-  
+    height: 200,
+
   },
   UserGallerycontainer: {
     flex: 1,
-    width: '100%', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 50,
   },
-    userGalleryTitle: {
+  userGalleryTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 50,
-    color: Colors.LIGHT_YELLOW, 
+    color: Colors.LIGHT_YELLOW,
 
   },
-    
-   notificationContainer: {
-     paddingVertical: 10, // Vertical padding
-    paddingHorizontal: 20, // Horizontal padding
-    borderRadius: 20, // Rounded corners
-    flexDirection: 'row', // Align icon and text horizontally
-    alignItems: 'center', // Center items vertically within the button
-    justifyContent: 'center', // Center button content
-    shadowOffset: { width: 0, height: 2 }, // Shadow settings for iOS (optional)
-      borderColor: Colors.WHITE,
-     borderWidth: 2,
-       marginTop: 10,
+  notificationContainer: {
+    paddingVertical: 10, 
+    paddingHorizontal: 20, 
+    borderRadius: 20, 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'center', 
+    shadowOffset: { width: 0, height: 2 },
+    borderColor: Colors.WHITE,
+    borderWidth: 2,
+    marginTop: 10,
   },
 
 })

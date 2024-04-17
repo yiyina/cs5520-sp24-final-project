@@ -1,22 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Colors from '../Shared/Colors'
-import GoogleMapView from '../Components/Home/GoogleMapView'
+// import GoogleMapView from '../Components/Home/GoogleMapView'
 import Header from '../Components/Home/Header'
-import { LinearGradient } from 'expo-linear-gradient'
 import Histogram from '../Shared/Histogram'
 
 export default function Home() {
   return (
     <View style={styles.container}>
-      {/* <LinearGradient
-        colors={[Colors.LIGHT_YELLOW, Colors.GRAY]}
-        style={styles.gradient}
-      > */}
         <Header />
         {/* <GoogleMapView /> */}
         <Histogram />
-      {/* </LinearGradient> */}
     </View>
   )
 }

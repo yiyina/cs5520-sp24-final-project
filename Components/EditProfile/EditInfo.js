@@ -11,6 +11,7 @@ import { getUpdatedUserData } from '../../Shared/updateUserData';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { auth } from '../../firebase-files/FirebaseSetup';
 import { ActivityIndicator } from 'react-native';
+import Logout from './Logout';
 
 export default function EditInfo() {
     const { avatarUri } = getUpdatedUserData();
@@ -163,6 +164,7 @@ export default function EditInfo() {
                     </>
                 }
             </Pressable>
+            <Logout />
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
