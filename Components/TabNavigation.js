@@ -79,7 +79,8 @@ export default function TabNavigation() {
                     options={{
                         tabBarLabel: 'Spin',
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
+                            // <MaterialCommunityIcons name="lightbulb-on-outline" size={size} color={color} />
+                            <MaterialCommunityIcons name="ferris-wheel" size={size} color={color} />
                         ),
                     }}
                 />

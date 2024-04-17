@@ -56,10 +56,10 @@ export default function EditAvatar({ avatarUri, toggleCamera }) {
 const styles = StyleSheet.create({
     avatarContainer: {
         borderWidth: 5,
-        borderColor: Colors.WHITE,
+        borderColor: Colors.BORDER_GOLD,
         borderRadius: 100,
         marginBottom: 50,
-        backgroundColor: Colors.WHITE,
+        backgroundColor: Colors.MAIN_BACKGROUND,
     },
     editAvatar: {
         position: 'absolute',

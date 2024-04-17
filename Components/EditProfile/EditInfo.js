@@ -146,7 +146,7 @@ export default function EditInfo() {
                     {
                         backgroundColor: pressed
                             ? Colors.DARK_YELLOW_PRESSED
-                            : Colors.DARK_YELLOW,
+                            : Colors.TEXT_COLOR,
                         opacity: (usernameError || emailError || passwordError) ? 0.5 : 1
                     }
                 ]}
@@ -154,13 +154,13 @@ export default function EditInfo() {
             >
                 {editProfilePressed ?
                     <>
-                        <Feather name="save" size={24} color="black" />
-                        <Text>Save</Text>
+                        <Feather name="save" size={24} color={Colors.WHITE} />
+                        <Text style={styles.buttonText}>Save</Text>
                     </>
                     :
                     <>
-                        <MaterialCommunityIcons name="lead-pencil" size={24} color="black" />
-                        <Text>Edit Profile</Text>
+                        <MaterialCommunityIcons name="lead-pencil" size={24} color={Colors.WHITE} />
+                        <Text style={styles.buttonText}>Edit Profile</Text>
                     </>
                 }
             </Pressable>
@@ -182,12 +182,12 @@ export default function EditInfo() {
 
 const styles = StyleSheet.create({
     modalContent: {
-        backgroundColor: Colors.LIGHT_YELLOW,
+        backgroundColor: Colors.MAIN_BACKGROUND,
         height: '90%',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderWidth: 5,
-        borderColor: Colors.DARK_YELLOW,
+        borderColor: Colors.BORDER_GOLD,
         overflow: 'hidden',
         alignItems: 'center',
         paddingTop: 60,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: Colors.DEEP_RED,
+        color: Colors.TEXT_COLOR,
         marginBottom: 20,
         textAlign: 'center',
     },
@@ -212,5 +212,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    buttonText: {
+        color: Colors.WHITE,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 5,
     },
 })
