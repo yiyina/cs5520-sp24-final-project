@@ -1,53 +1,60 @@
-import { Image, StyleSheet, Text, View, Dimensions, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Pressable } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import Weather from '../../Shared/Weather';
 import Button from '../../Shared/Button';
+import Input from '../../Shared/Input';
 
 export default function SearchBar({ setSearchText, spinValue }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
-    
+
     useEffect(() => {
         setSearchInput(spinValue);
     }, [spinValue]);
 
+    const handleTextChange = (text) => {
+        setSearchInput(text);
+    }
+
+    const handleSubmit = () => {
+        setSearchText(searchInput);
+    }
+
+    const handlePress = () => {
+        setSearchText(searchInput);
+    }
+
     return (
         <View style={styles.container}>
-            {/* <LinearGradient
-                colors={[Colors.LIGHT_YELLOW, Colors.GRAY]}
-                style={styles.gradient}
-            > */}
-                <View style={styles.header}>
-                    <Text style={styles.headerTitle}>Discover</Text>
-                    <Weather />
-                </View>
-                <View style={styles.searchContainer}>
-                    <TextInput
-                        placeholder={searchInput || "Search"}
-                        style={styles.searchBar}
-                        onChangeText={(value) => setSearchInput(value)}
-                        onSubmitEditing={() => setSearchText(searchInput)}
-                    />
-                    <Pressable
-                        style={({ pressed }) => [
-                            styles.searchIcon,
-                            { backgroundColor: pressed ? Colors.DARK_YELLOW : Colors.TRANSPARENT },
-                        ]}
-                        onPress={() => setSearchText(searchInput)}>
-                        <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
-                    </Pressable>
-                    <Button 
-                        text={'Create Spin'} 
-                        textColor={Colors.TEXT_COLOR}
-                        buttonPress={() => console.log('Filter')}
-                        textStyle={{ fontSize: 16, fontWeight: 'bold'}}
-                        defaultStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 20}} 
-                        pressedStyle={{ backgroundColor: Colors.LIGHT_YELLOW, borderRadius: 20 }}
-                    />
-                </View>
-            {/* </LinearGradient> */}
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Discover</Text>
+                <Weather />
+            </View>
+            <View style={styles.searchContainer}>
+                <TextInput
+                    placeholder={searchInput || "Search"}
+                    style={styles.searchBar}
+                    onChangeText={handleTextChange}
+                    onSubmitEditing={handleSubmit}
+                />
+                <Pressable
+                    style={({ pressed }) => [
+                        styles.searchIcon,
+                        { backgroundColor: pressed ? Colors.DARK_YELLOW : Colors.TRANSPARENT },
+                    ]}
+                    onPress={handlePress}>
+                    <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
+                </Pressable>
+                <Button
+                    text={'Create Spin'}
+                    textColor={Colors.TEXT_COLOR}
+                    buttonPress={() => console.log('Filter')}
+                    textStyle={{ fontSize: 16, fontWeight: 'bold' }}
+                    defaultStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 20 }}
+                    pressedStyle={{ backgroundColor: Colors.LIGHT_YELLOW, borderRadius: 20 }}
+                />
+            </View>
         </View>
     );
 }
