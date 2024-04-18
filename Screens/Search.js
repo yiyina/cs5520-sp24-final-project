@@ -5,8 +5,12 @@ import GoogleMapViewFull from '../Components/Search/GoogleMapViewFull'
 import BusinessList from '../Components/Search/BusinessList'
 import GlobalApi from '../Services/GlobalApi';
 import { getUpdatedUserData } from '../Shared/updateUserData'
+import { useRoute } from '@react-navigation/native'
 
 export default function Search() {
+  const route = useRoute();
+  const { query } = route.params || {};
+
   const [placeList, setPlaceList] = useState([]);
   const { coords } = getUpdatedUserData();
 
@@ -14,8 +18,13 @@ export default function Search() {
     if (coords) {
       getNearbyPlaces('restaurant');
     }
-  }
-    , []);
+  }, []);
+
+  useEffect(() => {
+    if (query && coords) {
+      getNearbyPlaces(query);
+    }
+  }, [query, coords]);
 
   const getNearbyPlaces = (value) => {
     GlobalApi.searchByText(value)
@@ -30,9 +39,9 @@ export default function Search() {
   return (
     <View>
       <View style={{ position: 'absolute', zIndex: 10 }}>
-        <SearchBar setSearchText={(value) => getNearbyPlaces(value)} />
+        <SearchBar setSearchText={(value) => getNearbyPlaces(value)} spinValue={query} />
       </View>
-      <GoogleMapViewFull placeList={placeList}/>
+      <GoogleMapViewFull placeList={placeList} />
       <View style={{ position: 'absolute', zIndex: 1, bottom: 0 }}>
         <BusinessList placeList={placeList} />
       </View>

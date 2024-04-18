@@ -6,8 +6,10 @@ import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
 import Button from '../Shared/Button';
+import { useNavigation } from '@react-navigation/native';
 
 const WheelGame = ({ spinItems, spinColor }) => {
+  const navigation = useNavigation();
   const [options, setOptions] = useState(spinItems);
   const [colorSet, setColorSet] = useState(spinColor);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -124,6 +126,11 @@ const WheelGame = ({ spinItems, spinColor }) => {
     });
   };
 
+  const resultSearchHandler = () => {
+    setShowResultModal(false);
+    navigation.navigate('Search', { query: result });
+  }
+
   return (
     <View style={styles.container}>
       {/* <Card newStyle={styles.card} /> */}
@@ -174,7 +181,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
                     <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>{result}</Text>
                     <Button
                         text="Search for it!"
-                        buttonPress={() => console.log('Search for it!')}
+                        buttonPress={resultSearchHandler}
                         defaultStyle={{ backgroundColor: Colors.LIGHT_RED, borderRadius: 10 }}
                         textColor={Colors.WHITE}
                         textStyle={{ fontWeight: 'bold' }}

@@ -5,8 +5,12 @@ import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import Weather from '../../Shared/Weather';
 
-export default function SearchBar({ setSearchText }) {
-    const [searchInput, setSearchInput] = useState('');
+export default function SearchBar({ setSearchText, spinValue }) {
+    const [searchInput, setSearchInput] = useState(spinValue || '');
+    
+    useEffect(() => {
+        setSearchInput(spinValue);
+    }, [spinValue]);
 
     return (
         <View style={styles.container}>
@@ -20,7 +24,7 @@ export default function SearchBar({ setSearchText }) {
                 </View>
                 <View style={styles.searchContainer}>
                     <TextInput
-                        placeholder="Search"
+                        placeholder={searchInput || "Search"}
                         style={styles.searchBar}
                         onChangeText={(value) => setSearchInput(value)}
                         onSubmitEditing={() => setSearchText(searchInput)}
