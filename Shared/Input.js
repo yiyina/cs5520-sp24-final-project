@@ -1,7 +1,7 @@
 import { StyleSheet, View, TextInput } from 'react-native'
 import React from 'react'
 
-export default function Input({ text, handleInput, secureTextEntry, onSubmitEditing }) {
+export default function Input({ text, handleInput, secureTextEntry, onSubmitEditing, newStyle }) {
 
   const textChange = (text) => {
     handleInput(text)
@@ -15,8 +15,8 @@ export default function Input({ text, handleInput, secureTextEntry, onSubmitEdit
         secureTextEntry={secureTextEntry}
         onSubmitEditing={onSubmitEditing}
         returnKeyType='done'
-      >
-      </TextInput>
+        style={newStyle || null}
+      />
     </View>
   )
 }

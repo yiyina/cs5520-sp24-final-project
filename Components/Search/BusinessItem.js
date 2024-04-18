@@ -48,7 +48,7 @@ export default function BusinessItem({ place }) {
             )}
             <Text numberOfLines={2} style={styles.name} >
                 {ensureTwoLines(place.name)}</Text>
-            <Text>
+            <Text numberOfLines={1}>
                 {place.opening_hours?.open_now ? 'Open' : 'Closed'}
                 {coords && place.geometry ? ` (${getDistance(coords.latitude, coords.longitude, place.geometry.location.lat, place.geometry.location.lng).toFixed(2)} miles)` : ''}</Text>
             <Text numberOfLines={2} style={styles.title} >

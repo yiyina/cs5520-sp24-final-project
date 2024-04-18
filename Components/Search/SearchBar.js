@@ -4,7 +4,6 @@ import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import Weather from '../../Shared/Weather';
 import Button from '../../Shared/Button';
-import Input from '../../Shared/Input';
 
 export default function SearchBar({ setSearchText, spinValue }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
@@ -34,9 +33,13 @@ export default function SearchBar({ setSearchText, spinValue }) {
             <View style={styles.searchContainer}>
                 <TextInput
                     placeholder={searchInput || "Search"}
+                    value={searchInput}
                     style={styles.searchBar}
                     onChangeText={handleTextChange}
                     onSubmitEditing={handleSubmit}
+                    keyboardType="default"
+                    autoCorrect={false}
+                    autoCapitalize="none"
                 />
                 <Pressable
                     style={({ pressed }) => [
