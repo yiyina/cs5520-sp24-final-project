@@ -11,6 +11,7 @@ import Colors from '../Shared/Colors'
 
 export default function Spin() {
   const [spinItems, setSpinItems] = useState([])
+  const [spinName, setSpinName] = useState('')
   const [spinColor, setSpinColor] = useState([])
   const [spinColorName, setSpinColorName] = useState('')
   const [spinId, setSpinId] = useState('')
@@ -30,6 +31,7 @@ export default function Spin() {
       } else {
         const firstSpin = spinsCollection[0];
         setSpinId(firstSpin.id);
+        setSpinName(firstSpin.spinName);
         setSpinItems(firstSpin.spinItems);
         setSpinColor(firstSpin.spinColor);
         setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(firstSpin.spinColor)));
@@ -51,6 +53,7 @@ export default function Spin() {
       if (selectedSpin) {
         console.log("Spin selectedSpin: ", selectedSpin);
         setSpinId(selectedSpin.id);
+        setSpinName(selectedSpin.spinName);
         setSpinItems(selectedSpin.spinItems);
         setSpinColor(selectedSpin.spinColor);
         setSpinColorName(Object.keys(ColorThemes).find(key => JSON.stringify(ColorThemes[key]) === JSON.stringify(selectedSpin.spinColor)));
@@ -67,7 +70,7 @@ export default function Spin() {
       {dataLoaded && (
         <>
           <Header spinSelectHandler={spinSelectHandler} />
-          <SpinWheel spinItems={spinItems} spinColor={spinColor} />
+          <SpinWheel spinName={spinName} spinItems={spinItems} spinColor={spinColor} />
           <EditSpin spinId={spinId} spinColorName={spinColorName} />
         </>
       )}

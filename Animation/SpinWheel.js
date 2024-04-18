@@ -8,7 +8,7 @@ import Card from '../Shared/Card';
 import Button from '../Shared/Button';
 import { useNavigation } from '@react-navigation/native';
 
-const WheelGame = ({ spinItems, spinColor }) => {
+const WheelGame = ({ spinName, spinItems, spinColor }) => {
   const navigation = useNavigation();
   const [options, setOptions] = useState(spinItems);
   const [colorSet, setColorSet] = useState(spinColor);
@@ -128,7 +128,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
 
   const resultSearchHandler = () => {
     setShowResultModal(false);
-    navigation.navigate('Search', { query: result });
+    navigation.navigate('Search', { query: `${result} ${spinName}` });
   }
 
   return (
