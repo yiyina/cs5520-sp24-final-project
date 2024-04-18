@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import PlaceMarker from '../Place/PlaceMarker';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { getLocation } from '../../Shared/LocationManager';
 
 export default function GoogleMapViewFull({ placeList }) {
     const [mapRegion, setMapRegion] = useState({});
@@ -13,10 +14,12 @@ export default function GoogleMapViewFull({ placeList }) {
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {
             try {
-                if (coords) {
+                const userData = await FirestoreService.getUserData(); // Fetch user data
+                console.log('userData:', userData);
+                if (userData && userData.coords) {
                     setMapRegion({
-                        latitude: coords.latitude,
-                        longitude: coords.longitude,
+                        latitude: userData.coords.latitude,
+                        longitude: userData.coords.longitude,
                         latitudeDelta: 0.0522,
                         longitudeDelta: 0.0321,
                     });
@@ -28,7 +31,9 @@ export default function GoogleMapViewFull({ placeList }) {
                 console.error('Error fetching user data:', error);
             }
         }
-        fetchUserDataAndSetRegion();
+        getLocation().then(() => {
+            fetchUserDataAndSetRegion();
+        })
     }, [coords]);
 
     const handleMyLocationPress = () => {
