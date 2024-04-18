@@ -28,7 +28,6 @@ export default function EditInfo({ onCancel }) {
     const [passwordError, setPasswordError] = useState('');
     const [editProfilePressed, setEditProfilePressed] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-    const user = auth.currentUser;
 
     useEffect(() => {
         async function fetchUserData() {
@@ -49,8 +48,6 @@ export default function EditInfo({ onCancel }) {
         if (avatarUri && avatarUri.uri) {
             console.log("EditInfo AvatarUri: ", avatarUri.uri);
         }
-        console.log("UserName: ", username);
-        console.log("Email: ", email);
     }, []);
 
     const toggleCamera = () => {
@@ -83,7 +80,7 @@ export default function EditInfo({ onCancel }) {
                         isEmailAlreadyExists = true;
                         return;
                     }
-                    await FirestoreService.updateEmailForUser(user.uid, email);
+                    await FirestoreService.updateEmailForUser(email);
                     // fieldsToUpdate.email = email;
                     hasChanges = true;
                 }
@@ -95,7 +92,7 @@ export default function EditInfo({ onCancel }) {
 
                 if (hasChanges) {
                     setIsUploading(true);
-                    await FirestoreService.updateDocuments(user.uid, fieldsToUpdate);
+                    await FirestoreService.updateDocuments(fieldsToUpdate);
                     Alert.alert("Success", "Your data updated successfully.");
                 } else {
                     Alert.alert("Info", "No changes.");

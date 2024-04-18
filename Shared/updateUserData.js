@@ -25,7 +25,6 @@ export const getUpdatedUserData = () => {
                 setEmail(userData.email);
                 setCoords(userData.coords);
                 setUpGalleryListener(querySnapshot.docs[0].id);
-                console.log("User Data: ", userData);
             },
             (error) => {
                 console.error(error.message);

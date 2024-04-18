@@ -65,55 +65,57 @@ const FirestoreService = {
         }
     },
 
-  async uploadToStorage(uid, fileUri, type) {
-    try {
-        if (!uid || !fileUri) {
-            throw new Error("Invalid parameters for uploadToStorage");
-        }
-
-        // Determine the storage path based on the type of image
-        let storagePath;
-        switch (type) {
-            case 'avatar':
-                storagePath = `user_avatars/${uid}/`;
-                break;
-            case 'gallery':
-                storagePath = `user_gallery/${uid}/`;
-                break;
-            default:
-                throw new Error("Invalid image type for uploadToStorage");
-        }
-
-        const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
-        const fileRef = storageRef(storage, `${storagePath}${fileName}`);
-
-        // Convert the file URI to a blob for uploading
-        const response = await fetch(fileUri);
-        const blob = await response.blob();
-
-        // Upload the file
-        await uploadBytes(fileRef, blob);
-
-        // After upload, get the file's download URL
-        const downloadURL = await getDownloadURL(fileRef);
-
-        return downloadURL;
-    } catch (error) {
-        console.error("Error uploading to storage:", error);
-        throw error;
-    }
-},
-
-
-    async updateUserAvatar(uid, avatarUri) {
+    async uploadToStorage(fileUri, type) {
         try {
+            const uid = auth.currentUser.uid;
+            if (!uid || !fileUri) {
+                throw new Error("Invalid parameters for uploadToStorage");
+            }
+
+            // Determine the storage path based on the type of image
+            let storagePath;
+            switch (type) {
+                case 'avatar':
+                    storagePath = `user_avatars/${uid}/`;
+                    break;
+                case 'gallery':
+                    storagePath = `user_gallery/${uid}/`;
+                    break;
+                default:
+                    throw new Error("Invalid image type for uploadToStorage");
+            }
+
+            const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
+            const fileRef = storageRef(storage, `${storagePath}${fileName}`);
+
+            // Convert the file URI to a blob for uploading
+            const response = await fetch(fileUri);
+            const blob = await response.blob();
+
+            // Upload the file
+            await uploadBytes(fileRef, blob);
+
+            // After upload, get the file's download URL
+            const downloadURL = await getDownloadURL(fileRef);
+
+            return downloadURL;
+        } catch (error) {
+            console.error("Error uploading to storage:", error);
+            throw error;
+        }
+    },
+
+
+    async updateUserAvatar(avatarUri) {
+        try {
+            const uid = auth.currentUser.uid;
             if (!uid || (avatarUri !== null && typeof avatarUri !== 'string')) {
                 throw new Error("Invalid parameters for updateUserAvatar");
             }
 
             let url = avatarUri;
             if (avatarUri) {
-                url = await this.uploadToStorage(uid, avatarUri,'avatar');
+                url = await this.uploadToStorage(avatarUri, 'avatar');
             }
             const userDocId = await this.getUserDocId(uid);
             if (userDocId) {
@@ -131,41 +133,41 @@ const FirestoreService = {
         }
     },
 
-  async addPhotoToGallery(uid, fileUri) {
-    try {
-        if (!uid || !fileUri) {
-            throw new Error("Invalid parameters for addPhotoToGallery.");
-        }
-
-        
-       const imageUrl = await this.uploadToStorage(uid, fileUri, 'gallery');
-
-        // Reference to the user's gallery collection
-        const userDocId = await this.getUserDocId(uid);
-        if (!userDocId) {
-            throw new Error(`User document not found for UID: ${uid}`);
-        }
-
-        const galleryRef = collection(firestore, `users/${userDocId}/gallery`);
-
-        // Add a new document in the gallery collection with the image URL
-        const docRef = await addDoc(galleryRef, {
-            url: imageUrl,
-            createdAt: new Date()
-        });
-
-        console.log("Gallery image added with ID:", docRef.id);
-    } catch (error) {
-        console.error("Error adding photo to gallery:", error);
-        throw error;
-    }
-},
-
-    async addCurrentLocation(uid, location) {
+    async addPhotoToGallery(fileUri) {
         try {
-            const userDocId = await this.getUserDocId(uid);
-          
+            const uid = auth.currentUser.uid;
+            if (!uid || !fileUri) {
+                throw new Error("Invalid parameters for addPhotoToGallery.");
+            }
 
+
+            const imageUrl = await this.uploadToStorage(uid, fileUri, 'gallery');
+
+            // Reference to the user's gallery collection
+            const userDocId = await this.getUserDocId(uid);
+            if (!userDocId) {
+                throw new Error(`User document not found for UID: ${uid}`);
+            }
+
+            const galleryRef = collection(firestore, `users/${userDocId}/gallery`);
+
+            // Add a new document in the gallery collection with the image URL
+            const docRef = await addDoc(galleryRef, {
+                url: imageUrl,
+                createdAt: new Date()
+            });
+
+            console.log("Gallery image added with ID:", docRef.id);
+        } catch (error) {
+            console.error("Error adding photo to gallery:", error);
+            throw error;
+        }
+    },
+
+    async addCurrentLocation(location) {
+        try {
+            const uid = auth.currentUser.uid;
+            const userDocId = await this.getUserDocId(uid);
             if (userDocId) {
                 const firestore = getFirestore();
                 const userDocRef = doc(firestore, "users", userDocId);
@@ -225,12 +227,13 @@ const FirestoreService = {
             throw error;
         }
     },
-  
 
-    async updateEmailForUser(uid, newEmail) {
-        console.log("Updating email for user: ", uid, newEmail);
+
+    async updateEmailForUser(newEmail) {
         try {
             const user = auth.currentUser;
+            console.log("Updating email for user: ", user.uid, newEmail);
+            
             if (user) {
                 try {
                     updateEmail(user, newEmail);
@@ -243,9 +246,9 @@ const FirestoreService = {
                 console.error("Current user is not available.");
             }
 
-            const userDocId = await this.getUserDocId(uid);
+            const userDocId = await this.getUserDocId(user.uid);
             if (!userDocId) {
-                throw new Error("No user document found for UID: " + uid);
+                throw new Error("No user document found for UID: " + user.uid);
             }
             const userDocRef = doc(firestore, "users", userDocId);
             await updateDoc(userDocRef, { email: newEmail });
@@ -255,8 +258,12 @@ const FirestoreService = {
         }
     },
 
-    async updateDocuments(uid, fieldsToUpdate, subcollectionPath = null) {
+    async updateDocuments(fieldsToUpdate, subcollectionPath = null) {
         try {
+            const uid = auth.currentUser.uid;
+            if (!uid) {
+                throw new Error("User is not authenticated.");
+            }
             const userDocId = await this.getUserDocId(uid);
             if (!userDocId) {
                 throw new Error("User document not found for UID: " + uid);
@@ -286,7 +293,7 @@ const FirestoreService = {
 
     async addSpinToUser(spin, spinId) {
         try {
-            const uid = auth.currentUser.uid; 
+            const uid = auth.currentUser.uid;
             if (!uid) {
                 throw new Error("User is not authenticated.");
             }
@@ -296,8 +303,6 @@ const FirestoreService = {
             }
 
             const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
-            console.log("spin ID: ", spinId)
-            console.log("spin: ", spin)
 
             if (spinId) {
                 const spinDocRef = doc(spinsCollectionRef, spinId);
@@ -333,7 +338,7 @@ const FirestoreService = {
             throw error;
         }
     },
-    
+
     async deleteSpin(spinId) {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
@@ -344,13 +349,27 @@ const FirestoreService = {
             throw error;
         }
     },
+
+    async addSpinResultsToUser(spinId, results) {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            if (!userDocId) {
+                throw new Error("User document not found for UID: " + uid);
+            }
+            const spinDocRef = doc(firestore, "users", userDocId, "spins", spinId);
+            await updateDoc(spinDocRef, { results });
+        } catch (error) {
+            console.error("Error updating spin results: ", error);
+            throw error;
+        }
+    }
     // async getGalleryImages(uid) {
     //     try {
     //         const userDocId = await this.getUserDocId(uid);
     //         const galleryCollectionRef = collection(firestore, "users", userDocId, "gallery");
     //         const querySnapshot = await getDocs(galleryCollectionRef);
     //          console.log("querySnapshot: ", querySnapshot);
-            
+
 
     //          const galleryData = querySnapshot.docs.map(doc => {
     //              return {
