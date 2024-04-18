@@ -145,6 +145,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                         onPress: async () => {
                             await FirestoreService.deleteSpin(spinId);
                             setShowEditSpinModal(false);
+                            Alert.alert('Success', 'Spin successfully deleted!');
                             fetchData();
                         },
                         style: 'destructive',
@@ -157,7 +158,13 @@ export default function EditSpin({ spinId, spinColorName }) {
 
     return (
         <View>
-            <Pressable style={styles.editButton} onPress={editHandler}>
+            <Pressable
+                style={({ pressed }) => [
+                    styles.editButton,
+                    pressed ? {opacity: 0.5} : {opacity: 1}
+                ]}
+                onPress={editHandler}
+            >
                 <EvilIcons name="pencil" size={60} color={Colors.WHITE} />
             </Pressable>
             <Modal

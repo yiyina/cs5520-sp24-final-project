@@ -75,7 +75,8 @@ export default function Spin() {
         </>
       )}
       {!dataLoaded &&
-        <View style={styles.waitingView}>
+        <View 
+          style={styles.waitingView}>
           <ActivityIndicator size="large" color={Colors.DEEP_RED} />
         </View>
       }
