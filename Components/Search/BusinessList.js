@@ -13,9 +13,10 @@ export default function BusinessList({ placeList }) {
                 horizontal={true}
                 renderItem={({ item, index }) => index < 10 && (
                     <TouchableOpacity
-                        onPress={() => navigation.navigate(
-                            'place-detail', { place: item }
-                        )}
+                        onPress={() => {
+                            console.log('BusinessList item:', item)
+                            navigation.navigate('place-detail', { place: item })
+                        }}
                     >
                         <BusinessItem place={item} />
                     </TouchableOpacity>

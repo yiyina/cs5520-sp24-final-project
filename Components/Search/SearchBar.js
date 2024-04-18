@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import Weather from '../../Shared/Weather';
+import Button from '../../Shared/Button';
 
 export default function SearchBar({ setSearchText, spinValue }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
@@ -37,6 +38,14 @@ export default function SearchBar({ setSearchText, spinValue }) {
                         onPress={() => setSearchText(searchInput)}>
                         <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
                     </Pressable>
+                    <Button 
+                        text={'Create Spin'} 
+                        textColor={Colors.TEXT_COLOR}
+                        buttonPress={() => console.log('Filter')}
+                        textStyle={{ fontSize: 16, fontWeight: 'bold'}}
+                        defaultStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 20}} 
+                        pressedStyle={{ backgroundColor: Colors.LIGHT_YELLOW, borderRadius: 20 }}
+                    />
                 </View>
             {/* </LinearGradient> */}
         </View>
@@ -47,10 +56,8 @@ const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('screen').width,
         backgroundColor: Colors.MAIN_BACKGROUND,
-        padding: 20,
-    },
-    gradient: {
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
     },
     header: {
         display: 'flex',
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         flexDirection: 'row',
-        marginTop: 10,
+        alignItems: 'center',
     },
     searchBar: {
         backgroundColor: Colors.WHITE,
@@ -85,11 +92,13 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
         elevation: 2,
         paddingHorizontal: 10,
-        width: '90%',
+        width: '60%',
         height: 40,
         marginRight: 10,
     },
     searchIcon: {
+        position: 'absolute',
+        left: Dimensions.get('screen').width * 0.45,
         width: 40,
         height: 40,
         borderRadius: 20,

@@ -7,8 +7,7 @@ import Share from '../../Services/Share'
 
 export default function PlaceDetailItem({ place, onDirectionClick }) {
     if (!place || Object.keys(place).length === 0) {
-        // Optionally return null or a placeholder if 'place' is not available
-        return null; // or <LoadingSpinner /> or any other placeholder component
+        return null; 
     }
     console.log("PlaceDetailItem", place);
 
@@ -40,7 +39,11 @@ export default function PlaceDetailItem({ place, onDirectionClick }) {
                 {place.vicinity? place.vicinity : place.formatted_address}
             </Text>
             {place?.opening_hours && (
-                <Text>
+                <Text style={
+                    place.opening_hours.open_now ? 
+                    { color: Colors.BLUE, fontSize: 16 } : 
+                    { color: Colors.LIGHT_RED, fontSize: 16 }
+                }>
                     {place.opening_hours.open_now ? "(Open)" : "(Closed)"}
                 </Text>
             )}

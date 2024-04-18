@@ -1,14 +1,14 @@
 // import PlaceMarker from './PlaceMarker';
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
-import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import Colors from '../../Shared/Colors';
-import { auth } from '../../firebase-files/FirebaseSetup';
 import { getLocation } from '../../Shared/LocationManager';
+import PlaceMarker from '../Place/PlaceMarker';
 
 export default function GoogleMapView({ placeList }) {
+    console.log('GoogleMapView placeList:', placeList);
     const [mapRegion, setMapRegion] = useState({});
 
     useEffect(() => {
@@ -43,19 +43,16 @@ export default function GoogleMapView({ placeList }) {
                     showsMyLocationButton={true}
                     region={mapRegion}
                 >
-                    {/* {mapRegion.latitude && mapRegion.longitude && (
+                    {mapRegion.latitude && mapRegion.longitude && (
                         <Marker 
                             title='You'
                             coordinate={mapRegion}/>
-                    )} */}
-                    {/* <Marker 
-                        title='You'
-                        coordinate={mapRegion}/> */}
-                    {/* {placeList && placeList.length > 0 && placeList.slice(0,6).map((item, index) => {
+                    )}
+                    {placeList && placeList.length > 0 && placeList.slice(0,6).map((item, index) => {
                             // Check if item has an id for key, if not use index
                             const key = item.id ? item.id.toString() : `place_${index}`;
                             return <PlaceMarker key={key} item={item} />;
-                        })} */}
+                        })}
                 </MapView>
         </View>
     )

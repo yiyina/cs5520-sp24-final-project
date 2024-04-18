@@ -1,49 +1,63 @@
-import { Platform, StyleSheet, ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { useRoute } from '@react-navigation/native'
-import PlaceDetailItem from './PlaceDetailItem'
-import Colors from '../../Shared/Colors'
-import GoogleMapView from '../Home/GoogleMapView'
-import { Linking } from 'react-native'
+import { Platform, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useRoute } from '@react-navigation/native';
+import PlaceDetailItem from './PlaceDetailItem';
+import Colors from '../../Shared/Colors';
+import GoogleMapView from '../Home/GoogleMapView';
+import { Linking } from 'react-native';
 
 export default function PlaceDetail() {
-    const param = useRoute().params;
-    console.log("PlaceDetail param", param);
-    const [place, setPlace] = useState(param.place || {});
+    const { place } = useRoute().params || {};
+    const [placeDetails, setPlaceDetails] = useState(place || {});
 
     useEffect(() => {
-        if (param && param.place) {
-          setPlace(param.place);
+        if (place) {
+            setPlaceDetails(place);
         }
-    }, [param])
-      
+    }, [place]);
 
-    const onDirectionClick = () => {
-        const url=Platform.select({
-            ios: "maps: " + place.geometry.location.lat + "," + place.geometry.location.lng + "?q=" + place.vicinity,
-            android: "geo: " + place.geometry.location.lat + "," + place.geometry.location.lng + "?q=" + place.vicinity
+    const openMapsApp = () => {
+        if (!placeDetails.geometry || !placeDetails.geometry.location) {
+            console.error('Location data is missing');
+            return;
+        }
+
+        const { lat, lng } = placeDetails.geometry.location;
+        const label = encodeURIComponent(placeDetails.name || 'Location');
+        const query = encodeURIComponent(placeDetails.formatted_address || `${lat},${lng}`);
+
+        const iosUrl = `maps:${lat},${lng}?q=${query}`;
+        const googleMapsUrl = `comgooglemaps://?q=${label}&center=${lat},${lng}&zoom=14`;
+        const webUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+        const url = Platform.select({
+            ios: googleMapsUrl,
+            android: `geo:${lat},${lng}?q=${query}`
         });
 
-        Linking.openURL(url)
-    }
+        Linking.canOpenURL(url)
+            .then(supported => {
+                if (supported) {
+                    Linking.openURL(url);
+                } else {
+                    Linking.openURL(webUrl);
+                }
+            })
+            .catch(err => console.error('An error occurred', err));
+    };
 
     return (
-        <ScrollView style={{padding:20, backgroundColor:Colors.WHITE, flex:1}}>
-            <PlaceDetailItem place={place} onDirectionClick={()=>onDirectionClick()}/>
-            <GoogleMapView placeList={[place]}/>
-            {/* <TouchableOpacity 
-                style={{
-                    backgroundColor:Colors.PRIMARY, 
-                    padding:15, 
-                    alignContent:'center', alignItems:'center',
-                    margin:8, 
-                    borderRadius:50}} onPress={()=>onDirectionClick()}>
-                <Text style={{fontFamily:'Raleway-Regular', textAlign:'center',color:Colors.WHITE}}>
-                    Get Direction on Google Map
-                </Text>
-            </TouchableOpacity> */}
+        <ScrollView style={styles.container}>
+            <PlaceDetailItem place={placeDetails} onDirectionClick={openMapsApp} />
+            <GoogleMapView placeList={[placeDetails]} />
         </ScrollView>
-    )
+    );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+        backgroundColor: Colors.WHITE,
+        flex: 1
+    },
+});
