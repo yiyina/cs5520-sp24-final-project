@@ -4,12 +4,14 @@ import Colors from '../Shared/Colors'
 // import GoogleMapView from '../Components/Home/GoogleMapView'
 import Header from '../Components/Home/Header'
 import Histogram from '../Shared/Histogram'
+import NavToSpin from '../Components/Home/NavToSpin'
 
 export default function Home() {
   return (
     <View style={styles.container}>
         <Header />
         {/* <GoogleMapView /> */}
+        <NavToSpin />
         <Histogram />
     </View>
   )

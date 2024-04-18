@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions, Modal } from 'react-native';
 import Svg, { G, Path, Text as SvgText, Circle, Line } from 'react-native-svg';
 import tinycolor from 'tinycolor2';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
+import Button from '../Shared/Button';
 
 const WheelGame = ({ spinItems, spinColor }) => {
   const [options, setOptions] = useState(spinItems);
@@ -17,6 +18,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
   const strokeSize = 5; // the thinkness of the wheel's white border
   const viewBoxSize = wheelSize + strokeSize * 2;
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
+  const [showResultModal, setShowResultModal] = useState(false);
 
   useEffect(() => {
     setColorSet(spinColor);
@@ -69,7 +71,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
         <SvgText
           x={wheelSize / 3.5}
           y="20"
-          fill="black"
+          fill={Colors.TEXT_COLOR}
           transform={`rotate(${(360 / options.length)} ${wheelSize / 12} 30)`}
           textAnchor="middle"
           fontSize="16"
@@ -118,6 +120,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
       setResult(selectedOption);
       setIsSpinning(false);
       setIsButtonDisabled(false);
+      setShowResultModal(true);
     });
   };
 
@@ -155,9 +158,41 @@ const WheelGame = ({ spinItems, spinColor }) => {
           disabled={isButtonDisabled}>
           <Text style={{ color: Colors.TEXT_COLOR, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
-        <View style={styles.result}>
-          <Text style={{ fontSize: 25, margin: 20 }}>Selected: {result}</Text>
-        </View>
+        {/* <View style={styles.result}>
+          <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>Spin Result: {result}</Text>
+        </View> */}
+        {
+          result !== '' && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Modal
+                visible={showResultModal}
+                transparent={true}
+                animationType="fade">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <Card newStyle={{ alignItems: 'center' }}>
+                    <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR, fontWeight: 'bold' }}>Your Spin Result is</Text>
+                    <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>{result}</Text>
+                    <Button
+                        text="Search for it!"
+                        buttonPress={() => console.log('Search for it!')}
+                        defaultStyle={{ backgroundColor: Colors.LIGHT_RED, borderRadius: 10 }}
+                        textColor={Colors.WHITE}
+                        textStyle={{ fontWeight: 'bold' }}
+                        pressedStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 10}}
+                      />
+                      <Button
+                        text="Close"
+                        buttonPress={() => setShowResultModal(false)}
+                        textColor={Colors.DEEP_RED}
+                        textStyle={{ fontWeight: 'bold' }}
+                        pressedStyle={{ backgroundColor: Colors.DEEP_RED, borderRadius: 10}}
+                      />
+                  </Card>
+                </View>
+              </Modal>
+            </View>
+          )
+        }
       </View>
     </View>
   );
