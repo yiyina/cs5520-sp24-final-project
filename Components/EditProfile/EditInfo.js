@@ -114,6 +114,10 @@ export default function EditInfo({ onCancel }) {
         }
     };
 
+    const handleAvatarChange = async (imageUri) => {
+        CameraService.handleImageCaptured(imageUri,'avatar')
+    }
+
     return (
         <View style={styles.modalContent}>
             <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera} />
@@ -170,7 +174,7 @@ export default function EditInfo({ onCancel }) {
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
-                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri,'avatar')}
+                onImageCaptured={handleAvatarChange}
                 type={'avatar'} />
             {isUploading &&
                 <View style={styles.waitingView}>

@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 import { auth } from '../firebase-files/FirebaseSetup';
@@ -35,8 +36,10 @@ class CameraService {
                 url = await FirestoreService.uploadToStorage(uid, imageUri, type);
                 if (type === 'avatar') {
                     await FirestoreService.updateUserAvatar(uid, url);
+                    Alert.alert("Success", "Avatar updated successfully.");
                 } else if (type === 'gallery') {
                     await FirestoreService.addPhotoToGallery(uid, url);
+                    Alert.alert("Success", "Photo added to gallery successfully.");
                 }
             }
             console.log(`${type} updated:`, url);
