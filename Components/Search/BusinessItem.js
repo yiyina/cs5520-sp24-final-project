@@ -4,6 +4,7 @@ import { MY_API_KEY } from '@env'
 import Colors from '../../Shared/Colors'
 import { AntDesign } from '@expo/vector-icons'
 import { getUpdatedUserData } from '../../Shared/updateUserData'
+import { getDistance } from '../../Shared/CalculateDistance'
 
 export default function BusinessItem({ place }) {
     const { coords } = getUpdatedUserData();
@@ -11,25 +12,7 @@ export default function BusinessItem({ place }) {
     const ensureTwoLines = (text) => {
         return text.includes('\n') ? text : text + '\n ';
     };
-
-    const deg2rad = (deg) => {
-        return deg * (Math.PI / 180);
-    };
-
-    const getDistance = (lat1, lon1, lat2, lon2) => {
-        const R = 6371; // Radius of the earth in km
-        const dLat = deg2rad(lat2 - lat1);
-        const dLon = deg2rad(lon2 - lon1);
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2)
-            ;
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const d = R * c; // Distance in km
-        return d * 0.621371; // Distance in miles
-    }
-
+    
     return (
         <View style={styles.container}>
             {place?.photos && place.photos.length > 0 ? (

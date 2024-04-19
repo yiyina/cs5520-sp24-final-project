@@ -1,10 +1,14 @@
-import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../Shared/Colors'
 import { MY_API_KEY } from '@env'
+import { getUpdatedUserData } from '../../Shared/updateUserData'
+import { getDistance } from '../../Shared/CalculateDistance'
 
 export default function BarItemList({ place }) {
+    const { coords } = getUpdatedUserData();
+
     return (
         <View style={styles.container}>
             {place?.photos && place.photos.length > 0 ? (
@@ -31,13 +35,15 @@ export default function BarItemList({ place }) {
             )}
             <View style={{ flex: 1 }}>
                 <Text
-                    numberOfLines={2}
-                    style={{ fontSize: 18, marginBottom: 5 }}>{place.name}</Text>
-                <Text
-                    numberOfLines={2}
-                    style={{ fontSize: 18, marginBottom: 5 }}>{place.vicinity}</Text>
-                <View style={{ display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center' }}>
-                    <AntDesign name="star" size={20} color={Colors.YELLOW} />
+                    numberOfLines={1}
+                    style={{ fontSize: 20, marginBottom: 5, fontWeight: "bold" }}>{place.name}</Text>
+                <Text numberOfLines={2} style={styles.title} >
+                    {place.vicinity ? place.vicinity : place.formatted_address}</Text>
+                <Text numberOfLines={1}>
+                    {place.opening_hours?.open_now ? 'Open' : 'Closed'}
+                    {coords && place.geometry ? ` (${getDistance(coords.latitude, coords.longitude, place.geometry.location.lat, place.geometry.location.lng).toFixed(2)} miles)` : ''}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', gap: 5, alignItems: 'center', marginTop: 5 }}>
+                    <AntDesign name="star" size={20} color={Colors.DARK_RED} />
                     <Text>{place.rating}</Text>
                     <Text>({place.user_ratings_total})</Text>
                 </View>
