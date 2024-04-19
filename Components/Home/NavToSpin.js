@@ -22,7 +22,9 @@ export default function NavToSpin() {
 
 const styles = StyleSheet.create({
     container: {
-        width: '60%',
+        width: '80%',
+        alignSelf: 'center',
+        marginBottom: 20,
     },
     default: {
         backgroundColor: Colors.TEXT_COLOR,

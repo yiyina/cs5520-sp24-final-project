@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { BarChart } from "react-native-gifted-charts";
 import Colors from './Colors';
 import { getUpdatedUserData } from './updateUserData';
+import GlobalApi from '../Services/GlobalApi';
+import BarItemList from '../Components/Home/BarItemList';
 
 export default function Histogram() {
-  const { spinResults } = getUpdatedUserData();
+  const { coords, spinResults } = getUpdatedUserData();
   const [data, setData] = useState(null);
+  const [placeList, setPlaceList] = useState([])
   const TOP = 5;
 
   useEffect(() => {
@@ -17,10 +20,11 @@ export default function Histogram() {
   const processSpinResults = (spinResults) => {
     if (!spinResults) return [];
     const sortedResults = Object.entries(spinResults)
-      .map(([key, value]) => ({ 
-        label: key, 
+      .map(([key, value]) => ({
+        label: key,
         value,
-        onPress: () => console.log(`${key} was pressed with value ${value}`),}))
+        onPress: () => setPlaceList(getNearBySearchPlace(key)),
+      }))
       .sort((a, b) => b.value - a.value);
 
     while (sortedResults.length < TOP) {
@@ -30,26 +34,55 @@ export default function Histogram() {
     return sortedResults.slice(0, TOP);
   }
 
+  const getNearBySearchPlace = (value) => {
+    if (coords) {
+      console.log("Histograom: coords: ", coords.latitude, coords.longitude, "value: ", value);
+      GlobalApi.searchByText(value)
+        .then(response => {
+          // console.log("response: ", response.data)
+          setPlaceList(response.data.results);
+        })
+        .catch(error => {
+          console.error("Error fetching nearby places:", error);
+        });
+    } else {
+      console.log("Location is not available");
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Top Search Results</Text>
-      {spinResults &&
-        <BarChart
-          key={JSON.stringify(data)}
-          data={data}
-          barWidth={Dimensions.get('window').width / 9}
-          yAxisThickness={0}
-          xAxisThickness={1}
-          noOfSections={5}
-          barBorderRadius={5}
-          frontColor={Colors.TEXT_COLOR} 
-          // yAxisLabelTextsStyle={styles.yLabelStyle}
-          // xAxisLabelTextsStyle={styles.xLabelStyle}
-          initialSpacing={10}
-          showValuesOnTopOfBars={true}
-        />}
+      <FlatList
+        data={placeList}
+        keyExtractor={(item, index) => index.toString()}
+        ListHeaderComponent={() => (
+          <>
+            <Text style={styles.title}>Top Search Results</Text>
+            {spinResults && (
+              <BarChart
+                data={data}
+                barWidth={Dimensions.get('window').width / 9}
+                yAxisThickness={0}
+                xAxisThickness={1}
+                noOfSections={5}
+                barBorderRadius={5}
+                frontColor={Colors.TEXT_COLOR}
+                initialSpacing={10}
+                showValuesOnTopOfBars={true}
+              />
+            )}
+          </>
+        )}
+        renderItem={({ item }) => (
+          <TouchableOpacity 
+            onPress={() => console.log("Place clicked", item)}
+            style={{ marginTop: 20 }}>
+            <BarItemList place={item} />
+          </TouchableOpacity>
+        )}
+      />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -61,7 +94,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: Colors.TEXT_COLOR
+    color: Colors.TEXT_COLOR,
+    alignSelf: 'center',
   },
   xLabelStyle: {
     fontWeight: 'bold',
