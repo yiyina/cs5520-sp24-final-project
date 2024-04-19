@@ -5,6 +5,7 @@ import Colors from './Colors';
 import { getUpdatedUserData } from './updateUserData';
 import GlobalApi from '../Services/GlobalApi';
 import BarItemList from '../Components/Home/BarItemList';
+import { Entypo } from '@expo/vector-icons';
 
 export default function Histogram() {
   const { coords, spinResults } = getUpdatedUserData();
@@ -52,35 +53,43 @@ export default function Histogram() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={placeList}
-        keyExtractor={(item, index) => index.toString()}
-        ListHeaderComponent={() => (
-          <>
-            <Text style={styles.title}>Top Search Results</Text>
-            {spinResults && (
-              <BarChart
-                data={data}
-                barWidth={Dimensions.get('window').width / 9}
-                yAxisThickness={0}
-                xAxisThickness={1}
-                noOfSections={5}
-                barBorderRadius={5}
-                frontColor={Colors.TEXT_COLOR}
-                initialSpacing={10}
-                showValuesOnTopOfBars={true}
-              />
-            )}
-          </>
-        )}
-        renderItem={({ item }) => (
-          <TouchableOpacity 
-            onPress={() => console.log("Place clicked", item)}
-            style={{ marginTop: 20 }}>
-            <BarItemList place={item} />
-          </TouchableOpacity>
-        )}
-      />
+      {spinResults ?
+        <FlatList
+          data={placeList}
+          keyExtractor={(item, index) => index.toString()}
+          ListHeaderComponent={() => (
+            <>
+              <Text style={styles.title}>Top Search Results</Text>
+              {spinResults && (
+                <BarChart
+                  data={data}
+                  barWidth={Dimensions.get('window').width / 9}
+                  yAxisThickness={0}
+                  xAxisThickness={1}
+                  noOfSections={5}
+                  barBorderRadius={5}
+                  frontColor={Colors.TEXT_COLOR}
+                  initialSpacing={10}
+                  showValuesOnTopOfBars={true}
+                />
+              )}
+            </>
+          )}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => console.log("Place clicked", item)}
+              style={{ marginTop: 20 }}>
+              <BarItemList place={item} />
+            </TouchableOpacity>
+          )}
+        />
+        :
+        <View style={styles.firstLogin}>
+          <Entypo name="arrow-bold-up" size={24} color="black" />
+          <Text style={styles.title}>Do your first Spin now!</Text>
+          <Text style={styles.title}>Welcome to Spin to Explore!</Text>
+        </View>
+      }
     </View>
   );
 }
@@ -97,10 +106,9 @@ const styles = StyleSheet.create({
     color: Colors.TEXT_COLOR,
     alignSelf: 'center',
   },
-  xLabelStyle: {
-    fontWeight: 'bold',
-  },
-  yLabelStyle: {
-    color: '#666'
+  firstLogin: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 20,
   }
 });
