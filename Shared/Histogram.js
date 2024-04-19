@@ -4,8 +4,6 @@ import { BarChart } from "react-native-gifted-charts";
 import Colors from './Colors';
 import { getUpdatedUserData } from './updateUserData';
 
-const screenHeight = Dimensions.get('window').height;
-
 export default function Histogram() {
   const { spinResults } = getUpdatedUserData();
   const [data, setData] = useState(null);
@@ -19,7 +17,10 @@ export default function Histogram() {
   const processSpinResults = (spinResults) => {
     if (!spinResults) return [];
     const sortedResults = Object.entries(spinResults)
-      .map(([key, value]) => ({ label: key, value }))
+      .map(([key, value]) => ({ 
+        label: key, 
+        value,
+        onPress: () => console.log(`${key} was pressed with value ${value}`),}))
       .sort((a, b) => b.value - a.value);
 
     while (sortedResults.length < TOP) {
@@ -36,15 +37,14 @@ export default function Histogram() {
         <BarChart
           key={JSON.stringify(data)}
           data={data}
-          barWidth={50}
+          barWidth={Dimensions.get('window').width / 9}
           yAxisThickness={0}
           xAxisThickness={1}
           noOfSections={5}
           barBorderRadius={5}
-          frontColor={Colors.TEXT_COLOR} // Default front color
-          yAxisLabelSuffix={''}
-          yAxisLabelTextsStyle={styles.yLabelStyle}
-          xAxisLabelTextsStyle={styles.xLabelStyle}
+          frontColor={Colors.TEXT_COLOR} 
+          // yAxisLabelTextsStyle={styles.yLabelStyle}
+          // xAxisLabelTextsStyle={styles.xLabelStyle}
           initialSpacing={10}
           showValuesOnTopOfBars={true}
         />}
@@ -64,9 +64,7 @@ const styles = StyleSheet.create({
     color: Colors.TEXT_COLOR
   },
   xLabelStyle: {
-    color: '#333',
     fontWeight: 'bold',
-    transform: [{ rotate: '-45deg' }],
   },
   yLabelStyle: {
     color: '#666'
