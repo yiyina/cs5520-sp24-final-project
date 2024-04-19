@@ -37,7 +37,7 @@ export default function Header() {
                 <Avatar avatarUri={avatarUri} size={80} />
             </View>
             <View style={styles.greetingContainer}>
-                <Text style={styles.greetingText}>{username || 'Guest'}</Text>
+                <Text style={styles.greetingName}>Hi, {username || 'Guest'}</Text>
                 <Text style={styles.greetingText}>{greeting} !</Text>
             </View>
             <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         width: '90%',
         alignItems: 'center',
+        alignSelf: 'center',
     },
     avatarContainer: {
         borderWidth: 5,
@@ -67,6 +68,11 @@ const styles = StyleSheet.create({
     },
     greetingContainer: {
         marginRight: 10,
+    },
+    greetingName: {
+        fontSize: 40,
+        color: Colors.TEXT_COLOR,
+        fontWeight: 'bold',
     },
     greetingText: {
         fontSize: 20,
