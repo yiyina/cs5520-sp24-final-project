@@ -1,58 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase-files/FirebaseSetup';
-import { onSnapshot, collection, doc } from "firebase/firestore";
+import { onSnapshot, collection } from "firebase/firestore";
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 export const getUpdatedUserSpin = () => {
     const [spins, setSpins] = useState(null);
 
     useEffect(() => {
-        const fetchSpins = async () => {
-            const uid = auth.currentUser.uid;
-            const userDocId = await FirestoreService.getUserDocId(uid);
-            if (!userDocId) {
-                console.error("User document ID not found for UID:", uid);
-                return;
-            }
-            const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
+        let unsubscribeSpins;
 
-            // This returns the unsubscribe function
-            return onSnapshot(
-                spinsCollectionRef,
-                (querySnapshot) => {
-                    if (querySnapshot.empty) {
-                        console.log("No spins data found in firestore for user:", uid);
-                        return;
-                    }
-                    const spinsData = querySnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                    setSpins(spinsData);
-                },
-                (error) => {
-                    console.error("Snapshot error:", error);
-                    if (error.code === 'permission-denied') {
-                        unsubscribe();
-                    }
+        const uid = auth.currentUser?.uid;
+        if (uid) {
+            FirestoreService.getUserDocId(uid).then(userDocId => {
+                if (userDocId) {
+                    const spinsCollectionRef = collection(firestore, "users", userDocId, "spins");
+                    unsubscribeSpins = onSnapshot(
+                        spinsCollectionRef,
+                        (querySnapshot) => {
+                            const newSpins = querySnapshot.docs.map(doc => ({
+                                id: doc.id,
+                                ...doc.data()
+                            }));
+                            setSpins(newSpins);
+                        },
+                        (error) => {
+                            console.error("Snapshot error:", error);
+                        }
+                    );
+                } else {
+                    console.error("User document ID not found for UID:", uid);
                 }
-            );
-        };
-
-        let unsubscribe;
-
-        // Call the async function and store the unsubscribe function
-        fetchSpins().then(unsub => {
-            unsubscribe = unsub;
-        });
+            }).catch(error => {
+                console.error("Error fetching user document ID:", error.code);
+                if (error.code === 'permission-denied') {
+                    unsubscribe();
+                }
+            });
+        } else {
+            // User is not logged in or the UID is null.
+            setSpins(null);
+        }
 
         // Cleanup function
         return () => {
-            if (unsubscribe) {
-                unsubscribe();
+            if (unsubscribeSpins) {
+                unsubscribeSpins();
             }
         };
-    }, []);
+    }, [auth.currentUser]);
 
     return { spins };
 };

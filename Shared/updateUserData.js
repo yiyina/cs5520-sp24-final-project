@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase-files/FirebaseSetup';
-import { onSnapshot, collection, query, where, doc } from "firebase/firestore";
-import FirestoreService from '../firebase-files/FirebaseHelpers';
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 
 export const getUpdatedUserData = () => {
     const [username, setUsername] = useState(null);
@@ -29,7 +28,7 @@ export const getUpdatedUserData = () => {
                 setSpinResults(userData.spinResults ? userData.spinResults : null);
             },
             (error) => {
-                console.error("Snapshot error:", error);
+                // console.error("updateUserData unsubscribe error:", error.code);
                 if (error.code === 'permission-denied') {
                     unsubscribe();
                 }
@@ -44,6 +43,11 @@ export const getUpdatedUserData = () => {
                     ...doc.data()
                 }));
                 setGallery(galleryImages);
+            }, (error) => {
+                // console.error("Error fetching gallery images:", error.code);
+                if (error.code === 'permission-denied') {
+                    unsubscribe();
+                }
             });
         };
 
@@ -51,7 +55,7 @@ export const getUpdatedUserData = () => {
             unsubscribe();
             if (galleryUnsubscribe) galleryUnsubscribe();
         };
-    }, []);
+    }, [auth.currentUser]);
 
     return { username, avatarUri, email, coords, gallery, spinResults };
 };
