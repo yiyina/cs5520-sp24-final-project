@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase-files/FirebaseSetup';
-import { onSnapshot, collection, query, where,doc } from "firebase/firestore";
+import { onSnapshot, collection, query, where, doc } from "firebase/firestore";
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 export const getUpdatedUserData = () => {
@@ -29,7 +29,10 @@ export const getUpdatedUserData = () => {
                 setSpinResults(userData.spinResults ? userData.spinResults : null);
             },
             (error) => {
-                console.error(error.message);
+                console.error("Snapshot error:", error);
+                if (error.code === 'permission-denied') {
+                    unsubscribe();
+                }
             }
         );
 
