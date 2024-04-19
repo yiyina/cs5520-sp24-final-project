@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import PlaceDetailItem from './PlaceDetailItem';
 import Colors from '../../Shared/Colors';
-import GoogleMapView from '../Home/GoogleMapView';
+import GoogleMapView from './GoogleMapView';
 import { Linking } from 'react-native';
 
 export default function PlaceDetail() {

@@ -5,7 +5,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import Colors from '../../Shared/Colors';
 import { getLocation } from '../../Shared/LocationManager';
-import PlaceMarker from '../Place/PlaceMarker';
+import PlaceMarker from './PlaceMarker';
 
 export default function GoogleMapView({ placeList }) {
     console.log('GoogleMapView placeList:', placeList);
