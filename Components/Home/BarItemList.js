@@ -51,12 +51,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         padding: 10,
-        margin: 10,
         backgroundColor: Colors.MAIN_BACKGROUND,
         borderRadius: 15,
         borderWidth: 1,
         borderColor: Colors.TEXT_COLOR,
-        width: Dimensions.get('window').width * 0.9,
         gap: 10,
         alignItems: 'center',
     }

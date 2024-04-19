@@ -104,7 +104,8 @@ export default function Histogram() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignSelf: 'center',
+    width: Dimensions.get('window').width * 0.9,
   },
   title: {
     fontSize: 20,
