@@ -6,9 +6,11 @@ import { getUpdatedUserData } from './updateUserData';
 import GlobalApi from '../Services/GlobalApi';
 import BarItemList from '../Components/Home/BarItemList';
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Histogram() {
   const { coords, spinResults } = getUpdatedUserData();
+  const navigator = useNavigation();
   const [data, setData] = useState(null);
   const [placeList, setPlaceList] = useState([])
   const TOP = 5;
@@ -51,6 +53,11 @@ export default function Histogram() {
     }
   };
 
+  const onPlaceClick = (item) => {
+    navigator.navigate("place-detail", { place: item });
+    console.log("Place clicked", item);
+  }
+
   return (
     <View style={styles.container}>
       {spinResults ?
@@ -77,7 +84,7 @@ export default function Histogram() {
           )}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => console.log("Place clicked", item)}
+              onPress={() => onPlaceClick(item)}
               style={{ marginTop: 20 }}>
               <BarItemList place={item} />
             </TouchableOpacity>
