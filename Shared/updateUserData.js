@@ -9,6 +9,7 @@ export const getUpdatedUserData = () => {
     const [avatarUri, setAvatarUri] = useState(null);
     const [coords, setCoords] = useState(null);
     const [gallery, setGallery] = useState([]);
+    const [spinResults, setSpinResults] = useState(null);
 
     useEffect(() => {
         let galleryUnsubscribe;
@@ -25,6 +26,7 @@ export const getUpdatedUserData = () => {
                 setEmail(userData.email);
                 setCoords(userData.coords);
                 setUpGalleryListener(querySnapshot.docs[0].id);
+                setSpinResults(userData.spinResults ? userData.spinResults : null);
             },
             (error) => {
                 console.error(error.message);
@@ -48,5 +50,5 @@ export const getUpdatedUserData = () => {
         };
     }, []);
 
-    return { username, avatarUri, email, coords, gallery };
+    return { username, avatarUri, email, coords, gallery, spinResults };
 };

@@ -350,14 +350,26 @@ const FirestoreService = {
         }
     },
 
-    async addSpinResultsToUser(spinId, results) {
+    async addSpinResultToUser(result) {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
             if (!userDocId) {
                 throw new Error("User document not found for UID: " + uid);
             }
-            const spinDocRef = doc(firestore, "users", userDocId, "spins", spinId);
-            await updateDoc(spinDocRef, { results });
+            const userDocRef = doc(firestore, "users", userDocId);
+            const docSnapshot = await getDoc(userDocRef);
+            if (!docSnapshot.exists()) {
+                throw new Error("User document does not exist.");
+            }
+            const spinResults = docSnapshot.data().spinResults || {};
+            const currentCount = spinResults[result] || 0;
+
+            await updateDoc(userDocRef, {
+                spinResults: {
+                    ...spinResults,
+                    [result]: currentCount + 1
+                }
+            });
         } catch (error) {
             console.error("Error updating spin results: ", error);
             throw error;

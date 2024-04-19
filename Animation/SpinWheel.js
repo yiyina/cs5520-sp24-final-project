@@ -7,6 +7,7 @@ import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
 import Button from '../Shared/Button';
 import { useNavigation } from '@react-navigation/native';
+import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 const WheelGame = ({ spinName, spinItems, spinColor }) => {
   const navigation = useNavigation();
@@ -126,9 +127,15 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
     });
   };
 
-  const resultSearchHandler = () => {
-    setShowResultModal(false);
-    navigation.navigate('Search', { query: `${result} ${spinName}` });
+  const resultSearchHandler = async () => {
+    try {
+      setShowResultModal(false);
+      const finalResult = `${result} ${spinName}`;
+      navigation.navigate('Search', { query: finalResult });
+      await FirestoreService.addSpinResultToUser(finalResult);
+    } catch (error) {
+      console.error('Error in searching for the result:', error);
+    }
   }
 
   return (
@@ -180,20 +187,20 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
                     <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR, fontWeight: 'bold' }}>Your Spin Result is</Text>
                     <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>{result}</Text>
                     <Button
-                        text="Search for it!"
-                        buttonPress={resultSearchHandler}
-                        defaultStyle={{ backgroundColor: Colors.LIGHT_RED, borderRadius: 10 }}
-                        textColor={Colors.WHITE}
-                        textStyle={{ fontWeight: 'bold' }}
-                        pressedStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 10}}
-                      />
-                      <Button
-                        text="Close"
-                        buttonPress={() => setShowResultModal(false)}
-                        textColor={Colors.DEEP_RED}
-                        textStyle={{ fontWeight: 'bold' }}
-                        pressedStyle={{ backgroundColor: Colors.DEEP_RED, borderRadius: 10}}
-                      />
+                      text="Search for it!"
+                      buttonPress={resultSearchHandler}
+                      defaultStyle={{ backgroundColor: Colors.LIGHT_RED, borderRadius: 10 }}
+                      textColor={Colors.WHITE}
+                      textStyle={{ fontWeight: 'bold' }}
+                      pressedStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 10 }}
+                    />
+                    <Button
+                      text="Close"
+                      buttonPress={() => setShowResultModal(false)}
+                      textColor={Colors.DEEP_RED}
+                      textStyle={{ fontWeight: 'bold' }}
+                      pressedStyle={{ backgroundColor: Colors.DEEP_RED, borderRadius: 10 }}
+                    />
                   </Card>
                 </View>
               </Modal>
