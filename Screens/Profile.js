@@ -1,4 +1,4 @@
-=import { StyleSheet, Pressable, View, Text, Alert } from 'react-native'
+import { StyleSheet, Pressable, View, Text, Alert } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
 import { auth } from '../firebase-files/FirebaseSetup';
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    marginTop: 30, // Adjust the marginTop to increase or decrease the distance
+    marginTop: 30, 
     padding: 10,
     zIndex: 0,
   },
