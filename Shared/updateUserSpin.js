@@ -31,7 +31,10 @@ export const getUpdatedUserSpin = () => {
                     setSpins(spinsData);
                 },
                 (error) => {
-                    console.error("Error fetching spins data: ", error);
+                    console.error("Snapshot error:", error);
+                    if (error.code === 'permission-denied') {
+                        unsubscribe();
+                    }
                 }
             );
         };
