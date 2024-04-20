@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Pressable, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,6 +27,11 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
     }
 
     const handleAddSpin = () => {
+        console.log("SearchBar.js searchInput: ", searchInput);
+        if (!searchInput) {
+            Alert.alert('Please search for a place first');
+            return;
+        }
         setShowAddSpinModal(true);
     }
 
