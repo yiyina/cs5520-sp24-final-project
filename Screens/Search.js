@@ -29,7 +29,10 @@ export default function Search() {
   const getNearbyPlaces = (value) => {
     GlobalApi.searchByText(value)
       .then((response) => {
-        setPlaceList(response.data.results);
+        const sortedPlace = response.data.results.sort((a, b) => {
+          return a.user_ratings_total - b.user_ratings_total;
+        }).slice(0, 10).reverse();
+        setPlaceList(sortedPlace);
       })
       .catch((error) => {
         console.error('Error fetching nearby places:', error);
@@ -39,7 +42,11 @@ export default function Search() {
   return (
     <View>
       <View style={{ position: 'absolute', zIndex: 10 }}>
-        <SearchBar setSearchText={(value) => getNearbyPlaces(value)} spinValue={query} />
+        <SearchBar
+          setSearchText={(value) => getNearbyPlaces(value)}
+          spinValue={query}
+          playList={placeList}
+        />
       </View>
       <GoogleMapViewFull placeList={placeList} />
       <View style={{ position: 'absolute', zIndex: 1, bottom: 0 }}>

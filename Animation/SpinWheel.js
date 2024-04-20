@@ -74,7 +74,7 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
         <SvgText
           x={wheelSize / 3.5}
           y="20"
-          fill={Colors.TEXT_COLOR}
+          fill={Colors.BLACK}
           transform={`rotate(${(360 / options.length)} ${wheelSize / 12} 30)`}
           textAnchor="middle"
           fontSize="16"
@@ -170,7 +170,7 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
           onPress={spinWheel}
           style={[styles.startButton, isButtonDisabled && { opacity: 0.4 }]} // Disable button style when isButtonDisabled is true
           disabled={isButtonDisabled}>
-          <Text style={{ color: Colors.TEXT_COLOR, fontWeight: 'bold' }}>START</Text>
+          <Text style={{ color: Colors.WHITE, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
         {/* <View style={styles.result}>
           <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>Spin Result: {result}</Text>
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     height: 350,
     borderRadius: 175,
     backgroundColor: Colors.BLACK,
-    shadowColor: Colors.DARK_YELLOW,
+    shadowColor: Colors.BORDER_GOLD,
     shadowOffset: {
       width: 0,
       height: 0,

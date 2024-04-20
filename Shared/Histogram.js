@@ -33,7 +33,7 @@ export default function Histogram() {
     while (sortedResults.length < TOP) {
       sortedResults.push({ value: 0, label: '' });
     }
-    console.log("sortedResults results: ", sortedResults);
+    // console.log("sortedResults results: ", sortedResults);
     return sortedResults.slice(0, TOP);
   }
 
@@ -43,7 +43,10 @@ export default function Histogram() {
       GlobalApi.searchByText(value)
         .then(response => {
           // console.log("response: ", response.data)
-          setPlaceList(response.data.results);
+          const sortedResults = response.data.results.sort((a, b) => {
+            return a.user_ratings_total - b.user_ratings_total;
+          }).reverse();
+          setPlaceList(sortedResults);
         })
         .catch(error => {
           console.error("Error fetching nearby places:", error);

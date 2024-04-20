@@ -4,7 +4,7 @@ export default {
     MID_GRAY: '#565D7C',
     LIGHT_GRAY: '#646B82',
     DARK_RED: '#FF0A2A',
-    DEEP_RED: 'darkred',
+    DEEP_RED: '#FF4440',
     MID_RED: '#FF2F41',
     LIGHT_RED: '#FF5962',
     WHITE: '#FFFFFF',
@@ -17,6 +17,6 @@ export default {
     MAIN_BACKGROUND: '#FFFDF2',
     DARK_BACKGROUND: '#F9F9E9',
     TEXT_COLOR: '#545434',
-    BORDER_GOLD: '#FFFFDD',
+    BORDER_GOLD: '#C6AEE7',
     BORDER_GRAY: '#DFDFD1',
 };

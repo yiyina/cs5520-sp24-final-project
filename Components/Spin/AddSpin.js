@@ -1,5 +1,5 @@
 import { StyleSheet, Text, Modal, View, Pressable, ScrollView, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Octicons } from '@expo/vector-icons';
 import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
@@ -13,16 +13,41 @@ import generateUUID from '../../Shared/GenerateUUID';
 import { Ionicons } from '@expo/vector-icons';
 import HorizontalLine from '../../Shared/HorizontalLine';
 
-export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
+export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...props }) {
     const [spinName, setSpinName] = useState('');
     const [themes, setThemes] = useState(ColorThemes);
     const [inputs, setInputs] = useState([{ id: generateUUID(), value: '' }]);
     const [selectedTheme, setSelectedTheme] = useState('');
-
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
 
     const handleThemeSelect = (item) => {
         setSelectedTheme(item);
+    }
+
+    useEffect(() => {
+        if (props.searchInput) {
+            setSpinName(props.searchInput);
+        }
+    }, [props.searchInput]);
+
+    useEffect(() => {
+        if (props.playList) {
+            const searchInputs = [];
+            props.playList.forEach((item) =>
+                searchInputs.push({ id: generateUUID(), value: item.name })
+            );
+            // const searchInputs = props.inputs.map()
+            setInputs(searchInputs);
+        }
+    }, [props.playList]);
+
+    const handleSpinName = (text) => {
+        if (props.searchInput) {
+            console.log('Setting spinName handleSpinName:', props.searchInput);
+            setSpinName(props.searchInput);
+        } else {
+            setSpinName(text);
+        }
     }
 
     const addInput = () => {
@@ -91,9 +116,11 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
     }
 
     const onCancelModified = () => {
+        if (!props) {
+            setInputs([{ id: generateUUID(), value: '' }]);
+            setSelectedTheme('');
+        }
         setShowAddSpinModal(false);
-        setInputs([{ id: generateUUID(), value: '' }]);
-        setSelectedTheme('');
     }
 
     return (
@@ -127,7 +154,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <View style={{ width: '100%' }}>
                         <Text style={styles.subTitile}>Name of Spin</Text>
                     </View>
-                    <Input value={spinName} handleInput={setSpinName} />
+                    <Input text={spinName} handleInput={handleSpinName} />
                     <View style={{ width: '100%' }}>
                         <Text style={styles.subTitile}>Spin Items</Text>
                     </View>
@@ -165,7 +192,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal }) {
                     <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
                     <HorizontalLine />
                     <Pressable onPress={onCancelModified} style={styles.fold}>
-                        <Octicons name="chevron-down" size={50} color="black" />
+                        <Octicons name="chevron-down" size={50} color={Colors.BLACK} />
                     </Pressable>
                 </View>
             </View>
