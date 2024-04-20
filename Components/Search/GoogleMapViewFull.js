@@ -2,31 +2,31 @@ import { StyleSheet, Dimensions, View, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import PlaceMarker from '../Place/PlaceMarker';
-import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { getLocation } from '../../Shared/LocationManager';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
 
 export default function GoogleMapViewFull({ placeList }) {
+    const { coords } = getUpdatedUserData();
     const [mapRegion, setMapRegion] = useState({});
     const [mapRef, setMapRef] = useState(null);
-    const [coords, setCoords] = useState(null);
+
+
+    useEffect(() => {
+        console.log('GoogleMapViewFull.js coords: ', coords);
+    }, [coords])
 
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {
             try {
-                const userData = await FirestoreService.getUserData(); // Fetch user data
-                console.log('userData:', userData);
-                if (userData && userData.coords) {
+                if (coords) {
                     setMapRegion({
-                        latitude: userData.coords.latitude,
-                        longitude: userData.coords.longitude,
+                        latitude: coords.latitude,
+                        longitude: coords.longitude,
                         latitudeDelta: 0.0522,
                         longitudeDelta: 0.0321,
                     });
-                } else {
-                    const userCoords = await FirestoreService.getUserData();
-                    setCoords(userCoords.coords);
-                }
+                } 
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
