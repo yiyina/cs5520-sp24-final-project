@@ -71,7 +71,7 @@ const FirestoreService = {
             if (!uid || !fileUri) {
                 throw new Error("Invalid parameters for uploadToStorage");
             }
-
+    
             // Determine the storage path based on the type of image
             let storagePath;
             switch (type) {
@@ -84,20 +84,20 @@ const FirestoreService = {
                 default:
                     throw new Error("Invalid image type for uploadToStorage");
             }
-
+    
             const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
             const fileRef = storageRef(storage, `${storagePath}${fileName}`);
-
+    
             // Convert the file URI to a blob for uploading
             const response = await fetch(fileUri);
             const blob = await response.blob();
-
+    
             // Upload the file
             await uploadBytes(fileRef, blob);
-
+    
             // After upload, get the file's download URL
             const downloadURL = await getDownloadURL(fileRef);
-
+    
             return downloadURL;
         } catch (error) {
             console.error("Error uploading to storage:", error);
@@ -134,16 +134,18 @@ const FirestoreService = {
     },
 
     async addPhotoToGallery(fileUri) {
+        console.log("Adding photo to gallery: ", fileUri);
         try {
-            const uid = auth.currentUser.uid;
-            if (!uid || !fileUri) {
-                throw new Error("Invalid parameters for addPhotoToGallery.");
+            if (!fileUri) {
+                throw new Error("Invalid file URI for addPhotoToGallery.");
             }
-
-
-            const imageUrl = await this.uploadToStorage(uid, fileUri, 'gallery');
+            const imageUrl = await this.uploadToStorage(fileUri, 'gallery');
 
             // Reference to the user's gallery collection
+            const uid = auth.currentUser.uid;
+            if (!uid) {
+                throw new Error("Invalid parameters for addPhotoToGallery.");
+            }
             const userDocId = await this.getUserDocId(uid);
             if (!userDocId) {
                 throw new Error(`User document not found for UID: ${uid}`);

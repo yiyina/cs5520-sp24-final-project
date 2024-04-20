@@ -10,7 +10,7 @@ class CameraService {
                 console.log("takePicture photo: ", photo);
                 await this.handleImageCaptured(photo.uri, type);
             }
-        } catch (error) {
+        } catch(error) {
             console.error("Error in taking picture:", error);
         }
     }
