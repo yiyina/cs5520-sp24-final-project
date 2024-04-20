@@ -34,23 +34,39 @@ class CameraService {
     }
 
     static async handleImageCaptured(imageUri, type) {
-        try {
-            let url;
-            // Decide action based on type and upload image if necessary
-            if (type === 'avatar' || type === 'gallery') {
-                url = await FirestoreService.uploadToStorage(imageUri, type);
-                if (type === 'avatar') {
-                    await FirestoreService.updateUserAvatar(url);
-                    Alert.alert("Success", "Avatar updated successfully.");
-                } else if (type === 'gallery') {
-                    await FirestoreService.addPhotoToGallery(url);
-                    Alert.alert("Success", "Photo added to gallery successfully.");
+         Alert.alert(
+            "Upload Photo",
+            "Do you want to upload this photo to your gallery?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Upload cancelled"),
+                    style: "cancel"
+                },
+                { 
+                    text: "Yes", 
+                    onPress: async () => {
+                        try {
+                            let url;
+                            if (type === 'avatar' || type === 'gallery') {
+                                url = await FirestoreService.uploadToStorage(imageUri, type);
+                                if (type === 'avatar') {
+                                    await FirestoreService.updateUserAvatar(url);
+                                    Alert.alert("Success", "Avatar updated successfully.");
+                                } else if (type === 'gallery') {
+                                    await FirestoreService.addPhotoToGallery(url);
+                                    Alert.alert("Success", "Photo added to gallery successfully.");
+                                }
+                            }
+                            console.log(`${type} updated:`, url);
+                        } catch (error) {
+                            console.error(`Error in handling image capture for ${type}:`, error);
+                        }
+                    }
                 }
-            }
-            console.log(`${type} updated:`, url);
-        } catch (error) {
-            console.error(`Error in handling image capture for ${type}:`, error);
-        }
+            ],
+            { cancelable: false }
+        );
     }
 }
 
