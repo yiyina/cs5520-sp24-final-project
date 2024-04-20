@@ -4,9 +4,11 @@ import Colors from '../../Shared/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import Weather from '../../Shared/Weather';
 import Button from '../../Shared/Button';
+import AddSpin from '../Spin/AddSpin';
 
-export default function SearchBar({ setSearchText, spinValue }) {
+export default function SearchBar({ setSearchText, spinValue, playList }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
+    const [showAddSpinModal, setShowAddSpinModal] = useState(false);
 
     useEffect(() => {
         setSearchInput(spinValue);
@@ -22,6 +24,10 @@ export default function SearchBar({ setSearchText, spinValue }) {
 
     const handlePress = () => {
         setSearchText(searchInput);
+    }
+
+    const handleAddSpin = () => {
+        setShowAddSpinModal(true);
     }
 
     return (
@@ -52,11 +58,15 @@ export default function SearchBar({ setSearchText, spinValue }) {
                 <Button
                     text={'Create Spin'}
                     textColor={Colors.TEXT_COLOR}
-                    buttonPress={() => console.log('Filter')}
+                    buttonPress={handleAddSpin}
                     textStyle={{ fontSize: 16, fontWeight: 'bold' }}
                     defaultStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 20 }}
-                    pressedStyle={{ backgroundColor: Colors.LIGHT_YELLOW, borderRadius: 20 }}
-                />
+                    pressedStyle={{ backgroundColor: Colors.LIGHT_YELLOW, borderRadius: 20 }} />
+                <AddSpin
+                    showAddSpinModal={showAddSpinModal}
+                    setShowAddSpinModal={setShowAddSpinModal}
+                    searchInput={searchInput}
+                    playList={playList} />
             </View>
         </View>
     );

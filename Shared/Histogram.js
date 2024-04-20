@@ -33,7 +33,7 @@ export default function Histogram() {
     while (sortedResults.length < TOP) {
       sortedResults.push({ value: 0, label: '' });
     }
-    console.log("sortedResults results: ", sortedResults);
+    // console.log("sortedResults results: ", sortedResults);
     return sortedResults.slice(0, TOP);
   }
 
