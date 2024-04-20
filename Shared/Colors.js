@@ -17,6 +17,6 @@ export default {
     MAIN_BACKGROUND: '#FFFDF2',
     DARK_BACKGROUND: '#F9F9E9',
     TEXT_COLOR: '#545434',
-    BORDER_GOLD: '#FFFFDD',
+    BORDER_GOLD: '#C6AEE7',
     BORDER_GRAY: '#DFDFD1',
 };
