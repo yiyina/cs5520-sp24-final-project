@@ -192,7 +192,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
                     <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
                     <HorizontalLine />
                     <Pressable onPress={onCancelModified} style={styles.fold}>
-                        <Octicons name="chevron-down" size={50} color="black" />
+                        <Octicons name="chevron-down" size={50} color={Colors.BLACK} />
                     </Pressable>
                 </View>
             </View>

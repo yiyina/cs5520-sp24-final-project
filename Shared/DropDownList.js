@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker'
 import Colors from './Colors'
@@ -32,8 +32,7 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect 
         <DropDownPicker
             style={styles.dropDown}
             dropDownStyle={styles.dropDownContainer}
-            // labelStyle={styles.label}
-            // textStyle={styles.text}
+            textStyle={styles.text}
             placeholder={placeholder}
             placeholderStyle={{ color: Colors.BLACK }}
             open={open}
@@ -49,8 +48,8 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect 
 
 const styles = StyleSheet.create({
     dropDownContainer: {
-        // backgroundColor: Colors.WHITE,
-        // borderColor: Colors.BORDER_GOLD,
+        backgroundColor: Colors.WHITE,
+        borderColor: Colors.BORDER_GOLD,
     },
     dropDown: {
         height: 50,
@@ -62,5 +61,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 1,
         elevation: 2,
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: Colors.TEXT_COLOR,
     },
 })

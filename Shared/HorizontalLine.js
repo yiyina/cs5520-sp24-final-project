@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
     line: {
         borderBottomWidth: 2,
         width: '100%',
-        backgroundColor: Colors.BLACK,
+        backgroundColor: Colors.BORDER_GOLD,
     },
 })

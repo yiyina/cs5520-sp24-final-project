@@ -180,7 +180,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                         <View style={{ width: '100%' }}>
                             <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={styles.subTitile}>Choose Theme</Text>
-                                <Ionicons name="color-palette-outline" size={24} color="black" style={styles.palette} />
+                                <Ionicons name="color-palette-outline" size={24} color={Colors.BLACK} style={styles.palette} />
                             </View>
                         </View>
                         <DropdownList
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         height: 60,
         width: 60,
-        backgroundColor: Colors.BLUE,
+        backgroundColor: Colors.BORDER_GOLD,
         alignItems: 'center',
         justifyContent: 'center',
     },
