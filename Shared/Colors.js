@@ -4,7 +4,7 @@ export default {
     MID_GRAY: '#565D7C',
     LIGHT_GRAY: '#646B82',
     DARK_RED: '#FF0A2A',
-    DEEP_RED: 'darkred',
+    DEEP_RED: '#FF4440',
     MID_RED: '#FF2F41',
     LIGHT_RED: '#FF5962',
     WHITE: '#FFFFFF',

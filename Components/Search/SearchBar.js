@@ -23,6 +23,10 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
     }
 
     const handlePress = () => {
+        if (!searchInput) {
+            Alert.alert('Please search for a place first');
+            return;
+        }
         setSearchText(searchInput);
     }
 
