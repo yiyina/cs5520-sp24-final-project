@@ -15,41 +15,41 @@ import { EvilIcons } from '@expo/vector-icons';
 
 export default function TabNavigation() {
     const Tab = createBottomTabNavigator()
-    const [showCamera, setShowCamera] = useState(false);
+    // const [showCamera, setShowCamera] = useState(false);
 
-    const CustomTabBarButton = ({ children }) => (
-        <Pressable
-            style={{
-                top: -30,
-                shadowColor: '#7F5DF0',
-                shadowOffset: {
-                    width: 0,
-                    height: 10,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.5,
-                elevation: 5,
-                backgroundColor: '#ffffff', 
-                borderRadius: 35,
-                width: 70,
-                height: 70,
-            }}
-            onPress={() => setShowCamera(true)}>
-            <View style={{
-                width: 70,
-                height: 70,
-                paddingTop: 10,
-                borderRadius: 35,
-                backgroundColor: '#ffffff'
-            }}>
-                {children}
-            </View>
-        </Pressable>
-    )
+    // const CustomTabBarButton = ({ children }) => (
+    //     <Pressable
+    //         style={{
+    //             top: -30,
+    //             shadowColor: '#7F5DF0',
+    //             shadowOffset: {
+    //                 width: 0,
+    //                 height: 10,
+    //             },
+    //             shadowOpacity: 0.25,
+    //             shadowRadius: 3.5,
+    //             elevation: 5,
+    //             backgroundColor: '#ffffff', 
+    //             borderRadius: 35,
+    //             width: 70,
+    //             height: 70,
+    //         }}
+    //         onPress={() => setShowCamera(true)}>
+    //         <View style={{
+    //             width: 70,
+    //             height: 70,
+    //             paddingTop: 10,
+    //             borderRadius: 35,
+    //             backgroundColor: '#ffffff'
+    //         }}>
+    //             {children}
+    //         </View>
+    //     </Pressable>
+    // )
 
-     const toggleCamera = () => {
-        setShowCamera(!showCamera);
-     }
+    //  const toggleCamera = () => {
+    //     setShowCamera(!showCamera);
+    //  }
 
     return (
         <>
@@ -91,7 +91,7 @@ export default function TabNavigation() {
                         ),
                     }}
                 />
-                <Tab.Screen name="Camera" component={CameraScreen}
+                {/* <Tab.Screen name="Camera" component={CameraScreen}
                     options={{
                         tabBarLabel: '',
                         tabBarIcon: ({ focused }) => (
@@ -105,7 +105,7 @@ export default function TabNavigation() {
                             <CustomTabBarButton {...props} />
                         ),
                     }}
-                />
+                /> */}
                 <Tab.Screen name="Gallery" component={Gallery}
                     options={{
                         tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>GALLERY</Text> : null),
@@ -115,7 +115,7 @@ export default function TabNavigation() {
                     }}
                 />
             </Tab.Navigator>
-            <Modal
+            {/* <Modal
                 visible={showCamera}
                 animationType="slide"
                 transparent={true}
@@ -130,12 +130,12 @@ export default function TabNavigation() {
                         setShowCamera(false);
                     }}
                 />
-            </Modal>
-            <CameraScreen
+            </Modal> */}
+            {/* <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
                 onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
-                type={'avatar'} />
+                type={'avatar'} /> */}
         </>
     )
 }
