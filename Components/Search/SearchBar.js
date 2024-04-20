@@ -59,7 +59,7 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
                 <Pressable
                     style={({ pressed }) => [
                         styles.searchIcon,
-                        { backgroundColor: pressed ? Colors.DARK_YELLOW : Colors.TRANSPARENT },
+                        { backgroundColor: pressed ? Colors.DARK_COLOR : Colors.TRANSPARENT },
                     ]}
                     onPress={handlePress}>
                     <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
@@ -69,8 +69,8 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
                     textColor={Colors.TEXT_COLOR}
                     buttonPress={handleAddSpin}
                     textStyle={{ fontSize: 16, fontWeight: 'bold' }}
-                    defaultStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 20 }}
-                    pressedStyle={{ backgroundColor: Colors.LIGHT_YELLOW, borderRadius: 20 }} />
+                    defaultStyle={{ backgroundColor: Colors.LIGHT_COLOR, borderRadius: 10 }}
+                    pressedStyle={{ backgroundColor: Colors.DARK_COLOR, borderRadius: 10 }} />
                 <AddSpin
                     showAddSpinModal={showAddSpinModal}
                     setShowAddSpinModal={setShowAddSpinModal}
@@ -114,20 +114,20 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE,
         borderColor: Colors.BORDER_GOLD,
         borderWidth: 1,
-        borderRadius: 20,
+        borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.5,
         shadowRadius: 1,
         elevation: 2,
         paddingHorizontal: 10,
-        width: '60%',
+        width: '65%',
         height: 40,
         marginRight: 10,
     },
     searchIcon: {
         position: 'absolute',
-        left: Dimensions.get('screen').width * 0.45,
+        left: Dimensions.get('screen').width * 0.5,
         width: 40,
         height: 40,
         borderRadius: 20,

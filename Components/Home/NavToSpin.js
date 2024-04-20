@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import Button from '../../Shared/Button'
 import Colors from '../../Shared/Colors'
@@ -11,7 +11,7 @@ export default function NavToSpin() {
         <View style={styles.container}>
             <Button
                 text={"Spin to Explore"}
-                textColor={Colors.WHITE}
+                textColor={Colors.TEXT_COLOR}
                 buttonPress={() => navigation.navigate("Spin")}
                 textStyle={styles.text}
                 defaultStyle={styles.default}
@@ -27,11 +27,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     default: {
-        backgroundColor: Colors.TEXT_COLOR,
+        backgroundColor: Colors.LIGHT_COLOR,
         borderRadius: 10,
     },
     pressed: {
-        backgroundColor: Colors.DARK_MAIN_COLOR,
+        backgroundColor: Colors.DARK_COLOR,
+        borderRadius: 10,
     },
     text: {
         color: Colors.TEXT_COLOR,

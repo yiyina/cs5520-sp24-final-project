@@ -192,7 +192,7 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
                       defaultStyle={{ backgroundColor: Colors.LIGHT_RED, borderRadius: 10 }}
                       textColor={Colors.WHITE}
                       textStyle={{ fontWeight: 'bold' }}
-                      pressedStyle={{ backgroundColor: Colors.DARK_YELLOW, borderRadius: 10 }}
+                      pressedStyle={{ backgroundColor: Colors.DARK_COLOR, borderRadius: 10 }}
                     />
                     <Button
                       text="Close"
@@ -241,7 +241,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 140,
     top: -40,
-    shadowColor: 'rgba(0, 0, 0, 0.5)',
+    // shadowColor: 'rgba(0, 0, 0, 0.5)',
+    shadowColor: Colors.BORDER_GOLD,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 4,

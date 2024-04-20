@@ -221,9 +221,9 @@ export default function EditSpin({ spinId, spinColorName }) {
                             onPress={addInput}
                             style={({ pressed }) => [
                                 styles.plusButton,
-                                pressed ? { backgroundColor: Colors.LIGHT_YELLOW } : { backgroundColor: Colors.WHITE }
+                                pressed ? { backgroundColor: Colors.LIGHT_COLOR } : { backgroundColor: Colors.WHITE }
                             ]}>
-                            <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
+                            <Feather name="plus-square" size={36} color={Colors.DARK_COLOR} />
                         </Pressable>
                         <View style={styles.buttonsContainer}>
                             <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
@@ -313,13 +313,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     saveButtonDefault: {
-        backgroundColor: Colors.LIGHT_YELLOW,
+        backgroundColor: Colors.LIGHT_COLOR,
         width: '50%',
         alignSelf: 'center',
         borderRadius: 10,
     },
     saveButtonPressed: {
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         width: '50%',
         alignSelf: 'center',
         borderRadius: 10,

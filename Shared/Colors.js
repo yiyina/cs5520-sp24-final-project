@@ -1,4 +1,9 @@
 export default {
+    TEXT_COLOR: '#3C8BAA', // 545434
+    LIGHT_COLOR: '#C3DFEA',
+    DARK_COLOR: '#88C6E5',
+    MAIN_BACKGROUND: '#FDF7F2',
+    DARK_BACKGROUND: '#F9F9E9',
     GRAY: '#F0F0F0',
     DARK_GRAY: '#2F3B5E',
     MID_GRAY: '#565D7C',
@@ -9,14 +14,9 @@ export default {
     LIGHT_RED: '#FF5962',
     WHITE: '#FFFFFF',
     BLACK: '#000000',
-    LIGHT_YELLOW: '#FFE9D8',
-    DARK_YELLOW: '#FFD8BA',
     BLUE: "#65A3F0",
     TRANSPARENT: 'transparent',
     INVALID_TEXT: '#e0e0e0',
-    MAIN_BACKGROUND: '#FFFDF2',
-    DARK_BACKGROUND: '#F9F9E9',
-    TEXT_COLOR: '#545434',
     BORDER_GOLD: '#C6AEE7',
     BORDER_GRAY: '#DFDFD1',
 };
