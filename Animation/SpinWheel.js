@@ -74,7 +74,7 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
         <SvgText
           x={wheelSize / 3.5}
           y="20"
-          fill={Colors.TEXT_COLOR}
+          fill={Colors.BLACK}
           transform={`rotate(${(360 / options.length)} ${wheelSize / 12} 30)`}
           textAnchor="middle"
           fontSize="16"

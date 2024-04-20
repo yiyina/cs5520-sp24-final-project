@@ -5,5 +5,6 @@ export default ColorThemes = {
     CUTE: ['#90B8DB', '#4389C4', '#FF677C', '#FDBDCB', '#FFFFFF'],
     ENERGE: ['#9EBF24', '#F2C84B', '#F2B263', '#F2620F', '#F4DBBC'],
     CHOCOLATE: ['#A65F37', '#D98D62', '#73341D', '#A66963'],
-    WOOD: ['#736656', '#A69580', '#593E25', '#A68263', '#D9B9A7']
+    WOOD: ['#736656', '#A69580', '#593E25', '#A68263', '#D9B9A7'],
+    ICECREAM: ['#8EE5F5', '#CCFFB8', '#F55877', '#FFEDAB', '#FFE6D1'],
 };
