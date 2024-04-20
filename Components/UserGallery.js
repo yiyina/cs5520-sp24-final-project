@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Image, StyleSheet, Text } from 'react-native';
+import { ScrollView, View, Image, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import Colors from '../Shared/Colors';
 import { getUpdatedUserData } from '../Shared/updateUserData';
+import FirestoreService from '../firebase-files/FirebaseHelpers'; 
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 export default function UserGallery() {
   const [groupedImages, setGroupedImages] = useState({});
@@ -10,23 +13,17 @@ export default function UserGallery() {
   const { gallery } = getUpdatedUserData(); 
 
   useEffect(() => {
-    // Group images by date
-    const groups = gallery.reduce((acc, img) => {
-      // Convert createdAt to a Date object and format it to a simple date string
-      const date = img.createdAt.toDate().toDateString();
-      
-      // Initialize the array if the date key doesn't exist
-      if (!acc[date]) {
-        acc[date] = [];
-      }
+    groupImages(gallery);
+  }, [gallery]);
 
-      // Push the current image to the correct date key
+  const groupImages = (gallery) => {
+    const groups = gallery.reduce((acc, img) => {
+      const date = img.createdAt.toDate().toDateString();
+      if (!acc[date]) acc[date] = [];
       acc[date].push(img);
-      
       return acc;
     }, {});
-
-    // Sort the groups by date
+    
     const sortedGroups = Object.keys(groups).sort().reduce(
       (obj, key) => { 
         obj[key] = groups[key];
@@ -36,7 +33,29 @@ export default function UserGallery() {
     );
 
     setGroupedImages(sortedGroups);
-  }, [gallery]);
+  }
+
+  const handleDelete = (image) => {
+    Alert.alert(
+      "Delete Photo",
+      "Are you sure you want to delete this photo?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", onPress: () => deleteImage(image) }
+      ]
+    );
+  };
+
+  const deleteImage = async (image) => {
+    try {
+      await FirestoreService.deletePhoto(image.id); // Make sure you have a method to delete the photo by ID
+      const updatedGallery = gallery.filter(img => img.id !== image.id);
+      groupImages(updatedGallery); // Re-group images without the deleted one
+    } catch (error) {
+      console.error("Error deleting the photo: ", error);
+      Alert.alert("Error", "Failed to delete the photo.");
+    }
+  };
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -45,8 +64,13 @@ export default function UserGallery() {
           <View key={date} style={styles.dateGroup}>
             <Text style={styles.dateText}>{date}</Text>
             <View style={styles.imageGroup}>
-              {images.map((img, index) => (
-                <Image key={index} source={{ uri: img.url }} style={styles.image} />
+              {images.map((img) => (
+                <View key={img.id} style={styles.imageContainer}>
+                  <Image source={{ uri: img.url }} style={styles.image} />
+                    <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(img)}>
+                      <Icon name="close" size={20} color="white" />
+                  </TouchableOpacity>
+                </View>
               ))}
             </View>
           </View>
@@ -71,20 +95,36 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 16,
     color: Colors.TEXT_COLOR,
-    width: 50, // Set a fixed width for the date column
+    width: 50,
+    fontWeight: 'bold',
   },
   imageGroup: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginLeft: 10, // Give some space after the date column
+    marginLeft: 10,
+    marginRight: 20,
+  },
+  imageContainer: {
+    position: 'relative',
+    margin: 10,
   },
   image: {
-    width: 100, 
-    height: 100,
-    margin: 5,
+    width: 120,
+    height: 120,
     borderWidth: 3,
     borderColor: Colors.WHITE,
+  },
+  deleteButton: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    padding: 4,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 10,
   },
 });

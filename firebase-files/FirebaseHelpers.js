@@ -351,6 +351,22 @@ const FirestoreService = {
             throw error;
         }
     },
+     async deletePhoto(photoId) {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            const photoDocRef = doc(firestore, "users", userDocId, "gallery", photoId);
+            const photoDoc = await getDoc(photoDocRef);
+            const photoUrl = photoDoc.data().url;
+            await deleteDoc(photoDocRef);
+            if (photoUrl) {
+                const fileRef = storageRef(storage, photoUrl);
+                await deleteObject(fileRef);
+            }
+        } catch (error) {
+            console.error("Error deleting photo: ", error);
+            throw error;
+        }
+    },
 
     async addSpinResultToUser(result) {
         try {
