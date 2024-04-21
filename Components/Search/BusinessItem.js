@@ -31,7 +31,7 @@ export default function BusinessItem({ place }) {
             )}
             <Text numberOfLines={2} style={styles.name} >
                 {ensureTwoLines(place.name)}</Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text numberOfLines={1}
                     style={
                     place.opening_hours?.open_now ?
@@ -56,7 +56,7 @@ export default function BusinessItem({ place }) {
 const styles = StyleSheet.create({
     container: {
         width: 160,
-        height: 250,
+        height: 260,
         backgroundColor: Colors.WHITE,
         padding: 10,
         borderRadius: 15,
@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 16,
-        marginTop: 5,
+        marginVertical: 5,
+        fontWeight: 'bold',
     },
     rating: {
         display: 'flex',
