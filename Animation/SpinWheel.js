@@ -131,7 +131,7 @@ const WheelGame = ({ spinName, spinItems, spinColor }) => {
     try {
       setShowResultModal(false);
       const finalResult = `${result} ${spinName}`;
-      navigation.navigate('Search', { query: finalResult });
+      navigation.navigate('Search', { query: result });
       await FirestoreService.addSpinResultToUser(finalResult);
     } catch (error) {
       console.error('Error in searching for the result:', error);
