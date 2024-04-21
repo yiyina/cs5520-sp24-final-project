@@ -3,7 +3,20 @@ import * as ImagePicker from 'expo-image-picker';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 class CameraService {
-    static async takePicture(cameraRef, type,location = null) {
+
+
+ static async checkPermissions() {
+     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+            return false;
+        }
+        return true;
+    }
+    static async takePicture(cameraRef, type, location = null) {
+         const hasPermission = await this.checkPermissions();
+        if (!hasPermission) return;
+
         try {
             if (cameraRef.current) {
                 let photo = await cameraRef.current.takePictureAsync();
@@ -16,6 +29,8 @@ class CameraService {
     }
 
     static async pickImage(type, location = null) {
+         const hasPermission = await this.checkPermissions();
+        if (!hasPermission) return;
         try {
             let photo = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
