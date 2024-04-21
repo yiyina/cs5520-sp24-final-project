@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { BarChart } from "react-native-gifted-charts";
 import Colors from '../../Shared/Colors';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
 import GlobalApi from '../../Services/GlobalApi';
 import BarItemList from './BarItemList';
-import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Histogram() {
@@ -102,7 +101,7 @@ export default function Histogram() {
         />
         :
         <View style={styles.firstLogin}>
-          <Entypo name="arrow-bold-up" size={24} color="black" />
+          <Image source={require('../../assets/point.gif')} style={styles.pointGif} />
           <Text style={styles.title}>Do your first Spin now!</Text>
           <Text style={styles.title}>Welcome to Spin to Explore!</Text>
         </View>
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginTop: 50,
     color: Colors.TEXT_COLOR,
     alignSelf: 'center',
   },
@@ -128,5 +127,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     gap: 20,
+  },
+  pointGif: {
+    position: 'absolute',
+    top: -50,
+    width: 100,
+    height: 100,
+    transform: [{ rotateX: '180deg' }],
   }
 });
