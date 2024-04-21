@@ -226,7 +226,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                             onPress={addInput}
                             style={({ pressed }) => [
                                 styles.plusButton,
-                                pressed ? { backgroundColor: Colors.LIGHT_COLOR } : { backgroundColor: Colors.WHITE }
+                                { opacity: pressed ? 0.5 : 1 },
                             ]}>
                             <Feather name="plus-square" size={36} color={Colors.DARK_COLOR} />
                         </Pressable>

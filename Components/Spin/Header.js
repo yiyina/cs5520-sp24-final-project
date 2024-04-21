@@ -15,7 +15,13 @@ export default function Header({ spinSelectHandler }) {
   return (
     <View style={styles.container}>
       <SpinSelector spinSelectHandler={spinSelectHandler} />
-      <Pressable onPress={handleAddSpinModal}>
+      <Pressable
+        onPress={handleAddSpinModal}
+        style={({ pressed }) => [
+          styles.addButton,
+          { opacity: pressed ? 0.5 : 1 },
+        ]}
+      >
         <AntDesign
           name="pluscircleo"
           size={36}
@@ -24,7 +30,7 @@ export default function Header({ spinSelectHandler }) {
           activeStyle={{ opacity: 0.5 }}
         />
       </Pressable>
-      <AddSpin showAddSpinModal={showAddSpinModal} setShowAddSpinModal={setShowAddSpinModal} />
+        <AddSpin showAddSpinModal={showAddSpinModal} setShowAddSpinModal={setShowAddSpinModal} />
     </View>
   )
 }

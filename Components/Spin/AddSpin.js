@@ -36,7 +36,6 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
             props.playList.forEach((item) =>
                 searchInputs.push({ id: generateUUID(), value: item.name })
             );
-            // const searchInputs = props.inputs.map()
             setInputs(searchInputs);
         }
     }, [props.playList]);
@@ -166,14 +165,12 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
                     <ScrollView style={{ minHeight: 50, maxHeight: 250 }}>
                         {
                             inputs.map((input) => {
-                                // console.log('Rendering input with id:', input.id);
                                 return (
                                     <View key={input.id} style={styles.inputItem}>
                                         <View style={styles.inputText}>
                                             <Input
                                                 text={input.value}
                                                 handleInput={(text) => handleInputChange(text, input.id)}
-                                            // onSubmitEditing={addInput}
                                             />
                                         </View>
                                         <View style={styles.removeIcon}>
@@ -190,7 +187,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
                         onPress={addInput}
                         style={({ pressed }) => [
                             styles.plusButton,
-                            pressed ? { backgroundColor: Colors.LIGHT_COLOR } : { backgroundColor: Colors.WHITE }
+                            { opacity: pressed ? 0.5 : 1 },
                         ]}>
                         <Feather name="plus-square" size={36} color={Colors.DARK_COLOR} />
                     </Pressable>
