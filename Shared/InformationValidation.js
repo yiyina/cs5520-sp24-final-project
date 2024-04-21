@@ -1,7 +1,7 @@
 export const validateUsername = (username) => {
-    const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{4,}$/;
+    const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{1,8}$/;
     if (!usernamePattern.test(username)) {
-        return "Invalid Username, at least 4 characters and 1 letter";
+        return "Invalid, up to 8 characters and at least 1 letter";
     }
     return "";
 };
