@@ -115,7 +115,7 @@ export default function TabNavigation() {
                     }}
                 />
             </Tab.Navigator>
-            <Modal
+            {/* <Modal
                 visible={showCamera}
                 animationType="slide"
                 transparent={true}
@@ -130,12 +130,12 @@ export default function TabNavigation() {
                         setShowCamera(false);
                     }}
                 />
-            </Modal> */}
-            {/* <CameraScreen
+            </Modal> 
+            <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
                 onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
-                type={'avatar'} />
+                type={'avatar'} /> */}
         </>
     )
 }
