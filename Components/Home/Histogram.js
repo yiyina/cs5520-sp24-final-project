@@ -14,7 +14,7 @@ export default function Histogram() {
   const [data, setData] = useState(null);
   const [placeList, setPlaceList] = useState([])
   const [selectedLabel, setSelectedLabel] = useState(null);
-  const TOP = 5;
+  const TOP = 10;
 
   useEffect(() => {
     const updatedChartData = processSpinResults(spinResults); 
@@ -82,11 +82,12 @@ export default function Histogram() {
                   barWidth={Dimensions.get('window').width / 9}
                   yAxisThickness={0}
                   xAxisThickness={1}
+                  xAxisColor={Colors.LIGHT_COLOR}
                   noOfSections={5}
                   barBorderRadius={5}
                   frontColor={Colors.TEXT_COLOR}
                   initialSpacing={10}
-                  showValuesOnTopOfBars={true}
+                  yAxisLabelWidth={15}
                 />
               )}
             </>
