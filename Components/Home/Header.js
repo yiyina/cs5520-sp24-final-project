@@ -55,8 +55,13 @@ export default function Header() {
                 <Text style={styles.greetingName}>Hi, {username || 'Guest'}</Text>
                 <Text style={styles.greetingText}>{greeting} !</Text>
             </View>
-            <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
-                <AntDesign name="profile" size={36} color={Colors.TEXT_COLOR} />
+            <Pressable 
+                onPress={toggleEditProfile} 
+                style={({ pressed }) => [
+                    styles.editProfile,
+                    { opacity: pressed ? 0.5 : 1 }
+                ]}>
+                <Image source={require('../../assets/editProfileIcon.png')} style={{width: 40, height: 40}}/>
             </Pressable>
             <EditProfile
                 showProfile={showProfile}
@@ -96,6 +101,13 @@ const styles = StyleSheet.create({
     editProfile: {
         flexDirection: 'row',
         marginLeft: 'auto',
+        borderRadius: 10,
+        backgroundColor: Colors.MAIN_BACKGROUND,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 1,
+        elevation: 2,
     },
     gif: {
         position: 'absolute',

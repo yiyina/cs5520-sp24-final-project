@@ -14,7 +14,6 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect 
                 label: item[1], value: item[0]
             }))
             setItems(transformedList)
-            // console.log("DropDownList transformedList: ", transformedList);
         } else {
             setItems([]);
             console.log("listItems is not an array:", listItems);
@@ -34,7 +33,7 @@ export default function DropDownList({ placeholder, listItems, handleItemSelect 
             dropDownStyle={styles.dropDownContainer}
             textStyle={styles.text}
             placeholder={placeholder}
-            placeholderStyle={{ color: Colors.BLACK }}
+            placeholderStyle={{ color: Colors.TEXT_COLOR }}
             open={open}
             value={value}
             items={items}

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Image, Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import SpinWheel from '../Animation/SpinWheel'
 import Header from '../Components/Spin/Header'
@@ -18,7 +18,7 @@ export default function Spin() {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const originalSpin = {
-    spinColor: ColorThemes.SPRINGFLOWER,
+    spinColor: ColorThemes.SPRING,
     spinItems: defaultSpin,
     spinName: 'FOOD',
   }
@@ -67,6 +67,7 @@ export default function Spin() {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/decorate0.gif')} style={styles.gif} />
       {dataLoaded && (
         <>
           <Header spinSelectHandler={spinSelectHandler} />
@@ -75,8 +76,7 @@ export default function Spin() {
         </>
       )}
       {!dataLoaded &&
-        <View 
-          style={styles.waitingView}>
+        <View style={styles.waitingView}>
           <ActivityIndicator size="large" color={Colors.DEEP_RED} />
         </View>
       }
@@ -91,7 +91,19 @@ const styles = StyleSheet.create({
   },
   waitingView: {
     flex: 1,
+    width: Dimensions.get("window").height,
+    height: Dimensions.get("window").width,
+    backgroundColor: Colors.MAIN_BACKGROUND,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  gif: {
+    position: 'absolute',
+    zIndex: 1,
+    width: 300,
+    height: 300,
+    alignSelf: 'center',
+    top: Dimensions.get("window").height * 0.12,
+    left: Dimensions.get("window").width * 0.05
   },
 })

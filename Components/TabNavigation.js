@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, Image, Dimensions, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome } from '@expo/vector-icons';
