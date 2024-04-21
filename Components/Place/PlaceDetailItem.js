@@ -53,7 +53,6 @@ export default function PlaceDetailItem({ place, onDirectionClick }) {
                     <Ionicons name="navigate-circle-outline" size={24} color="black" />
                     <Text style={styles.buttonText}>Direction</Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity style={styles.directionShareButton} onPress={()=>Share.SharePlace(place)}>
                     <AntDesign name="sharealt" size={24} color="black" />
                     <Text style={styles.buttonText}>Share</Text>

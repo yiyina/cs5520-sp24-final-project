@@ -95,7 +95,7 @@ export default function EditInfo({ onCancel }) {
                     await FirestoreService.updateDocuments(fieldsToUpdate);
                     Alert.alert("Success", "Your data updated successfully.");
                 } else {
-                    Alert.alert("Info", "No changes.");
+                    Alert.alert("No changes.");
                 }
             } catch (error) {
                 console.error("Error updating user data: ", error);
