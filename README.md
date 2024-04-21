@@ -143,6 +143,17 @@ In iteration 2, we've implemented notifications and a feature for users to uploa
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/04704b05-16ea-4c7a-874f-88432de14928" width="30%"> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/6829bdbe-2eb4-4c67-b973-9292fdff1ed0" width="30%">
 
+### Iteration 3 implementation
+
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71f4532f-8108-45e8-a97d-0a5a868d8d48" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6f1fc85f-5440-4787-bfbc-24818bee7185" width="30%"> 
+<br> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6a1b6135-f3b6-4c85-9349-b72a4bf41195" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/8e6c947e-648c-47e8-bd65-94259d52282c" width="30%"> 
+
+<br>
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6b3fde3d-3c77-42ba-9743-b1a918e6437b" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/84f162fd-fb1b-4c57-8dae-8107bbc1a32a" width="30%"> 
 
 # Contributions
 
