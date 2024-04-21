@@ -69,17 +69,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.TEXT_COLOR,
   },
-  cameraButton: {
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: Colors.LIGHT_YELLOW,
-
-  },
-  cameraButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   body: {
     flex: 1,
     width: '100%',

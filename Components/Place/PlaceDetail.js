@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, ScrollView,TouchableOpacity,Modal} from 'react-native';
+import { Platform, StyleSheet, ScrollView,TouchableOpacity,Modal,Text} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useRoute,useNavigation } from '@react-navigation/native';
 import PlaceDetailItem from './PlaceDetailItem';
@@ -65,9 +65,9 @@ export default function PlaceDetail() {
             onPress={toggleCamera}>
             <EvilIcons 
               name="camera" 
-              size={45} 
+              size={80} 
               color={showCamera ? "#e32f45" : "#748c94"} 
-            />
+                /><Text style={ styles.cameraButtonText}>Take Photo For This Place</Text>
         </TouchableOpacity>
         <Modal
           visible={showCamera}
@@ -81,7 +81,6 @@ export default function PlaceDetail() {
                 onImageCaptured={(imageUri) => {
                 CameraService.handleImageCaptured(imageUri, 'gallery', placeDetails.name);
                 setShowCamera(false);
-                navigation.navigate('Gallery');
                 }}
             placeDetails={placeDetails}
           />
@@ -107,4 +106,19 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
     },
+    cameraButton: {
+        alignSelf: 'center',
+        padding: 10,
+        backgroundColor: Colors.SECONDARY,
+        borderRadius: 30,
+        alignItems: 'center', 
+    },
+    cameraButtonText: {
+        color: Colors.BORDER_GOLD,
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center', 
+         borderRadius: 30,
+    },
+
 });
