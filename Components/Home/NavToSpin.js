@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     container: {
         width: '80%',
         alignSelf: 'center',
-        marginBottom: 20,
+        marginBottom: 5,
     },
     default: {
         backgroundColor: Colors.LIGHT_COLOR,

@@ -83,10 +83,14 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
 
 const styles = StyleSheet.create({
     container: {
+        position: 'absolute',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+
         width: Dimensions.get('screen').width,
-        backgroundColor: Colors.MAIN_BACKGROUND,
+        // backgroundColor: Colors.MAIN_BACKGROUND,
         paddingHorizontal: 20,
         paddingTop: 20,
+
     },
     header: {
         display: 'flex',

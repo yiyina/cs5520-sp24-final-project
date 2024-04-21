@@ -15,9 +15,9 @@ export default function Histogram() {
   const [placeList, setPlaceList] = useState([])
   const [selectedLabel, setSelectedLabel] = useState(null);
   const TOP = 5;
-  
+
   useEffect(() => {
-    const updatedChartData = processSpinResults(spinResults); // 传递 selectedLabel
+    const updatedChartData = processSpinResults(spinResults); 
     setData([...updatedChartData]);
   }, [spinResults, selectedLabel]);
 
@@ -71,6 +71,7 @@ export default function Histogram() {
       {spinResults ?
         <FlatList
           data={placeList}
+          style={{ borderRadius: 50, marginTop: 20}}
           keyExtractor={(item, index) => index.toString()}
           ListHeaderComponent={() => (
             <>
