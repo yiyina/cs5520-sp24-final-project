@@ -133,8 +133,8 @@ const FirestoreService = {
         }
     },
 
-    async addPhotoToGallery(fileUri) {
-        console.log("Adding photo to gallery: ", fileUri);
+    async addPhotoToGallery(fileUri,location) {
+        console.log("Adding photo to gallery:", fileUri, "with location:", location);
         try {
             if (!fileUri) {
                 throw new Error("Invalid file URI for addPhotoToGallery.");
@@ -157,6 +157,7 @@ const FirestoreService = {
             const docRef = await addDoc(galleryRef, {
                 url: imageUrl,
                 createdAt: new Date(),
+                location: location || null
             });
 
             console.log("Gallery image added with ID:", docRef.id);

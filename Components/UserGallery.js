@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation,useRoute } from '@react-navigation/native';
 
 
-export default function UserGallery({ selectedPlace }) {
+export default function UserGallery() {
   
   const [groupedImages, setGroupedImages] = useState({});
   const { gallery } = getUpdatedUserData(); 
@@ -15,15 +15,17 @@ export default function UserGallery({ selectedPlace }) {
 
 
 
+
   useEffect(() => {
     groupImages(gallery);
   }, [gallery]);
-
+console.log("gallery: ",gallery);
   const groupImages = (gallery) => {
     const groups = gallery.reduce((acc, img) => {
       const date = img.createdAt.toDate().toDateString();
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(img);
+      const location = img.location || 'Undefined';
+       if (!acc[date]) acc[date] = { images: [], location: location };
+      acc[date].images.push(img);
       return acc;
     }, {});
     
@@ -61,40 +63,29 @@ export default function UserGallery({ selectedPlace }) {
       Alert.alert("Error", "Failed to delete the photo.");
     }
   };
-   const handleLocationPress = () => {
-     if (selectedPlace) {
-       setSelectedPlace(null);
-     } else {
-       navigation.navigate('Search');
-     }
-    };
+  
 
 
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        {Object.entries(groupedImages).map(([date, images]) => (
+        {Object.entries(groupedImages).map(([date, data]) => (
           <View key={date} style={styles.dateGroup}>
             <View style={styles.dateAndIconContainer}>
               <Text style={styles.dateText}>{date}</Text>
-               <TouchableOpacity onPress={handleLocationPress}>
-                                {selectedPlace ? (
-                                  <Text style={styles.placeText }>{selectedPlace.name}</Text>
-                                  ) : (
-                                   <Icon name="location-on" size={30} color={Colors.DARK_GRAY} />
-                                )}
-                            </TouchableOpacity>
+              <Text style={styles.placeText}>{data.location}</Text>
+               
             </View>
             <View style={styles.imageGroup}>
-              {images.map((img) => (
-                <View key={img.id} style={styles.imageContainer}>
-                  <Image source={{ uri: img.url }} style={styles.image} />
-                    <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(img)}>
-                      <Icon name="close" size={20} color="white" />
-                  </TouchableOpacity>
-                </View>
-              ))}
+              {data.images.map((img) => (
+                     <View key={img.id} style={styles.imageContainer}>
+                       <Image source={{ uri: img.url }} style={styles.image} />
+                          <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(img)}>
+                          <Icon name="close" size={20} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                ))}
             </View>
           </View>
         ))}
