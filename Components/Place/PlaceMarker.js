@@ -1,9 +1,11 @@
 import { StyleSheet, View, Image } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Marker } from 'react-native-maps'
 import { MY_API_KEY } from '@env'
 
 export default function PlaceMarker({ item }) {
+  const [imageSource, setImageSource] = useState(require('../../assets/placeholder.jpg'));
+
   if (
     !item ||
     !item.geometry ||
@@ -16,13 +18,17 @@ export default function PlaceMarker({ item }) {
     return null;
   }
 
-  const photoUrl = item?.photos && item.photos.length > 0
-    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${item.photos[0].photo_reference}&key=${MY_API_KEY}`
-    : undefined;
+  // const photoUrl = item?.photos && item.photos.length > 0
+  //   ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${item.photos[0].photo_reference}&key=${MY_API_KEY}`
+  //   : require('../../assets/placeholder.jpg');
 
   useEffect(() => {
-    console.log('PlaceMarker photoUrl:', photoUrl);
-  }, [photoUrl]);
+    let source = require('../../assets/placeholder.jpg'); // Default to local image
+    if (item?.photos && item.photos.length > 0) {
+      source = { uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${item.photos[0].photo_reference}&key=${MY_API_KEY}` };
+    }
+    setImageSource(source);
+  }, [item]);
 
   return (
     <View>
@@ -36,12 +42,10 @@ export default function PlaceMarker({ item }) {
             longitudeDelta: 0.0421,
           }
         } >
-        {photoUrl && (
-          <Image
-            source={{ uri: photoUrl }}
-            style={styles.image}
-          />
-        )}
+        <Image
+          source={imageSource}
+          style={styles.image}
+        />
       </Marker>
     </View>
   )
@@ -49,8 +53,8 @@ export default function PlaceMarker({ item }) {
 
 const styles = StyleSheet.create({
   image: {
-    width: 50,  
-    height: 50, 
+    width: 50,
+    height: 50,
     borderRadius: 50,
     borderWidth: 1,
     borderColor: 'black',
