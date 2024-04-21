@@ -15,7 +15,7 @@ import { EvilIcons } from '@expo/vector-icons';
 
 export default function TabNavigation() {
     const Tab = createBottomTabNavigator()
-    const [showCamera, setShowCamera] = useState(false);
+    // const [showCamera, setShowCamera] = useState(false);
 
     const CustomTabBarButton = ({ children }) => (
         <Pressable
@@ -130,8 +130,8 @@ export default function TabNavigation() {
                         setShowCamera(false);
                     }}
                 />
-            </Modal>
-            <CameraScreen
+            </Modal> */}
+            {/* <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
                 onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}

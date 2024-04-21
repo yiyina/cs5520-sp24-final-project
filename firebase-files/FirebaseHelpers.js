@@ -156,7 +156,7 @@ const FirestoreService = {
             // Add a new document in the gallery collection with the image URL
             const docRef = await addDoc(galleryRef, {
                 url: imageUrl,
-                createdAt: new Date()
+                createdAt: new Date(),
             });
 
             console.log("Gallery image added with ID:", docRef.id);
@@ -351,6 +351,22 @@ const FirestoreService = {
             throw error;
         }
     },
+     async deletePhoto(photoId) {
+        try {
+            const userDocId = await this.getUserDocId(auth.currentUser.uid);
+            const photoDocRef = doc(firestore, "users", userDocId, "gallery", photoId);
+            const photoDoc = await getDoc(photoDocRef);
+            const photoUrl = photoDoc.data().url;
+            await deleteDoc(photoDocRef);
+            if (photoUrl) {
+                const fileRef = storageRef(storage, photoUrl);
+                await deleteObject(fileRef);
+            }
+        } catch (error) {
+            console.error("Error deleting photo: ", error);
+            throw error;
+        }
+    },
 
     async addSpinResultToUser(result) {
         try {
@@ -376,7 +392,7 @@ const FirestoreService = {
             console.error("Error updating spin results: ", error);
             throw error;
         }
-    }
+    },
     // async getGalleryImages(uid) {
     //     try {
     //         const userDocId = await this.getUserDocId(uid);
@@ -389,7 +405,7 @@ const FirestoreService = {
     //              return {
     //                  id: doc.id,
     //                  ...doc.data()
-    //              };}        
+    //              };}
     //         );
     //         return galleryData;
     //     } catch (error) {
@@ -397,6 +413,8 @@ const FirestoreService = {
     //         throw error;
     //     }
     // },
+ 
+
 }
 
 export default FirestoreService;

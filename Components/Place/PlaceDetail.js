@@ -1,13 +1,15 @@
-import { Platform, StyleSheet, ScrollView } from 'react-native';
+import { Platform, StyleSheet, ScrollView,TouchableOpacity,Text} from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { useRoute } from '@react-navigation/native';
+import { useRoute,useNavigation } from '@react-navigation/native';
 import PlaceDetailItem from './PlaceDetailItem';
 import Colors from '../../Shared/Colors';
 import GoogleMapView from './GoogleMapView';
 import { Linking } from 'react-native';
 
 export default function PlaceDetail() {
+    const navigation = useNavigation();
     const { place } = useRoute().params || {};
+    console.log('PlaceDetail:', place);
     const [placeDetails, setPlaceDetails] = useState(place || {});
 
     useEffect(() => {
@@ -15,6 +17,9 @@ export default function PlaceDetail() {
             setPlaceDetails(place);
         }
     }, [place]);
+     const handleSelectLocation = () => {
+         navigation.navigate('Gallery', { selectedPlace: placeDetails });
+    };
 
     const openMapsApp = () => {
         if (!placeDetails.geometry || !placeDetails.geometry.location) {
@@ -49,6 +54,10 @@ export default function PlaceDetail() {
         <ScrollView style={styles.container}>
             <PlaceDetailItem place={placeDetails} onDirectionClick={openMapsApp} />
             <GoogleMapView placeList={[placeDetails]} />
+            <TouchableOpacity style={styles.button} onPress={handleSelectLocation}>
+                <Text style={styles.buttonText}>Select This Location Showed In Gallery</Text>
+            </TouchableOpacity>
+
         </ScrollView>
     );
 }
@@ -58,5 +67,15 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: Colors.WHITE,
         flex: 1
+    },
+     button: {
+        marginTop: 20,
+        backgroundColor: Colors.PRIMARY,
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    buttonText: {
+        fontSize: 16,
     },
 });
