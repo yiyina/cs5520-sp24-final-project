@@ -99,9 +99,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     width: 300,
-    height: 280,
+    height: 300,
     alignSelf: 'center',
-    top: Dimensions.get("window").height * 0.15,
+    top: Dimensions.get("window").height * 0.12,
     left: Dimensions.get("window").width * 0.05
   },
 })

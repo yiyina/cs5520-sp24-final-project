@@ -38,13 +38,12 @@ const styles = StyleSheet.create({
     },
     default: {
         borderRadius: 10,
-        opacity: 0.9,
         margin: 0,
     },
     pressed: {
-        backgroundColor: Colors.CORAL,
+        backgroundColor: Colors.BORDER_GOLD,
         borderRadius: 10,
-        opacity: 1,
+        opacity: 0.5,
         margin: 0,
     },
     text: {

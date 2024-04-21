@@ -1,7 +1,6 @@
-import { StyleSheet, View, Dimensions, Pressable, Text } from 'react-native'
+import { StyleSheet, View, Dimensions, Pressable } from 'react-native'
 import React from 'react'
 import SpinSelector from './SpinSelector'
-import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../Shared/Colors';
 import AddSpin from './AddSpin';
@@ -15,12 +14,6 @@ export default function Header({ spinSelectHandler }) {
 
   return (
     <View style={styles.container}>
-      {/* <Feather
-        name="settings" size={24}
-        color={Colors.BORDER_GOLD}
-        style={({ pressed }) => [
-          pressed ? { opacity: 0.5 } : { opacity: 1 }
-        ]} /> */}
       <SpinSelector spinSelectHandler={spinSelectHandler} />
       <Pressable onPress={handleAddSpinModal}>
         <AntDesign
