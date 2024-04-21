@@ -1,7 +1,7 @@
 import { StyleSheet, Image } from 'react-native'
 import React from 'react'
 
-export default function Profile({ avatarUri, size }) {
+export default function Avatar({ avatarUri, size }) {
     const styles = StyleSheet.create({
         avatar: {
             width: size,

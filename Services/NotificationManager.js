@@ -111,11 +111,9 @@ const styles = StyleSheet.create({
   },
   Text: {
     marginTop: 3,
-    color: Colors.DEEP_RED,
+    color: Colors.TEXT_COLOR,
     fontSize: 15,
     marginRight: 10,
-  
-
   },
 });
 

@@ -1,14 +1,16 @@
-// import PlaceMarker from './PlaceMarker';
-import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import Colors from '../../Shared/Colors';
 import { getLocation } from '../../Shared/LocationManager';
 import PlaceMarker from './PlaceMarker';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
 
 export default function GoogleMapView({ placeList }) {
-    console.log('GoogleMapView placeList:', placeList);
+    const { avatarUri } = getUpdatedUserData();
+    // console.log('GoogleMapView placeList:', placeList);
+    console.log('GoogleMapView avatarUri:', avatarUri);
     const [mapRegion, setMapRegion] = useState({});
 
     useEffect(() => {
@@ -35,6 +37,15 @@ export default function GoogleMapView({ placeList }) {
         })
     }, []);
 
+    const customUserMarker = () => (
+        <View style={styles.avatarContainer}>
+            <Image 
+                source={avatarUri} 
+                style={styles.avatarImage}
+            />
+        </View>
+    );
+
     return (
         <View style={styles.container}>
                 <MapView style={styles.mapView}
@@ -43,10 +54,13 @@ export default function GoogleMapView({ placeList }) {
                     showsMyLocationButton={true}
                     region={mapRegion}
                 >
-                    {mapRegion.latitude && mapRegion.longitude && (
+                    {mapRegion.latitude && mapRegion.longitude && avatarUri && (
                         <Marker 
                             title='You'
-                            coordinate={mapRegion}/>
+                            coordinate={mapRegion}
+                        >
+                            {customUserMarker()}
+                        </Marker>
                     )}
                     {placeList && placeList.length > 0 && placeList.slice(0,6).map((item, index) => {
                             // Check if item has an id for key, if not use index
@@ -66,7 +80,21 @@ const styles = StyleSheet.create({
         width: Dimensions.get('screen').width*0.9,
         height: Dimensions.get('screen').height * 0.25,
         borderRadius: 20,
-        borderWidth: 5,
+        borderWidth: 1,
         borderColor: Colors.BORDER_GOLD,
-    }
+    },
+    avatarContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 5,
+        borderRadius: 50,
+        borderColor: Colors.DARK_COLOR,
+        width: 50, 
+        height: 50, 
+    },
+    avatarImage: {
+        width: 40, 
+        height: 40, 
+        borderRadius: 50,
+    },
 });

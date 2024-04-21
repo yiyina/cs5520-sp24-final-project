@@ -17,6 +17,7 @@ export default function Button({ text, textColor, buttonPress, textStyle, defaul
         },  
         text: {
             color: textColor,
+            fontWeight: 'bold',
         }
     })
     

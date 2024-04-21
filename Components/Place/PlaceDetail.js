@@ -34,17 +34,16 @@ export default function PlaceDetail() {
         }
 
         const { lat, lng } = placeDetails.geometry.location;
-        const label = encodeURIComponent(placeDetails.name || 'Location');
-        const query = encodeURIComponent(placeDetails.formatted_address || `${lat},${lng}`);
+        const address = placeDetails.formatted_address ? encodeURIComponent(placeDetails.name) : `${lat},${lng}`;
 
-        const iosUrl = `maps:${lat},${lng}?q=${query}`;
-        const googleMapsUrl = `comgooglemaps://?q=${label}&center=${lat},${lng}&zoom=14`;
-        const webUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+        const iosGoogleMapsUrl = `comgooglemaps://?q=${address}&center=${lat},${lng}&zoom=14`;
+        const androidUrl = `geo:${lat},${lng}?q=${address}`;
+        const webUrl = `https://www.google.com/maps/search/?api=1&query=${address}`;
 
         const url = Platform.select({
-            ios: googleMapsUrl,
-            android: `geo:${lat},${lng}?q=${query}`
-        });
+            ios: iosGoogleMapsUrl,
+            android: androidUrl,
+        }) || webUrl;
 
         Linking.canOpenURL(url)
             .then(supported => {

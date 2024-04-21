@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     captureButtonInner: {
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         padding: 20,
         borderRadius: 50,
         borderWidth: 2,

@@ -1,31 +1,32 @@
-import { StyleSheet, Dimensions, View, Pressable } from 'react-native'
+import { StyleSheet, Dimensions, View, Pressable, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import PlaceMarker from '../Place/PlaceMarker';
-import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { getLocation } from '../../Shared/LocationManager';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
+import Colors from '../../Shared/Colors';
 
 export default function GoogleMapViewFull({ placeList }) {
+    const { coords, avatarUri } = getUpdatedUserData();
     const [mapRegion, setMapRegion] = useState({});
     const [mapRef, setMapRef] = useState(null);
-    const [coords, setCoords] = useState(null);
+
+
+    useEffect(() => {
+        console.log('GoogleMapViewFull.js coords: ', coords);
+    }, [coords])
 
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {
             try {
-                const userData = await FirestoreService.getUserData(); // Fetch user data
-                console.log('userData:', userData);
-                if (userData && userData.coords) {
+                if (coords) {
                     setMapRegion({
-                        latitude: userData.coords.latitude,
-                        longitude: userData.coords.longitude,
+                        latitude: coords.latitude,
+                        longitude: coords.longitude,
                         latitudeDelta: 0.0522,
                         longitudeDelta: 0.0321,
                     });
-                } else {
-                    const userCoords = await FirestoreService.getUserData();
-                    setCoords(userCoords.coords);
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -47,6 +48,15 @@ export default function GoogleMapViewFull({ placeList }) {
         }
     };
 
+    const customUserMarker = () => (
+        <View style={styles.avatarContainer}>
+            <Image
+                source={avatarUri}
+                style={styles.avatarImage}
+            />
+        </View>
+    );
+
     return (
         <View>
             <MapView
@@ -61,9 +71,17 @@ export default function GoogleMapViewFull({ placeList }) {
                     const key = item.id ? item.id.toString() : `place_${index}`;
                     return <PlaceMarker key={key} item={item} />;
                 })}
+                {mapRegion.latitude && mapRegion.longitude && avatarUri && (
+                    <Marker
+                        title='You'
+                        coordinate={mapRegion}
+                    >
+                        {customUserMarker()}
+                    </Marker>
+                )}
             </MapView>
-            <Pressable 
-                style={({pressed}) => [
+            <Pressable
+                style={({ pressed }) => [
                     styles.myLocationButton,
                     {
                         backgroundColor: pressed ? 'lightgray' : 'white',
@@ -86,16 +104,28 @@ const styles = StyleSheet.create({
         width: 60,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#000',
+        shadowColor: Colors.BLACK,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.2,
         shadowRadius: 2,
         zIndex: 10,
         top: 200,
-        right: 10,
-        padding: 10,
-        backgroundColor: 'white',
+        right: 20,
         borderRadius: 50,
         elevation: 3,
+    },
+    avatarContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 5,
+        borderRadius: 50,
+        borderColor: Colors.DARK_COLOR,
+        width: 50, 
+        height: 50, 
+    },
+    avatarImage: {
+        width: 40, 
+        height: 40, 
+        borderRadius: 50,
     },
 })

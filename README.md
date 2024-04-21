@@ -17,6 +17,10 @@ service cloud.firestore {
     match /users/{document=**} {
       allow read, create: if request.auth != null;
       allow write, delete: if request.auth != null && request.auth.uid == resource.data.uid;
+    	
+      match /spins/{spinId} {
+        allow read, create, write, delete: if request.auth != null;
+      }
     }
   }
 }

@@ -21,7 +21,12 @@ export default function Notification() {
                         settings={notificationSettings}
                         onSave={setNotificationSettings}
                     />
-                    <Pressable onPress={() => setIsModalVisible(false)} style={styles.dismissButton}>
+                    <Pressable 
+                        onPress={() => setIsModalVisible(false)} 
+                        style={({pressed}) => [
+                            styles.dismissButton,
+                            { backgroundColor: pressed ? Colors.TEXT_COLOR : Colors.WHITE }
+                        ]}>
                         <Text style={styles.text}>Save Notification Setting.</Text>
                     </Pressable>
                 </View>
@@ -39,14 +44,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         shadowOffset: { width: 0, height: 2 },
-        borderColor: Colors.WHITE,
-        borderWidth: 2,
     },
     notificationsettingContainer: {
         position: 'absolute',
         zIndex: 10,
         width: '95%',
-        backgroundColor: Colors.LIGHT_YELLOW,
+        backgroundColor: Colors.LIGHT_COLOR,
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
@@ -55,9 +58,14 @@ const styles = StyleSheet.create({
         top: 250,
     },
     text: {
-        color: Colors.DEEP_RED,
+        color: Colors.DARK_COLOR,
         fontSize: 16,
         fontWeight: 'bold',
         paddingHorizontal: 5,
+    },
+    dismissButton: {
+        padding: 10,
+        borderRadius: 10,
+        marginTop: 10,
     },
 })

@@ -95,7 +95,7 @@ export default function EditInfo({ onCancel }) {
                     await FirestoreService.updateDocuments(fieldsToUpdate);
                     Alert.alert("Success", "Your data updated successfully.");
                 } else {
-                    Alert.alert("Info", "No changes.");
+                    Alert.alert("No changes.");
                 }
             } catch (error) {
                 console.error("Error updating user data: ", error);
@@ -148,7 +148,7 @@ export default function EditInfo({ onCancel }) {
                     styles.editProfileButton,
                     {
                         backgroundColor: pressed
-                            ? Colors.DARK_YELLOW_PRESSED
+                            ? Colors.DARK_COLOR
                             : Colors.TEXT_COLOR,
                         opacity: (usernameError || emailError || passwordError) ? 0.5 : 1
                     }
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     },
     editProfileButton: {
         flexDirection: 'row',
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         alignItems: 'center',
         padding: 10,
         borderRadius: 10,

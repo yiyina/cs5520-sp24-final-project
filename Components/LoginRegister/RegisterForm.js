@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     pressRegisterButton: {
         width: '80%',
         borderRadius: 10,
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         shadowColor: Colors.BLACK,
         shadowOffset: {
             width: 0,
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     RegisterButton: {
         width: '80%',
         borderRadius: 10,
-        backgroundColor: Colors.LIGHT_YELLOW,
+        backgroundColor: Colors.LIGHT_COLOR,
         shadowColor: Colors.BLACK,
         shadowOffset: {
             width: 0,
