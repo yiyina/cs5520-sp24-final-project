@@ -7,38 +7,42 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation,useRoute } from '@react-navigation/native';
 
 
-export default function UserGallery({ selectedPlace }) {
+export default function UserGallery() {
   
   const [groupedImages, setGroupedImages] = useState({});
-  const { gallery } = getUpdatedUserData(); 
+  const { gallery } = getUpdatedUserData();
   const navigation = useNavigation();
+
 
 
 
   useEffect(() => {
     groupImages(gallery);
   }, [gallery]);
-
+  console.log("gallery: ", gallery);
   const groupImages = (gallery) => {
-    const groups = gallery.reduce((acc, img) => {
-      const date = img.createdAt.toDate().toDateString();
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(img);
-      return acc;
-    }, {});
-    
-    const sortedGroups = Object.keys(groups).sort().reduce(
-      (obj, key) => { 
-        obj[key] = groups[key];
+  const groups = gallery.reduce((acc, img) => {
+    const date = img.createdAt.toDate().toDateString();
+    if (!acc[date]) acc[date] = { images: [], locations: new Set() };
+    acc[date].images.push(img);
+    acc[date].locations.add(img.location || 'No location');  // Using Set to avoid duplicate locations
+    return acc;
+  }, {});
 
-        return obj;
-      }, 
-      {}
-    );
+  const sortedGroups = Object.keys(groups).sort().reduce(
+    (obj, key) => {
+      obj[key] = {
+        images: groups[key].images,
+        locations: Array.from(groups[key].locations)  // Convert Set to Array for rendering
+      };
+      return obj;
+    },
+    {}
+  );
 
-    setGroupedImages(sortedGroups);
-    console.log("sortedGroups: ", sortedGroups,sortedGroups.object);
-  }
+  setGroupedImages(sortedGroups);
+};
+
 
   const handleDelete = (image) => {
     Alert.alert(
@@ -61,37 +65,25 @@ export default function UserGallery({ selectedPlace }) {
       Alert.alert("Error", "Failed to delete the photo.");
     }
   };
-   const handleLocationPress = () => {
-     if (selectedPlace) {
-       setSelectedPlace(null);
-     } else {
-       navigation.navigate('Search');
-     }
-    };
+  
 
 
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        {Object.entries(groupedImages).map(([date, images]) => (
+        {Object.entries(groupedImages).map(([date, data]) => (
           <View key={date} style={styles.dateGroup}>
             <View style={styles.dateAndIconContainer}>
               <Text style={styles.dateText}>{date}</Text>
-               <TouchableOpacity onPress={handleLocationPress}>
-                                {selectedPlace ? (
-                                  <Text style={styles.placeText }>{selectedPlace.name}</Text>
-                                  ) : (
-                                   <Icon name="location-on" size={30} color={Colors.DARK_GRAY} />
-                                )}
-                            </TouchableOpacity>
             </View>
             <View style={styles.imageGroup}>
-              {images.map((img) => (
+              {data.images.map((img) => (
                 <View key={img.id} style={styles.imageContainer}>
                   <Image source={{ uri: img.url }} style={styles.image} />
-                    <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(img)}>
-                      <Icon name="close" size={20} color="white" />
+                  <Text style={styles.imageLocationText}>{img.location || 'No location'}</Text>
+                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(img)}>
+                    <Icon name="close" size={20} color="white" />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -102,7 +94,6 @@ export default function UserGallery({ selectedPlace }) {
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
@@ -110,14 +101,14 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
- dateGroup: {
-    flexDirection: 'row',  // Keeps the date and images side by side
+  dateGroup: {
+    flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 20,
   },
   dateAndIconContainer: {
-    flexDirection: 'column',  
-    marginRight: 10,          
+    flexDirection: 'column',
+    marginRight: 10,
   },
   dateText: {
     fontSize: 16,
@@ -125,30 +116,31 @@ const styles = StyleSheet.create({
     width: 60,
     fontWeight: 'bold',
   },
-  placeText: {
-    marginTop: 20,
-    fontSize: 12,
-    color: Colors.TEXT_COLOR,
-    width: 60,
-
-  },
   imageGroup: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Change here to align items at the start
     marginLeft: 10,
     marginRight: 20,
   },
   imageContainer: {
     position: 'relative',
     margin: 10,
+    alignItems: 'center', // Center items vertically in the container
   },
   image: {
     width: 120,
     height: 120,
     borderWidth: 3,
     borderColor: Colors.WHITE,
+  },
+  imageLocationText: {
+    marginTop: 5, // Margin to separate the text from the image
+    fontSize: 12,
+    color: Colors.TEXT_COLOR,
+    textAlign: 'center', // Center the text under the image
+    width: 120, // Match the width of the image
   },
   deleteButton: {
     position: 'absolute',
@@ -161,8 +153,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 10,
   },
-  locationIcon: {
-    marginLeft: 10, 
-    marginTop: 20,
-},
 });

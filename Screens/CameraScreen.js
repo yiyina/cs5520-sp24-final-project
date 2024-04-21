@@ -5,7 +5,7 @@ import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import CameraService from '../Services/CameraService'; // Assuming this is the correct import path
 import Colors from '../Shared/Colors';
 
-export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured }) {
+export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured,placeDetails }) {
     const [isUploading, setIsUploading] = useState(false);
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef(null);
@@ -33,7 +33,8 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
 
     const takePhotoHandler = async () => {
         setIsUploading(true); // Start uploading indicator
-        await CameraService.takePicture(cameraRef, type, CameraService.handleImageAction).finally(() => {
+         const location = type === 'gallery' ? placeDetails?.name : undefined;
+        await CameraService.takePicture(cameraRef, type,location).finally(() => {
             setIsUploading(false); // Stop uploading indicator
             onCancel(); // Optionally close the camera modal
         });
@@ -41,7 +42,8 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
 
     const choosePhotoHandler = async () => {
         setIsUploading(true); // Start uploading indicator
-        await CameraService.pickImage(type, CameraService.handleImageAction).finally(() => {
+        const location = type === 'gallery' ? placeDetails?.name : undefined;
+        await CameraService.pickImage(type, location).finally(() => {
             setIsUploading(false); // Stop uploading indicator
             onCancel(); // Optionally close the camera modal
         });

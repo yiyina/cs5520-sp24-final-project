@@ -12,7 +12,7 @@ export default function BusinessItem({ place }) {
     const ensureTwoLines = (text) => {
         return text.includes('\n') ? text : text + '\n ';
     };
-    
+
     return (
         <View style={styles.container}>
             {place?.photos && place.photos.length > 0 ? (
@@ -31,9 +31,19 @@ export default function BusinessItem({ place }) {
             )}
             <Text numberOfLines={2} style={styles.name} >
                 {ensureTwoLines(place.name)}</Text>
-            <Text numberOfLines={1}>
-                {place.opening_hours?.open_now ? 'Open' : 'Closed'}
-                {coords && place.geometry ? ` (${getDistance(coords.latitude, coords.longitude, place.geometry.location.lat, place.geometry.location.lng).toFixed(2)} miles)` : ''}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {place?.opening_hours &&
+                    <Text numberOfLines={1}
+                        style={
+                            place.opening_hours?.open_now ?
+                                { color: Colors.BLUE, fontSize: 16 } :
+                                { color: Colors.LIGHT_RED, fontSize: 16 }
+                        }>
+                        {place.opening_hours.open_now ? "Open" : "Closed"}
+                    </Text>}
+                <Text numberOfLines={1}>
+                    {coords && place.geometry ? ` (${getDistance(coords.latitude, coords.longitude, place.geometry.location.lat, place.geometry.location.lng).toFixed(2)} miles)` : ''}</Text>
+            </View>
             <Text numberOfLines={2} style={styles.title} >
                 {place.vicinity ? place.vicinity : place.formatted_address}</Text>
             <View style={styles.rating}>
@@ -47,17 +57,17 @@ export default function BusinessItem({ place }) {
 const styles = StyleSheet.create({
     container: {
         width: 160,
-        height: 250,
-        backgroundColor: Colors.WHITE,
+        height: 260,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
         padding: 10,
         borderRadius: 15,
         marginHorizontal: 10,
         marginBottom: 50,
-        shadowColor: Colors.BLACK,
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.4,
-        shadowRadius: 1,
-        elevation: 2,
+        shadowColor: Colors.BORDER_GOLD,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.9,
+        shadowRadius: 5,
+        elevation: 10,
     },
     image: {
         width: 140,
@@ -76,7 +86,8 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 16,
-        marginTop: 5,
+        marginVertical: 5,
+        fontWeight: 'bold',
     },
     rating: {
         display: 'flex',

@@ -10,7 +10,6 @@ export default function PlaceDetailItem({ place, onDirectionClick }) {
         return null; 
     }
     console.log("PlaceDetailItem", place);
-
     return (
         <View>
             <Text style={{ fontSize: 26 }}>

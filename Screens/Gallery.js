@@ -7,7 +7,6 @@ import CameraService from '../Services/CameraService';
 import { EvilIcons } from '@expo/vector-icons';
 
 export default function Gallery(props) {
-  const { selectedPlace } = props.route.params || {};
   const [showCamera, setShowCamera] = useState(false);
 
   const toggleCamera = () => {
@@ -18,7 +17,7 @@ export default function Gallery(props) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.userGalleryTitle}>User Gallery</Text>
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
             style={styles.cameraButton} 
             onPress={toggleCamera}>
             <EvilIcons 
@@ -41,10 +40,10 @@ export default function Gallery(props) {
               setShowCamera(false);
             }}
           />
-        </Modal>
+        </Modal> */}
       </View>
       <View style={styles.body}>
-        <UserGallery selectedPlace={selectedPlace}/>
+        <UserGallery />
       </View>
     </View>
   )
@@ -69,17 +68,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: Colors.TEXT_COLOR,
-  },
-  cameraButton: {
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: Colors.LIGHT_YELLOW,
-
-  },
-  cameraButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   body: {
     flex: 1,

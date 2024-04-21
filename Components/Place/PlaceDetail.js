@@ -1,25 +1,31 @@
-import { Platform, StyleSheet, ScrollView,TouchableOpacity,Text} from 'react-native';
+import { Platform, StyleSheet, ScrollView,TouchableOpacity,Modal,Text} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useRoute,useNavigation } from '@react-navigation/native';
 import PlaceDetailItem from './PlaceDetailItem';
 import Colors from '../../Shared/Colors';
 import GoogleMapView from './GoogleMapView';
 import { Linking } from 'react-native';
+import CameraScreen from '../../Screens/CameraScreen';
+import CameraService from '../../Services/CameraService';
+import { EvilIcons } from '@expo/vector-icons';
 
 export default function PlaceDetail() {
     const navigation = useNavigation();
     const { place } = useRoute().params || {};
-    console.log('PlaceDetail:', place);
+    // console.log('PlaceDetail:', place);
     const [placeDetails, setPlaceDetails] = useState(place || {});
+      const [showCamera, setShowCamera] = useState(false);
+
+  const toggleCamera = () => {
+    setShowCamera(!showCamera);
+  };
 
     useEffect(() => {
         if (place) {
             setPlaceDetails(place);
         }
     }, [place]);
-     const handleSelectLocation = () => {
-         navigation.navigate('Gallery', { selectedPlace: placeDetails });
-    };
+
 
     const openMapsApp = () => {
         if (!placeDetails.geometry || !placeDetails.geometry.location) {
@@ -54,9 +60,31 @@ export default function PlaceDetail() {
         <ScrollView style={styles.container}>
             <PlaceDetailItem place={placeDetails} onDirectionClick={openMapsApp} />
             <GoogleMapView placeList={[placeDetails]} />
-            <TouchableOpacity style={styles.button} onPress={handleSelectLocation}>
-                <Text style={styles.buttonText}>Select This Location Showed In Gallery</Text>
-            </TouchableOpacity>
+             <TouchableOpacity 
+            style={styles.cameraButton} 
+            onPress={toggleCamera}>
+            <EvilIcons 
+              name="camera" 
+              size={80} 
+              color={showCamera ? "#e32f45" : "#748c94"} 
+                /><Text style={ styles.cameraButtonText}>Take Photo For This Place</Text>
+        </TouchableOpacity>
+        <Modal
+          visible={showCamera}
+          animationType="slide"
+          transparent={true}
+        >
+          <CameraScreen
+            showCamera={showCamera}
+            onCancel={() => setShowCamera(false)}
+            type={'gallery'}
+                onImageCaptured={(imageUri) => {
+                CameraService.handleImageCaptured(imageUri, 'gallery', placeDetails.name);
+                setShowCamera(false);
+                }}
+            placeDetails={placeDetails}
+          />
+        </Modal>
 
         </ScrollView>
     );
@@ -78,4 +106,19 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
     },
+    cameraButton: {
+        alignSelf: 'center',
+        padding: 10,
+        backgroundColor: Colors.SECONDARY,
+        borderRadius: 30,
+        alignItems: 'center', 
+    },
+    cameraButtonText: {
+        color: Colors.BORDER_GOLD,
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center', 
+         borderRadius: 30,
+    },
+
 });

@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { BarChart } from "react-native-gifted-charts";
-import Colors from './Colors';
-import { getUpdatedUserData } from './updateUserData';
-import GlobalApi from '../Services/GlobalApi';
-import BarItemList from '../Components/Home/BarItemList';
+import Colors from '../../Shared/Colors';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
+import GlobalApi from '../../Services/GlobalApi';
+import BarItemList from './BarItemList';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -13,12 +13,13 @@ export default function Histogram() {
   const navigator = useNavigation();
   const [data, setData] = useState(null);
   const [placeList, setPlaceList] = useState([])
+  const [selectedLabel, setSelectedLabel] = useState(null);
   const TOP = 5;
 
   useEffect(() => {
-    const updatedChartData = processSpinResults(spinResults);
+    const updatedChartData = processSpinResults(spinResults); 
     setData([...updatedChartData]);
-  }, [spinResults]);
+  }, [spinResults, selectedLabel]);
 
   const processSpinResults = (spinResults) => {
     if (!spinResults) return [];
@@ -26,12 +27,16 @@ export default function Histogram() {
       .map(([key, value]) => ({
         label: key,
         value,
-        onPress: () => setPlaceList(getNearBySearchPlace(key)),
+        onPress: () => {
+          setSelectedLabel(key);
+          setPlaceList(getNearBySearchPlace(key));
+        },
+        frontColor: key === selectedLabel ? Colors.DARK_COLOR : Colors.LIGHT_COLOR,
       }))
       .sort((a, b) => b.value - a.value);
 
     while (sortedResults.length < TOP) {
-      sortedResults.push({ value: 0, label: '' });
+      sortedResults.push({ value: 0, label: '', frontColor: Colors.LIGHT_COLOR });
     }
     // console.log("sortedResults results: ", sortedResults);
     return sortedResults.slice(0, TOP);
@@ -66,6 +71,7 @@ export default function Histogram() {
       {spinResults ?
         <FlatList
           data={placeList}
+          style={{ borderRadius: 50, marginTop: 20}}
           keyExtractor={(item, index) => index.toString()}
           ListHeaderComponent={() => (
             <>
