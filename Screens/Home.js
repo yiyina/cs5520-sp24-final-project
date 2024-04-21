@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import Colors from '../Shared/Colors'
 import Header from '../Components/Home/Header'
-import Histogram from '../Shared/Histogram'
+import Histogram from '../Components/Home/Histogram'
 import NavToSpin from '../Components/Home/NavToSpin'
 
 export default function Home() {

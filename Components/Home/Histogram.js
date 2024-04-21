@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { BarChart } from "react-native-gifted-charts";
-import Colors from './Colors';
-import { getUpdatedUserData } from './updateUserData';
-import GlobalApi from '../Services/GlobalApi';
-import BarItemList from '../Components/Home/BarItemList';
+import Colors from '../../Shared/Colors';
+import { getUpdatedUserData } from '../../Shared/updateUserData';
+import GlobalApi from '../../Services/GlobalApi';
+import BarItemList from './BarItemList';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 

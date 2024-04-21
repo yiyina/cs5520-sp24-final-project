@@ -31,15 +31,16 @@ export default function BusinessItem({ place }) {
             )}
             <Text numberOfLines={2} style={styles.name} >
                 {ensureTwoLines(place.name)}</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text numberOfLines={1}
-                    style={
-                    place.opening_hours?.open_now ?
-                        { color: Colors.BLUE, fontSize: 16 } :
-                        { color: Colors.LIGHT_RED, fontSize: 16 }
-                }>
-                    {place.opening_hours.open_now ? "Open" : "Closed"}
-                </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {place?.opening_hours &&
+                    <Text numberOfLines={1}
+                        style={
+                            place.opening_hours?.open_now ?
+                                { color: Colors.BLUE, fontSize: 16 } :
+                                { color: Colors.LIGHT_RED, fontSize: 16 }
+                        }>
+                        {place.opening_hours.open_now ? "Open" : "Closed"}
+                    </Text>}
                 <Text numberOfLines={1}>
                     {coords && place.geometry ? ` (${getDistance(coords.latitude, coords.longitude, place.geometry.location.lat, place.geometry.location.lng).toFixed(2)} miles)` : ''}</Text>
             </View>

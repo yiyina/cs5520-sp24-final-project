@@ -94,6 +94,11 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
             return;
         };
 
+        if (inputs.length < 2) {
+            Alert.alert('Alert', 'Please have at least 2 items');
+            return;
+        }
+
         const spinItems = inputs.map(input => {
             // console.log('Mapping input for save:', input);
             return input.value;

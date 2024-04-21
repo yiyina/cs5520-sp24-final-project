@@ -100,6 +100,11 @@ export default function EditSpin({ spinId, spinColorName }) {
             return;
         };
 
+        if (inputs.length < 2) {
+            Alert.alert('Alert', 'Please have at least 2 items');
+            return;
+        }
+
         const spinItems = inputs.map(input => input.value);
         const spin = {
             spinColor: selectedTheme,
