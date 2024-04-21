@@ -6,7 +6,8 @@ import CameraScreen from './CameraScreen';
 import CameraService from '../Services/CameraService';
 import { EvilIcons } from '@expo/vector-icons';
 
-export default function Gallery() {
+export default function Gallery(props) {
+  const { selectedPlace } = props.route.params || {};
   const [showCamera, setShowCamera] = useState(false);
 
   const toggleCamera = () => {
@@ -43,7 +44,7 @@ export default function Gallery() {
         </Modal>
       </View>
       <View style={styles.body}>
-        <UserGallery />
+        <UserGallery selectedPlace={selectedPlace}/>
       </View>
     </View>
   )

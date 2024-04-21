@@ -36,7 +36,7 @@ class CameraService {
     static async handleImageCaptured(imageUri, type) {
          Alert.alert(
             "Upload Photo",
-            "Do you want to upload this photo to your gallery?",
+            `Do you want to upload this photo to your ${type}`,
             [
                 {
                     text: "Cancel",

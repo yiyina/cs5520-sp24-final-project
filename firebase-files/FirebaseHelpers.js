@@ -156,7 +156,7 @@ const FirestoreService = {
             // Add a new document in the gallery collection with the image URL
             const docRef = await addDoc(galleryRef, {
                 url: imageUrl,
-                createdAt: new Date()
+                createdAt: new Date(),
             });
 
             console.log("Gallery image added with ID:", docRef.id);
@@ -392,7 +392,7 @@ const FirestoreService = {
             console.error("Error updating spin results: ", error);
             throw error;
         }
-    }
+    },
     // async getGalleryImages(uid) {
     //     try {
     //         const userDocId = await this.getUserDocId(uid);
@@ -405,7 +405,7 @@ const FirestoreService = {
     //              return {
     //                  id: doc.id,
     //                  ...doc.data()
-    //              };}        
+    //              };}
     //         );
     //         return galleryData;
     //     } catch (error) {
@@ -413,6 +413,8 @@ const FirestoreService = {
     //         throw error;
     //     }
     // },
+ 
+
 }
 
 export default FirestoreService;

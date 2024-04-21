@@ -4,13 +4,16 @@ import Colors from '../Shared/Colors';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import FirestoreService from '../firebase-files/FirebaseHelpers'; 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation,useRoute } from '@react-navigation/native';
 
 
-export default function UserGallery() {
+export default function UserGallery({ selectedPlace }) {
+  
   const [groupedImages, setGroupedImages] = useState({});
-
-  // Assuming `gallery` is fetched and stored in state
   const { gallery } = getUpdatedUserData(); 
+  const navigation = useNavigation();
+
+
 
   useEffect(() => {
     groupImages(gallery);
@@ -27,12 +30,14 @@ export default function UserGallery() {
     const sortedGroups = Object.keys(groups).sort().reduce(
       (obj, key) => { 
         obj[key] = groups[key];
+
         return obj;
       }, 
       {}
     );
 
     setGroupedImages(sortedGroups);
+    console.log("sortedGroups: ", sortedGroups,sortedGroups.object);
   }
 
   const handleDelete = (image) => {
@@ -56,13 +61,31 @@ export default function UserGallery() {
       Alert.alert("Error", "Failed to delete the photo.");
     }
   };
+   const handleLocationPress = () => {
+     if (selectedPlace) {
+       setSelectedPlace(null);
+     } else {
+       navigation.navigate('Search');
+     }
+    };
+
+
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         {Object.entries(groupedImages).map(([date, images]) => (
           <View key={date} style={styles.dateGroup}>
-            <Text style={styles.dateText}>{date}</Text>
+            <View style={styles.dateAndIconContainer}>
+              <Text style={styles.dateText}>{date}</Text>
+               <TouchableOpacity onPress={handleLocationPress}>
+                                {selectedPlace ? (
+                                  <Text style={styles.placeText }>{selectedPlace.name}</Text>
+                                  ) : (
+                                   <Icon name="location-on" size={30} color={Colors.DARK_GRAY} />
+                                )}
+                            </TouchableOpacity>
+            </View>
             <View style={styles.imageGroup}>
               {images.map((img) => (
                 <View key={img.id} style={styles.imageContainer}>
@@ -87,16 +110,27 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
-  dateGroup: {
-    flexDirection: 'row',
+ dateGroup: {
+    flexDirection: 'row',  // Keeps the date and images side by side
     alignItems: 'flex-start',
     marginBottom: 20,
+  },
+  dateAndIconContainer: {
+    flexDirection: 'column',  
+    marginRight: 10,          
   },
   dateText: {
     fontSize: 16,
     color: Colors.TEXT_COLOR,
-    width: 50,
+    width: 60,
     fontWeight: 'bold',
+  },
+  placeText: {
+    marginTop: 20,
+    fontSize: 12,
+    color: Colors.TEXT_COLOR,
+    width: 60,
+
   },
   imageGroup: {
     flexDirection: 'row',
@@ -127,4 +161,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 10,
   },
+  locationIcon: {
+    marginLeft: 10, 
+    marginTop: 20,
+},
 });
