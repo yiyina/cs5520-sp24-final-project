@@ -30,7 +30,7 @@ export default function Header({ spinSelectHandler }) {
           activeStyle={{ opacity: 0.5 }}
         />
       </Pressable>
-        <AddSpin showAddSpinModal={showAddSpinModal} setShowAddSpinModal={setShowAddSpinModal} />
+      <AddSpin showAddSpinModal={showAddSpinModal} setShowAddSpinModal={setShowAddSpinModal} />
     </View>
   )
 }

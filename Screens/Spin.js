@@ -76,8 +76,7 @@ export default function Spin() {
         </>
       )}
       {!dataLoaded &&
-        <View
-          style={styles.waitingView}>
+        <View style={styles.waitingView}>
           <ActivityIndicator size="large" color={Colors.DEEP_RED} />
         </View>
       }
@@ -92,6 +91,9 @@ const styles = StyleSheet.create({
   },
   waitingView: {
     flex: 1,
+    width: Dimensions.get("window").height,
+    height: Dimensions.get("window").width,
+    backgroundColor: Colors.MAIN_BACKGROUND,
     justifyContent: 'center',
     alignItems: 'center',
   },
