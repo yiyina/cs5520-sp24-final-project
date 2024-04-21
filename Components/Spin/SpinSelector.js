@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DropDownList from '../../Shared/DropDownList';
 import { getUpdatedUserSpin } from '../../Shared/updateUserSpin'
