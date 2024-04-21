@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Image, Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
@@ -6,25 +6,35 @@ import { getUpdatedUserData } from '../../Shared/updateUserData'
 import EditProfile from '../../Screens/EditProfile'
 import { AntDesign } from '@expo/vector-icons';
 
-const getGreetingBasedOnTime = () => {
-    const date = new Date();
-    const hours = date.getHours();
-    if (hours < 12) {
-        return 'Good Morning';
-    } else if (hours < 18) {
-        return 'Good Afternoon';
-    } else {
-        return 'Good Evening';
-    }
-}
-
 export default function Header() {
     const { username, avatarUri } = getUpdatedUserData();
     const [greeting, setGreeting] = useState('');
     const [showProfile, setShowProfile] = useState(false);
+    const [day, setDay] = useState(true);
 
     useEffect(() => {
+        const getGreetingBasedOnTime = () => {
+            const date = new Date();
+            const hours = date.getHours();
+            if (hours < 12) {
+                return 'Good Morning';
+            } else if (hours < 18) {
+                return 'Good Afternoon';
+            } else {
+                return 'Good Evening';
+            }
+        }
         setGreeting(getGreetingBasedOnTime());
+    }, []);
+
+    useEffect(() => {
+        const date = new Date();
+        const hours = date.getHours();
+        if (hours >= 6 && hours < 18) {
+            setDay(true);
+        } else {
+            setDay(false);
+        }
     }, []);
 
     const toggleEditProfile = () => {
@@ -33,6 +43,11 @@ export default function Header() {
 
     return (
         <View style={styles.container}>
+            {day ?
+                <Image source={require('../../assets/sun1.gif')} style={styles.gif} />
+                :
+                <Image source={require('../../assets/moon0.gif')} style={styles.gif} />
+            }
             <View style={styles.avatarContainer}>
                 <Avatar avatarUri={avatarUri} size={80} />
             </View>
@@ -42,7 +57,6 @@ export default function Header() {
             </View>
             <Pressable onPress={toggleEditProfile} style={styles.editProfile}>
                 <AntDesign name="profile" size={36} color={Colors.TEXT_COLOR} />
-                {/* <Text style={styles.text}>Profile</Text> */}
             </Pressable>
             <EditProfile
                 showProfile={showProfile}
@@ -83,10 +97,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 'auto',
     },
-    // text: {
-    //   color: Colors.DEEP_RED,
-    //   fontSize: 16,
-    //   fontWeight: 'bold',
-    //   marginTop: 5,
-    // },
+    gif: {
+        position: 'absolute',
+        top: Dimensions.get('window').width * 0.05,
+        right: Dimensions.get('window').width * 0.15,
+        width: 100,
+        height: 100,
+        zIndex: -1,
+    },
 })

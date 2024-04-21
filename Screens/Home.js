@@ -25,8 +25,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.MAIN_BACKGROUND,
   },
   headerContainer: {
-    // borderBottomLeftRadius: 50,
-    // borderBottomRightRadius: 50,
     height: '100%',
     backgroundColor: Colors.WHITE,
     shadowColor: Colors.BLACK,
@@ -54,5 +52,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 3,
     elevation: 10,
-  }
+  },
 })
