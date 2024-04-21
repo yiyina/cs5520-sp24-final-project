@@ -1,20 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import Colors from '../Shared/Colors'
-import GoogleMapView from '../Components/Home/GoogleMapView'
 import Header from '../Components/Home/Header'
-import { LinearGradient } from 'expo-linear-gradient'
+import Histogram from '../Shared/Histogram'
+import NavToSpin from '../Components/Home/NavToSpin'
 
 export default function Home() {
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={[Colors.LIGHT_YELLOW, Colors.GRAY]}
-        style={styles.gradient}
-      >
         <Header />
-        <GoogleMapView />
-      </LinearGradient>
+        <NavToSpin />
+        <Histogram />
     </View>
   )
 }
@@ -22,11 +18,6 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: Colors.GRAY,
-  },
-  gradient: {
-    padding: 20,
-    borderRadius: 10,
+    backgroundColor: Colors.MAIN_BACKGROUND,
   },
 })

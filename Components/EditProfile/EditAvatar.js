@@ -27,6 +27,7 @@ export default function EditAvatar({ avatarUri, toggleCamera }) {
                             if (user && user.uid) {
                                 await FirestoreService.deleteAvatarFileFromStorage();
                                 await FirestoreService.removeAvatarFieldFromUser();
+                                Alert.alert("Avatar Deleted", "Your avatar has been deleted successfully.");
                             }
                         } catch (error) {
                             console.error("Error deleting avatar: ", error);
@@ -56,10 +57,10 @@ export default function EditAvatar({ avatarUri, toggleCamera }) {
 const styles = StyleSheet.create({
     avatarContainer: {
         borderWidth: 5,
-        borderColor: Colors.WHITE,
+        borderColor: Colors.BORDER_GOLD,
         borderRadius: 100,
         marginBottom: 50,
-        backgroundColor: Colors.WHITE,
+        backgroundColor: Colors.MAIN_BACKGROUND,
     },
     editAvatar: {
         position: 'absolute',

@@ -11,8 +11,10 @@ import { getUpdatedUserData } from '../../Shared/updateUserData';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
 import { auth } from '../../firebase-files/FirebaseSetup';
 import { ActivityIndicator } from 'react-native';
+import Logout from './Logout';
+import Notification from './Notification';
 
-export default function EditInfo() {
+export default function EditInfo({ onCancel }) {
     const { avatarUri } = getUpdatedUserData();
     const [showCamera, setShowCamera] = useState(false);
     const [username, setUsername] = useState("");
@@ -26,7 +28,6 @@ export default function EditInfo() {
     const [passwordError, setPasswordError] = useState('');
     const [editProfilePressed, setEditProfilePressed] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-    const user = auth.currentUser;
 
     useEffect(() => {
         async function fetchUserData() {
@@ -47,8 +48,6 @@ export default function EditInfo() {
         if (avatarUri && avatarUri.uri) {
             console.log("EditInfo AvatarUri: ", avatarUri.uri);
         }
-        console.log("UserName: ", username);
-        console.log("Email: ", email);
     }, []);
 
     const toggleCamera = () => {
@@ -81,7 +80,7 @@ export default function EditInfo() {
                         isEmailAlreadyExists = true;
                         return;
                     }
-                    await FirestoreService.updateEmailForUser(user.uid, email);
+                    await FirestoreService.updateEmailForUser(email);
                     // fieldsToUpdate.email = email;
                     hasChanges = true;
                 }
@@ -93,10 +92,10 @@ export default function EditInfo() {
 
                 if (hasChanges) {
                     setIsUploading(true);
-                    await FirestoreService.updateDocuments(user.uid, fieldsToUpdate);
+                    await FirestoreService.updateDocuments(fieldsToUpdate);
                     Alert.alert("Success", "Your data updated successfully.");
                 } else {
-                    Alert.alert("Info", "No changes.");
+                    Alert.alert("No changes.");
                 }
             } catch (error) {
                 console.error("Error updating user data: ", error);
@@ -112,9 +111,14 @@ export default function EditInfo() {
         }
     };
 
+    const handleAvatarChange = async (imageUri) => {
+        CameraService.handleImageCaptured(imageUri,'avatar')
+    }
+
     return (
         <View style={styles.modalContent}>
             <EditAvatar avatarUri={avatarUri} toggleCamera={toggleCamera} />
+            <Notification />
             <Text style={styles.title}>Edit Profile</Text>
             <EditFields
                 title="Username"
@@ -144,8 +148,8 @@ export default function EditInfo() {
                     styles.editProfileButton,
                     {
                         backgroundColor: pressed
-                            ? Colors.DARK_YELLOW_PRESSED
-                            : Colors.DARK_YELLOW,
+                            ? Colors.DARK_COLOR
+                            : Colors.TEXT_COLOR,
                         opacity: (usernameError || emailError || passwordError) ? 0.5 : 1
                     }
                 ]}
@@ -153,20 +157,21 @@ export default function EditInfo() {
             >
                 {editProfilePressed ?
                     <>
-                        <Feather name="save" size={24} color="black" />
-                        <Text>Save</Text>
+                        <Feather name="save" size={24} color={Colors.WHITE} />
+                        <Text style={styles.buttonText}>Save</Text>
                     </>
                     :
                     <>
-                        <MaterialCommunityIcons name="lead-pencil" size={24} color="black" />
-                        <Text>Edit Profile</Text>
+                        <MaterialCommunityIcons name="lead-pencil" size={24} color={Colors.WHITE} />
+                        <Text style={styles.buttonText}>Edit Profile</Text>
                     </>
                 }
             </Pressable>
+            <Logout onCancel={onCancel}/>
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
-                onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri,'avatar')}
+                onImageCaptured={handleAvatarChange}
                 type={'avatar'} />
             {isUploading &&
                 <View style={styles.waitingView}>
@@ -180,26 +185,26 @@ export default function EditInfo() {
 
 const styles = StyleSheet.create({
     modalContent: {
-        backgroundColor: Colors.LIGHT_YELLOW,
+        backgroundColor: Colors.MAIN_BACKGROUND,
         height: '90%',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderWidth: 5,
-        borderColor: Colors.DARK_YELLOW,
-        overflow: 'hidden',
+        borderColor: Colors.BORDER_GOLD,
+        overflow: 'visible',
         alignItems: 'center',
         paddingTop: 60,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: Colors.DEEP_RED,
+        color: Colors.TEXT_COLOR,
         marginBottom: 20,
         textAlign: 'center',
     },
     editProfileButton: {
         flexDirection: 'row',
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         alignItems: 'center',
         padding: 10,
         borderRadius: 10,
@@ -210,5 +215,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    buttonText: {
+        color: Colors.WHITE,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 5,
     },
 })

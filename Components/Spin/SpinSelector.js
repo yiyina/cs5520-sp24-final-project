@@ -16,11 +16,11 @@ export default function SpinSelector({ spinSelectHandler }) {
   }, [spins])
 
   useEffect(() => {
-    console.log("SpinSelector spinNames: ", spinNames)
+    console.log("SpinSelector.js spinNames: ", spinNames)
   }, [spinNames])
 
   const handleItemSelect = (items) => {
-    console.log("handleItemSelect items: ", items)
+    console.log("SpinSelector.js handleItemSelect items: ", items)
     setSelectedSpin(items.label)
     setItemId(items.value)
     spinSelectHandler(items)

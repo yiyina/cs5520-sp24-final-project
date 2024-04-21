@@ -1,17 +1,16 @@
-import { StyleSheet, View, Pressable,Modal } from 'react-native'
+import { StyleSheet, Text, Image, Dimensions, Pressable, View, Modal } from 'react-native'
 import React, { useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
-import { AntDesign } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import Colors from '../Shared/Colors'
 import Home from '../Screens/Home'
 import Search from '../Screens/Search'
-import Profile from '../Screens/Profile'
+import Gallery from '../Screens/Gallery'
 import Spin from '../Screens/Spin'
 import CameraScreen from '../Screens/CameraScreen';
 import CameraService from '../Services/CameraService';
+import { EvilIcons } from '@expo/vector-icons';
 
 
 export default function TabNavigation() {
@@ -21,8 +20,8 @@ export default function TabNavigation() {
     const CustomTabBarButton = ({ children }) => (
         <Pressable
             style={{
-                top: -30, // Adjust this to make the button float
-                shadowColor: '#7F5DF0', // You can adjust shadow color
+                top: -30,
+                shadowColor: '#7F5DF0',
                 shadowOffset: {
                     width: 0,
                     height: 10,
@@ -30,7 +29,7 @@ export default function TabNavigation() {
                 shadowOpacity: 0.25,
                 shadowRadius: 3.5,
                 elevation: 5,
-                backgroundColor: '#ffffff', // Background color of the button
+                backgroundColor: '#ffffff', 
                 borderRadius: 35,
                 width: 70,
                 height: 70,
@@ -48,37 +47,47 @@ export default function TabNavigation() {
         </Pressable>
     )
 
-    //  const toggleCamera = () => {
-    //     setShowCamera(!showCamera);
-    //  }
+     const toggleCamera = () => {
+        setShowCamera(!showCamera);
+     }
 
     return (
         <>
             <Tab.Navigator screenOptions={{
                 headerShown: false,
-                // tabBarShowLabel: false,
+                tabBarActiveTintColor: Colors.TEXT_COLOR,
                 tabBarStyle: {
                     position: 'absolute',
                     elevation: 0,
-                    backgroundColor: '#ffffff',
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
-                    ...styles.shadow
+                    paddingTop: 10,
+                    height: Dimensions.get('screen').height * 0.1,
+                    ...styles.shadow,
                 }
             }}>
                 <Tab.Screen name="MainHome" component={Home}
                     options={{
-                        tabBarLabel: 'Home',
+                        tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>HOME</Text> : null),
                         tabBarIcon: ({ color, size }) => (
-                            <AntDesign name="home" size={size} color={color} />
+                            <FontAwesome5 name="home" size={size} color={color} />
+                        ),
+                    }}
+                />
+                <Tab.Screen name="Spin" component={Spin}
+                    options={{
+                        tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>SPIN</Text> : null),
+                        tabBarIcon: ({ color, size }) => (
+                            // <MaterialCommunityIcons name="ferris-wheel" size={size} color={color} />
+                            <Image source={require('../assets/spin-icon.png')} style={styles.spinIcon} />
                         ),
                     }}
                 />
                 <Tab.Screen name="Search" component={Search}
                     options={{
-                        tabBarLabel: 'Search',
+                        tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>SEARCH</Text> : null),
                         tabBarIcon: ({ color, size }) => (
-                            <AntDesign name="search1" size={size} color={color} />
+                            <FontAwesome5 name="search-location" size={size} color={color} />
                         ),
                     }}
                 />
@@ -97,19 +106,11 @@ export default function TabNavigation() {
                         ),
                     }}
                 />
-                <Tab.Screen name="Spin" component={Spin}
+                <Tab.Screen name="Gallery" component={Gallery}
                     options={{
-                        tabBarLabel: 'Spin',
+                        tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>GALLERY</Text> : null),
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color={color} />
-                        ),
-                    }}
-                />
-                <Tab.Screen name="Profile" component={Profile}
-                    options={{
-                        tabBarLabel: 'Profile',
-                        tabBarIcon: ({ color, size }) => (
-                            <AntDesign name="profile" size={size} color={color} />
+                            <FontAwesome name="photo" size={size} color={color} />
                         ),
                     }}
                 />
@@ -124,19 +125,28 @@ export default function TabNavigation() {
                     onCancel={() => setShowCamera(false)}
                     type={'gallery'} // Assume 'gallery' type for demonstration
                     onImageCaptured={(imageUri) => {
-                     CameraService.handleImageCaptured(imageUri, 'gallery');
+                        CameraService.handleImageCaptured(imageUri, 'gallery');
                         // Here you would handle the captured image URI, such as uploading it
                         setShowCamera(false);
                     }}
                 />
             </Modal>
-            {/* <CameraScreen
+            <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
                 onImageCaptured={(imageUri) => CameraService.handleImageCaptured(imageUri)}
-                type={'avatar'} /> */}
+                type={'avatar'} />
         </>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    title: { 
+        color: Colors.TEXT_COLOR,
+        fontWeight: 'bold',
+    },
+    spinIcon: {
+        width: 30,
+        height: 30,
+    },
+});

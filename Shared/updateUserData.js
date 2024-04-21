@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase-files/FirebaseSetup';
-import { onSnapshot, collection, query, where,doc } from "firebase/firestore";
-import FirestoreService from '../firebase-files/FirebaseHelpers';
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 
 export const getUpdatedUserData = () => {
     const [username, setUsername] = useState(null);
@@ -9,6 +8,7 @@ export const getUpdatedUserData = () => {
     const [avatarUri, setAvatarUri] = useState(null);
     const [coords, setCoords] = useState(null);
     const [gallery, setGallery] = useState([]);
+    const [spinResults, setSpinResults] = useState(null);
 
     useEffect(() => {
         let galleryUnsubscribe;
@@ -25,10 +25,13 @@ export const getUpdatedUserData = () => {
                 setEmail(userData.email);
                 setCoords(userData.coords);
                 setUpGalleryListener(querySnapshot.docs[0].id);
-                console.log("User Data: ", userData);
+                setSpinResults(userData.spinResults ? userData.spinResults : null);
             },
             (error) => {
-                console.error(error.message);
+                // console.error("updateUserData unsubscribe error:", error.code);
+                if (error.code === 'permission-denied') {
+                    unsubscribe();
+                }
             }
         );
 
@@ -40,6 +43,11 @@ export const getUpdatedUserData = () => {
                     ...doc.data()
                 }));
                 setGallery(galleryImages);
+            }, (error) => {
+                // console.error("Error fetching gallery images:", error.code);
+                if (error.code === 'permission-denied') {
+                    unsubscribe();
+                }
             });
         };
 
@@ -47,7 +55,7 @@ export const getUpdatedUserData = () => {
             unsubscribe();
             if (galleryUnsubscribe) galleryUnsubscribe();
         };
-    }, []);
+    }, [auth.currentUser]);
 
-    return { username, avatarUri, email, coords, gallery };
+    return { username, avatarUri, email, coords, gallery, spinResults };
 };

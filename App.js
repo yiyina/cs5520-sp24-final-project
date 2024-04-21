@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Colors from './Shared/Colors';
 import LoginRegister from './Screens/LoginRegister';
 import TabNavigation from './Components/TabNavigation';
+import PlaceDetail from './Components/Place/PlaceDetail';
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './firebase-files/FirebaseSetup'
@@ -20,7 +21,7 @@ export default function App() {
       setUserloggedIn(!!user);
     });
 
-    return unsubscribe; 
+    return unsubscribe;
   }, []);
 
   const AuthStack = (
@@ -29,8 +30,15 @@ export default function App() {
   const AppStack = (
     <>
       <Stack.Screen
-        name="Home"
+        name="Back"
         component={TabNavigation} />
+      <Stack.Screen name="place-detail"
+        component={PlaceDetail}
+        screenOptions={{ presentation: 'modal' }}
+        options={{
+          headerShown: true,
+          title: '',
+        }} />
     </>
   )
 
@@ -49,7 +57,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.LIGHT_YELLOW,
+    backgroundColor: Colors.LIGHT_COLOR,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -31,6 +31,22 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
         );
     }
 
+    const takePhotoHandler = async () => {
+        setIsUploading(true); // Start uploading indicator
+        await CameraService.takePicture(cameraRef, type, CameraService.handleImageAction).finally(() => {
+            setIsUploading(false); // Stop uploading indicator
+            onCancel(); // Optionally close the camera modal
+        });
+    }
+
+    const choosePhotoHandler = async () => {
+        setIsUploading(true); // Start uploading indicator
+        await CameraService.pickImage(type, CameraService.handleImageAction).finally(() => {
+            setIsUploading(false); // Stop uploading indicator
+            onCancel(); // Optionally close the camera modal
+        });
+    }
+
     return (
         <Modal
             visible={showCamera}
@@ -43,24 +59,12 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
                         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
                             <FontAwesome5 name="window-close" size={36} color="white" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.captureButtonOuter} onPress={async () => {
-                            setIsUploading(true); // Start uploading indicator
-                            await CameraService.takePicture(cameraRef, type, CameraService.handleImageAction).finally(() => {
-                                setIsUploading(false); // Stop uploading indicator
-                                onCancel(); // Optionally close the camera modal
-                            });
-                        }}>
+                        <TouchableOpacity style={styles.captureButtonOuter} onPress={takePhotoHandler}>
                             <View style={styles.captureButtonInner}>
                                 <FontAwesome name="camera" size={40} color="white" />
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.galleryButton} onPress={async () => {
-                            setIsUploading(true); // Start uploading indicator
-                            await CameraService.pickImage(type, CameraService.handleImageAction).finally(() => {
-                                setIsUploading(false); // Stop uploading indicator
-                                onCancel(); // Optionally close the camera modal
-                            });
-                        }}>
+                        <TouchableOpacity style={styles.galleryButton} onPress={choosePhotoHandler}>
                             <FontAwesome name="photo" size={36} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     captureButtonInner: {
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         padding: 20,
         borderRadius: 50,
         borderWidth: 2,

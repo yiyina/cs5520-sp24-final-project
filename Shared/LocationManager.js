@@ -1,6 +1,5 @@
 import * as Location from 'expo-location';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
-import { auth } from '../firebase-files/FirebaseSetup';
 
 export async function getLocation() {
   try {
@@ -10,7 +9,7 @@ export async function getLocation() {
       return null;
     }
     const location = await Location.getCurrentPositionAsync();
-    FirestoreService.addCurrentLocation(auth.currentUser.uid, location);
+    FirestoreService.addCurrentLocation(location);
     return location;
   } catch (error) {
     console.log(error);

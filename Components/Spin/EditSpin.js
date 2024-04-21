@@ -21,7 +21,7 @@ export default function EditSpin({ spinId, spinColorName }) {
     const [initialTheme, setInitialTheme] = useState('');
     const [selectedTheme, setSelectedTheme] = useState('')
     const [showEditSpinModal, setShowEditSpinModal] = useState(false)
-    const [inputs, setInputs] = useState([{ value: '' }]);
+    const [inputs, setInputs] = useState([{ id: generateUUID(), value: '' }]);
 
     const themeOptions = Object.keys(ColorThemes).map(key => ([ColorThemes[key], key]));
 
@@ -145,6 +145,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                         onPress: async () => {
                             await FirestoreService.deleteSpin(spinId);
                             setShowEditSpinModal(false);
+                            Alert.alert('Success', 'Spin successfully deleted!');
                             fetchData();
                         },
                         style: 'destructive',
@@ -157,7 +158,13 @@ export default function EditSpin({ spinId, spinColorName }) {
 
     return (
         <View>
-            <Pressable style={styles.editButton} onPress={editHandler}>
+            <Pressable
+                style={({ pressed }) => [
+                    styles.editButton,
+                    pressed ? {opacity: 0.5} : {opacity: 1}
+                ]}
+                onPress={editHandler}
+            >
                 <EvilIcons name="pencil" size={60} color={Colors.WHITE} />
             </Pressable>
             <Modal
@@ -173,7 +180,7 @@ export default function EditSpin({ spinId, spinColorName }) {
                         <View style={{ width: '100%' }}>
                             <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={styles.subTitile}>Choose Theme</Text>
-                                <Ionicons name="color-palette-outline" size={24} color="black" style={styles.palette} />
+                                <Ionicons name="color-palette-outline" size={24} color={Colors.BLACK} style={styles.palette} />
                             </View>
                         </View>
                         <DropdownList
@@ -214,9 +221,9 @@ export default function EditSpin({ spinId, spinColorName }) {
                             onPress={addInput}
                             style={({ pressed }) => [
                                 styles.plusButton,
-                                pressed ? { backgroundColor: Colors.LIGHT_YELLOW } : { backgroundColor: Colors.WHITE }
+                                pressed ? { backgroundColor: Colors.LIGHT_COLOR } : { backgroundColor: Colors.WHITE }
                             ]}>
-                            <Feather name="plus-square" size={36} color={Colors.DARK_YELLOW} />
+                            <Feather name="plus-square" size={36} color={Colors.DARK_COLOR} />
                         </Pressable>
                         <View style={styles.buttonsContainer}>
                             <Button text={'SAVE'} buttonPress={saveInputs} defaultStyle={styles.saveButtonDefault} pressedStyle={styles.saveButtonPressed} />
@@ -241,7 +248,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         height: 60,
         width: 60,
-        backgroundColor: Colors.BLUE,
+        backgroundColor: Colors.BORDER_GOLD,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -306,13 +313,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     saveButtonDefault: {
-        backgroundColor: Colors.LIGHT_YELLOW,
+        backgroundColor: Colors.LIGHT_COLOR,
         width: '50%',
         alignSelf: 'center',
         borderRadius: 10,
     },
     saveButtonPressed: {
-        backgroundColor: Colors.DARK_YELLOW,
+        backgroundColor: Colors.DARK_COLOR,
         width: '50%',
         alignSelf: 'center',
         borderRadius: 10,

@@ -54,22 +54,28 @@ const styles = StyleSheet.create({
     fieldText: {
         fontWeight: 'bold',
         fontSize: 16,
+        color: Colors.TEXT_COLOR,
     },
     editableFieldInput: {
         backgroundColor: Colors.WHITE,
         marginTop: 5,
         padding: 10,
         borderRadius: 5,
+        borderWidth: 1,
+        borderColor: Colors.TEXT_COLOR,
     },
     nonEditableFieldInput: {
         backgroundColor: Colors.INVALID_TEXT,
         marginTop: 5,
         padding: 10,
         borderRadius: 5,
+        borderWidth: 1,
+        borderColor: Colors.TEXT_COLOR,
     },
     errorField: {
         color: Colors.DARK_RED,
         height: 20,
+        marginTop: 5,
         flexWrap: 'wrap',
     },
 })

@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions, Modal } from 'react-native';
 import Svg, { G, Path, Text as SvgText, Circle, Line } from 'react-native-svg';
 import tinycolor from 'tinycolor2';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
+import Button from '../Shared/Button';
+import { useNavigation } from '@react-navigation/native';
+import FirestoreService from '../firebase-files/FirebaseHelpers';
 
-const WheelGame = ({ spinItems, spinColor }) => {
+const WheelGame = ({ spinName, spinItems, spinColor }) => {
+  const navigation = useNavigation();
   const [options, setOptions] = useState(spinItems);
   const [colorSet, setColorSet] = useState(spinColor);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -17,6 +21,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
   const strokeSize = 5; // the thinkness of the wheel's white border
   const viewBoxSize = wheelSize + strokeSize * 2;
   const wheelRadius = wheelSize / 2 - strokeSize / 2; // adjust the radius to make the white border visible
+  const [showResultModal, setShowResultModal] = useState(false);
 
   useEffect(() => {
     setColorSet(spinColor);
@@ -69,7 +74,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
         <SvgText
           x={wheelSize / 3.5}
           y="20"
-          fill="black"
+          fill={Colors.BLACK}
           transform={`rotate(${(360 / options.length)} ${wheelSize / 12} 30)`}
           textAnchor="middle"
           fontSize="16"
@@ -82,7 +87,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           y1="0"
           x2={startX}
           y2={startY}
-          stroke="white"
+          stroke={Colors.WHITE}
           strokeWidth="1"
         />
         {/* the end line */}
@@ -91,7 +96,7 @@ const WheelGame = ({ spinItems, spinColor }) => {
           y1="0"
           x2={endX}
           y2={endY}
-          stroke="white"
+          stroke={Colors.WHITE}
           strokeWidth="1"
         />
       </G>
@@ -118,8 +123,20 @@ const WheelGame = ({ spinItems, spinColor }) => {
       setResult(selectedOption);
       setIsSpinning(false);
       setIsButtonDisabled(false);
+      setShowResultModal(true);
     });
   };
+
+  const resultSearchHandler = async () => {
+    try {
+      setShowResultModal(false);
+      const finalResult = `${result} ${spinName}`;
+      navigation.navigate('Search', { query: result });
+      await FirestoreService.addSpinResultToUser(finalResult);
+    } catch (error) {
+      console.error('Error in searching for the result:', error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -147,17 +164,49 @@ const WheelGame = ({ spinItems, spinColor }) => {
           <Animated.View style={{ transform: [{ rotate: spinValue.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] }) }] }} />
         </View>
         <TouchableOpacity onPress={spinWheel} style={styles.selectTriangle}>
-          <Entypo name="triangle-down" size={80} color="white" />
+          <Entypo name="triangle-down" size={80} color={Colors.WHITE} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={spinWheel}
           style={[styles.startButton, isButtonDisabled && { opacity: 0.4 }]} // Disable button style when isButtonDisabled is true
           disabled={isButtonDisabled}>
-          <Text style={{ color: Colors.DARK_GRAY, fontWeight: 'bold' }}>START</Text>
+          <Text style={{ color: Colors.WHITE, fontWeight: 'bold' }}>START</Text>
         </TouchableOpacity>
-        <View style={styles.result}>
-          <Text style={{ fontSize: 25, margin: 20 }}>Selected: {result}</Text>
-        </View>
+        {/* <View style={styles.result}>
+          <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>Spin Result: {result}</Text>
+        </View> */}
+        {
+          result !== '' && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Modal
+                visible={showResultModal}
+                transparent={true}
+                animationType="fade">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <Card newStyle={{ alignItems: 'center' }}>
+                    <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR, fontWeight: 'bold' }}>Your Spin Result is</Text>
+                    <Text style={{ fontSize: 25, margin: 20, color: Colors.TEXT_COLOR }}>{result}</Text>
+                    <Button
+                      text="Search for it!"
+                      buttonPress={resultSearchHandler}
+                      defaultStyle={{ backgroundColor: Colors.LIGHT_RED, borderRadius: 10 }}
+                      textColor={Colors.WHITE}
+                      textStyle={{ fontWeight: 'bold' }}
+                      pressedStyle={{ backgroundColor: Colors.DARK_COLOR, borderRadius: 10 }}
+                    />
+                    <Button
+                      text="Close"
+                      buttonPress={() => setShowResultModal(false)}
+                      textColor={Colors.DEEP_RED}
+                      textStyle={{ fontWeight: 'bold' }}
+                      pressedStyle={{ backgroundColor: Colors.DEEP_RED, borderRadius: 10 }}
+                    />
+                  </Card>
+                </View>
+              </Modal>
+            </View>
+          )
+        }
       </View>
     </View>
   );
@@ -168,7 +217,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.GRAY,
+    backgroundColor: Colors.MAIN_BACKGROUND,
   },
   upperSection: {
     position: 'absolute',
@@ -186,13 +235,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: Colors.BORDER_GOLD,
   },
   selectTriangle: {
     position: 'absolute',
     left: 140,
     top: -40,
-    shadowColor: 'rgba(0, 0, 0, 0.5)',
+    // shadowColor: 'rgba(0, 0, 0, 0.5)',
+    shadowColor: Colors.BORDER_GOLD,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 4,
@@ -217,14 +267,14 @@ const styles = StyleSheet.create({
     width: 350,
     height: 350,
     borderRadius: 175,
-    backgroundColor: '#FFF',
-    shadowColor: '#000',
+    backgroundColor: Colors.BLACK,
+    shadowColor: Colors.BORDER_GOLD,
     shadowOffset: {
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
     elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Modal, Pressable } from 'react-native'
+import { StyleSheet, View, Modal, Pressable, Alert, Text } from 'react-native'
 import React from 'react'
 import { Octicons } from '@expo/vector-icons';
 import Colors from '../Shared/Colors';
@@ -16,7 +16,7 @@ export default function EditProfile({ showProfile, onCancel }) {
                 <Pressable onPress={onCancel} style={styles.fold}>
                     <Octicons name="chevron-down" size={50} color="white" />
                 </Pressable>
-                <EditInfo />
+                <EditInfo onCancel={onCancel}/>
             </View>
         </Modal>
     )
