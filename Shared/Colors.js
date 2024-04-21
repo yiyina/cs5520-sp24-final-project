@@ -19,4 +19,5 @@ export default {
     INVALID_TEXT: '#e0e0e0',
     BORDER_GOLD: '#C6AEE7',
     BORDER_GRAY: '#DFDFD1',
+    CORAL: '#EEAA91',
 };

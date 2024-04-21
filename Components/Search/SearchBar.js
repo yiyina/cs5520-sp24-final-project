@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Weather from '../../Shared/Weather';
 import Button from '../../Shared/Button';
 import AddSpin from '../Spin/AddSpin';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SearchBar({ setSearchText, spinValue, playList }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
@@ -64,13 +65,23 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
                     onPress={handlePress}>
                     <Ionicons name="search" size={24} color={Colors.DARK_GRAY} />
                 </Pressable>
-                <Button
-                    text={'Create Spin'}
-                    textColor={Colors.TEXT_COLOR}
-                    buttonPress={handleAddSpin}
-                    textStyle={{ fontSize: 16, fontWeight: 'bold' }}
-                    defaultStyle={{ backgroundColor: Colors.LIGHT_COLOR, borderRadius: 10 }}
-                    pressedStyle={{ backgroundColor: Colors.DARK_COLOR, borderRadius: 10 }} />
+                <LinearGradient
+                    colors={[Colors.CORAL, Colors.BORDER_GOLD, Colors.CORAL]}
+                    start={{ x: 0.0, y: 0.0 }}
+                    end={{ x: 1.0, y: 1.0 }}
+                    style={{
+                        ...styles.default,
+                    }}
+                >
+                    <Button
+                        text={'Create Spin'}
+                        textColor={Colors.WHITE}
+                        buttonPress={handleAddSpin}
+                        textStyle={{ fontSize: 16, fontWeight: 'bold' }}
+                        defaultStyle={styles.default}
+                        pressedStyle={styles.pressed}
+                    />
+                </LinearGradient>
                 <AddSpin
                     showAddSpinModal={showAddSpinModal}
                     setShowAddSpinModal={setShowAddSpinModal}
@@ -85,12 +96,11 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
-
         width: Dimensions.get('screen').width,
+        height: Dimensions.get('screen').height * 0.2,
         // backgroundColor: Colors.MAIN_BACKGROUND,
         paddingHorizontal: 20,
         paddingTop: 20,
-
     },
     header: {
         display: 'flex',
@@ -134,8 +144,19 @@ const styles = StyleSheet.create({
         left: Dimensions.get('screen').width * 0.5,
         width: 40,
         height: 40,
-        borderRadius: 20,
+        borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    default: {
+        borderRadius: 10,
+        opacity: 0.9,
+        margin: 0,
+    },
+    pressed: {
+        backgroundColor: Colors.CORAL,
+        borderRadius: 10,
+        opacity: 1,
+        margin: 0,
     },
 });
