@@ -18,7 +18,7 @@ export default function Spin() {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const originalSpin = {
-    spinColor: ColorThemes.SPRINGFLOWER,
+    spinColor: ColorThemes.SPRING,
     spinItems: defaultSpin,
     spinName: 'FOOD',
   }
