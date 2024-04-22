@@ -14,6 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 
+const screenHeight = Dimensions.get('window').height;
+const windowOffset = screenHeight < 700 ? 200 : 40;
+
 export default function EditSpin({ spinId, spinColorName }) {
     const [initialName, setInitialName] = useState('')
     const [spinName, setSpinName] = useState('')
@@ -290,7 +293,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     colorPalette: {
-        height: 40,
+        height: windowOffset,
     },
     colorBox: {
         width: 60,
