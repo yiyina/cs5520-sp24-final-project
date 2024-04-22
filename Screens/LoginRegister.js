@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, KeyboardAvoidingView, Platform, Dimensions, ScrollView } from 'react-native'
 import React from 'react'
 import Colors from '../Shared/Colors'
 import FlipForm from '../Components/LoginRegister/FlipForm'
 
 export default function LoginRegister() {
-
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -13,13 +12,23 @@ export default function LoginRegister() {
             <ImageBackground
                 source={require('../assets/main_background.jpg')}
                 style={styles.container}>
+                <View style={styles.mainContent}>
+                    <Text style={styles.welcome}>Spin To</Text>
+                    <Text style={styles.welcome}>Explore</Text>
+                    <ScrollView 
+                        style={styles.scrollContainer}
+                        bounces={false}
+                        alwaysBounceVertical={false}
+                        overScrollMode="never"
+                    >
+                        <View style={styles.overlay}></View>
+                        <FlipForm />
+                        {Array.from({ length: 2 }, (_, i) => (
+                            <Text key={i} style={{ marginTop: 50, padding: 10, fontSize: 16 }}></Text>
+                        ))}
+                    </ScrollView>
+                </View>
             </ImageBackground>
-            <View style={styles.mainContent}>
-                <Text style={styles.welcome}>Spin To</Text>
-                <Text style={styles.welcome}>Explore</Text>
-                <View style={styles.overlay}></View>
-                <FlipForm />
-            </View>
         </KeyboardAvoidingView>
     )
 }
@@ -27,15 +36,12 @@ export default function LoginRegister() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: Colors.WHITE,
         opacity: 0.4,
-        top: 100,
-        height: Dimensions.get('window').height,
+        top: 50,
     },
     welcome: {
         fontSize: 50,
@@ -52,6 +58,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         right: 0,
-        top: '20%',
+        top: '10%',
+        height: '90%', 
     },
+    scrollContainer: {
+        flex: 1, 
+        width: '100%',
+    }
 })
