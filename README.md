@@ -151,8 +151,8 @@ In iteration 2, we've implemented notifications and a feature for users to uploa
 ### Iteration 3 implementation
 Updated the home screen to make it more intuitive to use, and developed the function to update spin wheel directly from search results.
 
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71f4532f-8108-45e8-a97d-0a5a868d8d48" width="30%"> 
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6f1fc85f-5440-4787-bfbc-24818bee7185" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/fa6e94b6-e85c-4100-ad1a-85f8e7587c26" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/e2f6998e-6e3b-407d-947f-e35a8cb01db4" width="30%"> 
 <br> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6a1b6135-f3b6-4c85-9349-b72a4bf41195" width="30%"> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/8e6c947e-648c-47e8-bd65-94259d52282c" width="30%"> 
