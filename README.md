@@ -21,6 +21,10 @@ service cloud.firestore {
       match /spins/{spinId} {
         allow read, create, write, delete: if request.auth != null;
       }
+      
+      match /gallery/{photoId} {
+        allow read, create, write, delete: if request.auth != null;
+      }
     }
   }
 }
@@ -145,7 +149,7 @@ In iteration 2, we've implemented notifications and a feature for users to uploa
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/6829bdbe-2eb4-4c67-b973-9292fdff1ed0" width="30%">
 
 ### Iteration 3 implementation
-Updated the homep screen to make it more intuitive to use, and developed the function to update spin wheel directly from search results.
+Updated the home screen to make it more intuitive to use, and developed the function to update spin wheel directly from search results.
 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71f4532f-8108-45e8-a97d-0a5a868d8d48" width="30%"> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6f1fc85f-5440-4787-bfbc-24818bee7185" width="30%"> 
