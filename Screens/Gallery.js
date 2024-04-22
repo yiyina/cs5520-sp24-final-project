@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native'
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Modal } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../Shared/Colors'
 import UserGallery from '../Components/UserGallery';
@@ -15,8 +15,8 @@ export default function Gallery(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.userGalleryTitle}>User Gallery</Text>
+      {/* <View style={styles.header}> */}
+        {/* <Text style={styles.userGalleryTitle}>Gallery</Text> */}
         {/* <TouchableOpacity 
             style={styles.cameraButton} 
             onPress={toggleCamera}>
@@ -41,7 +41,7 @@ export default function Gallery(props) {
             }}
           />
         </Modal> */}
-      </View>
+      {/* </View> */}
       <View style={styles.body}>
         <UserGallery />
       </View>
@@ -57,17 +57,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   header: {
-    flexDirection: 'row', // Change to row to align items horizontally
-    justifyContent: 'space-between', // Align items to start and end
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 50,
-    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height * 0.15,
+    backgroundColor: Colors.WHITE,
   },
   userGalleryTitle: {
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: 'bold',
     color: Colors.TEXT_COLOR,
+    paddingLeft: Dimensions.get('window').width * 0.05,
+    paddingTop: Dimensions.get('window').height * 0.08,
   },
   body: {
     flex: 1,

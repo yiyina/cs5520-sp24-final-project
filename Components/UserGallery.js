@@ -2,46 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Image, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import Colors from '../Shared/Colors';
 import { getUpdatedUserData } from '../Shared/updateUserData';
-import FirestoreService from '../firebase-files/FirebaseHelpers'; 
+import FirestoreService from '../firebase-files/FirebaseHelpers';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 export default function UserGallery() {
-  
+
   const [groupedImages, setGroupedImages] = useState({});
   const { gallery } = getUpdatedUserData();
   const navigation = useNavigation();
 
-
-
-
   useEffect(() => {
     groupImages(gallery);
   }, [gallery]);
-  console.log("gallery: ", gallery);
+  // console.log("gallery: ", gallery);
   const groupImages = (gallery) => {
-  const groups = gallery.reduce((acc, img) => {
-    const date = img.createdAt.toDate().toDateString();
-    if (!acc[date]) acc[date] = { images: [], locations: new Set() };
-    acc[date].images.push(img);
-    acc[date].locations.add(img.location || 'No location');  // Using Set to avoid duplicate locations
-    return acc;
-  }, {});
-
-  const sortedGroups = Object.keys(groups).sort().reduce(
-    (obj, key) => {
-      obj[key] = {
-        images: groups[key].images,
-        locations: Array.from(groups[key].locations)  // Convert Set to Array for rendering
-      };
-      return obj;
-    },
-    {}
-  );
-
-  setGroupedImages(sortedGroups);
-};
+    const groups = gallery.reduce((acc, img) => {
+      const date = img.createdAt.toDate().toISOString().slice(0, 10); 
+      if (!acc[date]) acc[date] = { images: [], locations: new Set() };
+      acc[date].images.push(img);
+      acc[date].locations.add(img.location || 'No location');
+      return acc;
+    }, {});
+  
+    const sortedGroups = Object.keys(groups).sort((a, b) => b.localeCompare(a)).reduce(
+      (obj, key) => {
+        obj[key] = {
+          images: groups[key].images,
+          locations: Array.from(groups[key].locations)
+        };
+        return obj;
+      }, {}
+    );
+  
+    setGroupedImages(sortedGroups);
+  };
 
 
   const handleDelete = (image) => {
@@ -65,9 +61,6 @@ export default function UserGallery() {
       Alert.alert("Error", "Failed to delete the photo.");
     }
   };
-  
-
-
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -94,6 +87,7 @@ export default function UserGallery() {
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
