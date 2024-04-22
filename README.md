@@ -21,6 +21,9 @@ service cloud.firestore {
       match /spins/{spinId} {
         allow read, create, write, delete: if request.auth != null;
       }
+      match /gallery/{photoId} {
+        allow read, create, write, delete: if request.auth != null;
+      }
     }
   }
 }
@@ -146,18 +149,19 @@ In iteration 2, we've implemented notifications and a feature for users to uploa
 
 ### Iteration 3 implementation
 Updated the homep screen to make it more intuitive to use, and developed the function to update spin wheel directly from search results.
-
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71f4532f-8108-45e8-a97d-0a5a868d8d48" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/755fede5-e608-43a9-8ffb-e3ee3a52ddf5" width="30%"> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6f1fc85f-5440-4787-bfbc-24818bee7185" width="30%"> 
 <br> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6a1b6135-f3b6-4c85-9349-b72a4bf41195" width="30%"> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/8e6c947e-648c-47e8-bd65-94259d52282c" width="30%"> 
 
 <br>
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6b3fde3d-3c77-42ba-9743-b1a918e6437b" width="30%"> 
-<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/84f162fd-fb1b-4c57-8dae-8107bbc1a32a" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/1ebf2994-ceaa-46ff-9bfd-b1d286b2e448" width="30%"> 
+<img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/2a735204-a250-407f-a87c-5be5edeaae7f" width="30%"> 
+
 
 # Contributions
+
 
 | Contribution Area           | Yina Yi                                                              | Wei Song                                                         |
 | --------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
