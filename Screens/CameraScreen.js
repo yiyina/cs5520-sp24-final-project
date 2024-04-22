@@ -13,14 +13,20 @@ export default function CameraScreen({ showCamera, onCancel, type, placeDetails 
     const cameraRef = useRef(null);
 
     useEffect(() => {
-        (async () => {
-            const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
-            setHasCameraPermission(cameraStatus.status === 'granted');
+        if (showCamera) {
+            requestCameraPermission();
+        }
+    }, [showCamera]);
 
-            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            setHasGalleryPermission(galleryStatus.status === 'granted');
-        })();
-    }, []);
+    const requestCameraPermission = async () => {
+        const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+        setHasCameraPermission(cameraStatus.status === 'granted');
+    };
+
+    const requestGalleryPermission = async () => {
+        const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        setHasGalleryPermission(galleryStatus.status === 'granted');
+    };
 
     const handleCameraAction = async (action) => {
         if (action === CameraService.takePicture && !hasCameraPermission) {
@@ -28,45 +34,60 @@ export default function CameraScreen({ showCamera, onCancel, type, placeDetails 
             return;
         }
         if (action === CameraService.pickImage && !hasGalleryPermission) {
-            Alert.alert("Permission required", "Gallery access is needed to select pictures.");
-            return;
+            await requestGalleryPermission();
+            if (hasGalleryPermission === false) {
+                Alert.alert("Permission required", "Gallery access is needed to select pictures.");
+                return;
+            }
         }
 
         setIsUploading(true);
         const location = type === 'gallery' ? placeDetails?.name : undefined;
-        console.log('Location:', location);
         await action(cameraRef, type, location).finally(() => {
             setIsUploading(false);
             onCancel();
         });
     };
 
-    if (!hasCameraPermission || !hasGalleryPermission) {
+    if (isUploading) {
         return (
-            <View style={styles.waitingView}>
-                <Text>No access to camera or gallery</Text>
+            <View style={styles.fullscreen}>
+                <ActivityIndicator size="large" color={Colors.DARK_COLOR} />
             </View>
         );
     }
 
+    const renderContent = () => {
+        if (!hasCameraPermission) {
+            return (
+                <View style={styles.waitingView}>
+                    <Text></Text>
+                </View>
+            );
+        }
+        return (
+            <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
+                <View style={styles.controlLayer}>
+                    <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+                        <FontAwesome5 name="window-close" size={36} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.captureButtonOuter} onPress={() => handleCameraAction(CameraService.takePicture)}>
+                        <View style={styles.captureButtonInner}>
+                            <FontAwesome name="camera" size={40} color="white" />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.galleryButton} onPress={() => handleCameraAction(CameraService.pickImage)}>
+                        <FontAwesome name="photo" size={36} color="white" />
+                    </TouchableOpacity>
+                </View>
+            </Camera>
+        );
+    };
+
     return (
         <Modal visible={showCamera} animationType="slide" transparent={true}>
             <View style={styles.fullscreen}>
-                <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
-                    <View style={styles.controlLayer}>
-                        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                            <FontAwesome5 name="window-close" size={36} color="white" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.captureButtonOuter} onPress={() => handleCameraAction(CameraService.takePicture)}>
-                            <View style={styles.captureButtonInner}>
-                                <FontAwesome name="camera" size={40} color="white" />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.galleryButton} onPress={() => handleCameraAction(CameraService.pickImage)}>
-                            <FontAwesome name="photo" size={36} color="white" />
-                        </TouchableOpacity>
-                    </View>
-                </Camera>
+                {renderContent()}
             </View>
         </Modal>
     );
