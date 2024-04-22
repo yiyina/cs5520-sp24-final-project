@@ -9,6 +9,9 @@ import FirestoreService from '../firebase-files/FirebaseHelpers'
 import { ActivityIndicator } from 'react-native'
 import Colors from '../Shared/Colors'
 
+const screenHeight = Dimensions.get('window').height;
+const topOffset = screenHeight < 700 ? 0 : Dimensions.get("window").height * 0.12;
+
 export default function Spin() {
   const [spinItems, setSpinItems] = useState([])
   const [spinName, setSpinName] = useState('')
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     alignSelf: 'center',
-    top: Dimensions.get("window").height * 0.12,
+    top: topOffset,
     left: Dimensions.get("window").width * 0.05
   },
 })

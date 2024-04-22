@@ -52,7 +52,7 @@ export default function Header() {
                 <Avatar avatarUri={avatarUri} size={80} />
             </View>
             <View style={styles.greetingContainer}>
-                <Text style={styles.greetingName}>Hi, {username || 'Guest'}</Text>
+                <Text numberOfLines={1} style={styles.greetingName}>Hi, {username || 'Guest'}</Text>
                 <Text style={styles.greetingText}>{greeting} !</Text>
             </View>
             <Pressable 
@@ -89,9 +89,10 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     greetingName: {
-        fontSize: 40,
+        fontSize: 32,
         color: Colors.TEXT_COLOR,
         fontWeight: 'bold',
+        width: "100%",
     },
     greetingText: {
         fontSize: 20,

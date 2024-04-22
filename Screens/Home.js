@@ -1,9 +1,12 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Dimensions } from 'react-native'
 import React from 'react'
 import Colors from '../Shared/Colors'
 import Header from '../Components/Home/Header'
 import Histogram from '../Components/Home/Histogram'
 import NavToSpin from '../Components/Home/NavToSpin'
+
+const screenHeight = Dimensions.get('window').height;
+const topOffset = screenHeight < 700 ? '65%' : '75%';
 
 export default function Home() {
   return (
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    height: '75%',
+    height: topOffset,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     backgroundColor: Colors.MAIN_BACKGROUND,

@@ -41,7 +41,7 @@ export default function Search() {
 
   return (
     <View>
-      <View style={{ position: 'absolute', zIndex: 10 }}>
+      <View style={styles.headerContainer}>
         <SearchBar
           setSearchText={(value) => getNearbyPlaces(value)}
           spinValue={query}
@@ -56,4 +56,8 @@ export default function Search() {
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  headerContainer: {
+    zIndex: 1,
+  },
+})
