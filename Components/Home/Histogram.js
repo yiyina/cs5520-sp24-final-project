@@ -18,6 +18,10 @@ export default function Histogram() {
   useEffect(() => {
     const updatedChartData = processSpinResults(spinResults); 
     setData([...updatedChartData]);
+
+    if (selectedLabel === null && updatedChartData.length > 0) {
+      updatedChartData[0].onPress();
+    }
   }, [spinResults, selectedLabel]);
 
   const processSpinResults = (spinResults) => {
