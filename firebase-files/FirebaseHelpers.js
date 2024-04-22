@@ -66,12 +66,13 @@ const FirestoreService = {
     },
 
     async uploadToStorage(fileUri, type) {
+        console.log("Uploading to storage:", fileUri, "with type:", type);
         try {
             const uid = auth.currentUser.uid;
             if (!uid || !fileUri) {
                 throw new Error("Invalid parameters for uploadToStorage");
             }
-    
+
             // Determine the storage path based on the type of image
             let storagePath;
             switch (type) {
@@ -84,20 +85,20 @@ const FirestoreService = {
                 default:
                     throw new Error("Invalid image type for uploadToStorage");
             }
-    
+
             const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
             const fileRef = storageRef(storage, `${storagePath}${fileName}`);
-    
+
             // Convert the file URI to a blob for uploading
             const response = await fetch(fileUri);
             const blob = await response.blob();
-    
+
             // Upload the file
             await uploadBytes(fileRef, blob);
-    
+
             // After upload, get the file's download URL
             const downloadURL = await getDownloadURL(fileRef);
-    
+
             return downloadURL;
         } catch (error) {
             console.error("Error uploading to storage:", error);
@@ -133,7 +134,7 @@ const FirestoreService = {
         }
     },
 
-    async addPhotoToGallery(fileUri,location) {
+    async addPhotoToGallery(fileUri, location) {
         console.log("Adding photo to gallery:", fileUri, "with location:", location);
         try {
             if (!fileUri) {
@@ -236,7 +237,7 @@ const FirestoreService = {
         try {
             const user = auth.currentUser;
             console.log("Updating email for user: ", user.uid, newEmail);
-            
+
             if (user) {
                 try {
                     updateEmail(user, newEmail);
@@ -352,7 +353,7 @@ const FirestoreService = {
             throw error;
         }
     },
-     async deletePhoto(photoId) {
+    async deletePhoto(photoId) {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
             const photoDocRef = doc(firestore, "users", userDocId, "gallery", photoId);
@@ -414,7 +415,7 @@ const FirestoreService = {
     //         throw error;
     //     }
     // },
- 
+
 
 }
 

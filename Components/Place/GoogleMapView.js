@@ -10,7 +10,7 @@ import { getUpdatedUserData } from '../../Shared/updateUserData';
 export default function GoogleMapView({ placeList }) {
     const { avatarUri } = getUpdatedUserData();
     // console.log('GoogleMapView placeList:', placeList);
-    console.log('GoogleMapView avatarUri:', avatarUri);
+    // console.log('GoogleMapView avatarUri:',  avatarUri);
     const [mapRegion, setMapRegion] = useState({});
 
     useEffect(() => {

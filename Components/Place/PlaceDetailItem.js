@@ -9,7 +9,7 @@ export default function PlaceDetailItem({ place, onDirectionClick }) {
     if (!place || Object.keys(place).length === 0) {
         return null; 
     }
-    console.log("PlaceDetailItem", place);
+    // console.log("PlaceDetailItem", place);
     return (
         <View>
             <Text style={{ fontSize: 26 }}>

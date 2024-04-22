@@ -2,71 +2,67 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import CameraService from '../Services/CameraService'; // Assuming this is the correct import path
+import CameraService from '../Services/CameraService';
 import Colors from '../Shared/Colors';
+import * as ImagePicker from 'expo-image-picker';
 
-export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured,placeDetails }) {
+export default function CameraScreen({ showCamera, onCancel, type, placeDetails }) {
     const [isUploading, setIsUploading] = useState(false);
-    const [hasPermission, setHasPermission] = useState(null);
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
     const cameraRef = useRef(null);
 
     useEffect(() => {
         (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            setHasPermission(status === 'granted');
+            const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+            setHasCameraPermission(cameraStatus.status === 'granted');
+
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status === 'granted');
         })();
     }, []);
 
-    if (hasPermission === null) {
-        return <View />;
-    }
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
-    if (isUploading) {
+    const handleCameraAction = async (action) => {
+        if (action === CameraService.takePicture && !hasCameraPermission) {
+            Alert.alert("Permission required", "Camera access is needed to take pictures.");
+            return;
+        }
+        if (action === CameraService.pickImage && !hasGalleryPermission) {
+            Alert.alert("Permission required", "Gallery access is needed to select pictures.");
+            return;
+        }
+
+        setIsUploading(true);
+        const location = type === 'gallery' ? placeDetails?.name : undefined;
+        console.log('Location:', location);
+        await action(cameraRef, type, location).finally(() => {
+            setIsUploading(false);
+            onCancel();
+        });
+    };
+
+    if (!hasCameraPermission || !hasGalleryPermission) {
         return (
             <View style={styles.waitingView}>
-                <ActivityIndicator size="large" color={Colors.DEEP_RED} />
+                <Text>No access to camera or gallery</Text>
             </View>
         );
     }
 
-    const takePhotoHandler = async () => {
-        setIsUploading(true); // Start uploading indicator
-         const location = type === 'gallery' ? placeDetails?.name : undefined;
-        await CameraService.takePicture(cameraRef, type,location).finally(() => {
-            setIsUploading(false); // Stop uploading indicator
-            onCancel(); // Optionally close the camera modal
-        });
-    }
-
-    const choosePhotoHandler = async () => {
-        setIsUploading(true); // Start uploading indicator
-        const location = type === 'gallery' ? placeDetails?.name : undefined;
-        await CameraService.pickImage(type, location).finally(() => {
-            setIsUploading(false); // Stop uploading indicator
-            onCancel(); // Optionally close the camera modal
-        });
-    }
-
     return (
-        <Modal
-            visible={showCamera}
-            animationType="slide"
-            transparent={true}
-        >
+        <Modal visible={showCamera} animationType="slide" transparent={true}>
             <View style={styles.fullscreen}>
                 <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
                     <View style={styles.controlLayer}>
                         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
                             <FontAwesome5 name="window-close" size={36} color="white" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.captureButtonOuter} onPress={takePhotoHandler}>
+                        <TouchableOpacity style={styles.captureButtonOuter} onPress={() => handleCameraAction(CameraService.takePicture)}>
                             <View style={styles.captureButtonInner}>
                                 <FontAwesome name="camera" size={40} color="white" />
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.galleryButton} onPress={choosePhotoHandler}>
+                        <TouchableOpacity style={styles.galleryButton} onPress={() => handleCameraAction(CameraService.pickImage)}>
                             <FontAwesome name="photo" size={36} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -75,9 +71,6 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
         </Modal>
     );
 }
-
-
-
 
 const styles = StyleSheet.create({
     fullscreen: {
@@ -91,11 +84,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
     },
-    button: {
+    cancelButton: {
         alignSelf: 'center',
-        alignItems: 'center',
-        padding: 15,
-        borderRadius: 30,
+        padding: 4,
+        borderRadius: 50,
     },
     captureButtonOuter: {
         alignSelf: 'center',
@@ -110,19 +102,15 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: 'white',
     },
-    captureButton: {
+    galleryButton: {
         alignSelf: 'center',
-        backgroundColor: 'orange',
-        padding: 20,
-        borderRadius: 40,
-    },
-    text: {
-        fontSize: 16,
-        color: 'black',
+        padding: 4,
+        borderRadius: 50,
     },
     waitingView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 20,
     },
 });
