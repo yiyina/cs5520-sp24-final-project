@@ -112,7 +112,7 @@ export default function EditInfo({ onCancel }) {
     };
 
     const handleAvatarChange = async (imageUri) => {
-        CameraService.handleImageCaptured(imageUri,'avatar')
+        CameraService.handleImageCaptured(imageUri, 'avatar')
     }
 
     return (
@@ -167,7 +167,9 @@ export default function EditInfo({ onCancel }) {
                     </>
                 }
             </Pressable>
-            <Logout onCancel={onCancel}/>
+            <View style={styles.logoutButton}>
+                <Logout onCancel={onCancel} />
+            </View>
             <CameraScreen
                 showCamera={showCamera}
                 onCancel={toggleCamera}
@@ -222,4 +224,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginLeft: 5,
     },
+    logoutButton: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+    }
 })
