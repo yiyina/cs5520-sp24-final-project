@@ -97,6 +97,7 @@ The Users collection is a top-level collection where each document represents an
 
 - photoUri: The URI of the photo (e.g., "https://example.com/user_unique_id/gallery/imageuri......").
 - timestamp: The time and date when the photo was added or modified (e.g., "2024-03-27T14:00:00Z").
+- location: The place where user took photo
 
 # CRUD Operations
 
@@ -120,7 +121,7 @@ Explain how Create, Read, Update, and Delete (CRUD) operations are implemented i
 
 - Create: Users can upload new photos to the gallery.
 - Read: Users can view their gallery.
-- Delete: Users can remove photos from their gallery. // will implement during iteration 3
+- Delete: Users can remove photos from their gallery.
 
 # Screenshots
 
@@ -144,6 +145,7 @@ In iteration 2, we've implemented notifications and a feature for users to uploa
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/55360195/6829bdbe-2eb4-4c67-b973-9292fdff1ed0" width="30%">
 
 ### Iteration 3 implementation
+Updated the homep screen to make it more intuitive to use, and developed the function to update spin wheel directly from search results.
 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/71f4532f-8108-45e8-a97d-0a5a868d8d48" width="30%"> 
 <img src="https://github.com/yiyina/cs5520-sp24-final-project/assets/115501286/6f1fc85f-5440-4787-bfbc-24818bee7185" width="30%"> 
