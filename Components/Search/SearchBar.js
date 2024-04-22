@@ -7,6 +7,9 @@ import Button from '../../Shared/Button';
 import AddSpin from '../Spin/AddSpin';
 import { LinearGradient } from 'expo-linear-gradient';
 
+const screenHeight = Dimensions.get('window').height;
+const topOffset = screenHeight < 700 ? Dimensions.get('screen').height * 0.25 : Dimensions.get('screen').height * 0.2;
+
 export default function SearchBar({ setSearchText, spinValue, playList }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
     const [showAddSpinModal, setShowAddSpinModal] = useState(false);
@@ -97,8 +100,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         width: Dimensions.get('screen').width,
-        height: Dimensions.get('screen').height * 0.2,
-        // backgroundColor: Colors.MAIN_BACKGROUND,
+        height: topOffset,
         paddingHorizontal: 20,
         paddingTop: 20,
     },
