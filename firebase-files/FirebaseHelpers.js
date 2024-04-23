@@ -67,6 +67,12 @@ const FirestoreService = {
             throw error;
         }
     },
+    
+    // function to check if email exists in firestore
+    async doesEmailExist(email) {
+        const querySnapshot = await getDocs(query(collection(firestore, "users"), where("email", "==", email)));
+        return !querySnapshot.empty;
+    },
 
     // function to update user data in firestore
     async uploadToStorage(fileUri, type) {
