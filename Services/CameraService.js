@@ -3,34 +3,32 @@ import * as ImagePicker from 'expo-image-picker';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 class CameraService {
-
-
- static async checkPermissions() {
-     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
-            return false;
-        }
-        return true;
-    }
+    // static async checkPermissions() {
+    //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    //     if (status !== 'granted') {
+    //         alert('Sorry, we need camera roll permissions to make this work!');
+    //         return false;
+    //     }
+    //     return true;
+    // }
     static async takePicture(cameraRef, type, location = null) {
-         const hasPermission = await this.checkPermissions();
-        if (!hasPermission) return;
+        // const hasPermission = await this.checkPermissions();
+        // if (!hasPermission) return;
 
         try {
             if (cameraRef.current) {
                 let photo = await cameraRef.current.takePictureAsync();
                 console.log("takePicture photo: ", photo);
-                await this.handleImageCaptured(photo.uri, type,location);
+                await this.handleImageCaptured(photo.uri, type, location);
             }
-        } catch(error) {
+        } catch (error) {
             console.error("Error in taking picture:", error);
         }
     }
 
     static async pickImage(type, location = null) {
-         const hasPermission = await this.checkPermissions();
-        if (!hasPermission) return;
+        // const hasPermission = await this.checkPermissions();
+        // if (!hasPermission) return;
         try {
             let photo = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -38,7 +36,7 @@ class CameraService {
             if (photo && !photo.canceled) {
                 if (photo.assets && photo.assets.length > 0) {
                     let photoUri = photo.assets[0].uri;
-                    await this.handleImageCaptured(photoUri, type,location);
+                    await this.handleImageCaptured(photoUri, type, location);
                 } else {
                     console.error("No assets found in the photo response.");
                 }
@@ -49,7 +47,7 @@ class CameraService {
     }
 
     static async handleImageCaptured(imageUri, type, location = null) {
-         Alert.alert(
+        Alert.alert(
             "Upload Photo",
             `Do you want to upload this photo to your ${type}`,
             [
@@ -58,8 +56,8 @@ class CameraService {
                     onPress: () => console.log("Upload cancelled"),
                     style: "cancel"
                 },
-                { 
-                    text: "Yes", 
+                {
+                    text: "Yes",
                     onPress: async () => {
                         try {
                             let url;
@@ -68,8 +66,8 @@ class CameraService {
                                 if (type === 'avatar') {
                                     await FirestoreService.updateUserAvatar(url);
                                     Alert.alert("Success", "Avatar updated successfully.");
-                                } else if (type === 'gallery'&& location) {
-                                    await FirestoreService.addPhotoToGallery(url,location);
+                                } else if (type === 'gallery' && location) {
+                                    await FirestoreService.addPhotoToGallery(url, location);
                                     Alert.alert("Success", "Photo added to gallery successfully.");
                                 }
                             }

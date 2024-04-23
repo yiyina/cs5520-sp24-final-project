@@ -1,52 +1,84 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Modal, Alert, ActivityIndicator } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, TouchableOpacity, StyleSheet, Modal, Alert, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import CameraService from '../Services/CameraService'; // Assuming this is the correct import path
+import CameraService from '../Services/CameraService'; 
 import Colors from '../Shared/Colors';
+import * as MediaLibrary from 'expo-media-library';
 
-export default function CameraScreen({ showCamera, onCancel, type, onImageCaptured,placeDetails }) {
+export default function CameraScreen({ showCamera, onCancel, type, placeDetails }) {
     const [isUploading, setIsUploading] = useState(false);
-    const [hasPermission, setHasPermission] = useState(null);
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
     const cameraRef = useRef(null);
 
-    useEffect(() => {
-        (async () => {
+    const requestCameraPermission = async () => {
+        try {
             const { status } = await Camera.requestCameraPermissionsAsync();
-            setHasPermission(status === 'granted');
-        })();
-    }, []);
+            setHasCameraPermission(status === 'granted');
+        } catch (error) {
+            console.error("Failed to request camera permission: ", error);
+            Alert.alert("Permission Error", "Failed to request camera permission.");
+        }
+    };
 
-    if (hasPermission === null) {
-        return <View />;
+    const requestGalleryPermission = async () => {
+        try {
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            setHasGalleryPermission(status === 'granted');
+        } catch (error) {
+            console.error("Failed to request gallery permission: ", error);
+            Alert.alert("Permission Error", "Failed to request gallery permission.");
+        }
+    };
+
+    if (showCamera && hasCameraPermission === null) {
+        requestCameraPermission();
     }
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
+
+    const handleCameraButton = async () => {
+        setIsUploading(true);
+        try {
+            const location = type === 'gallery' ? placeDetails?.name : undefined;
+            await CameraService.takePicture(cameraRef, type, location);
+        } catch (error) {
+            console.error("Failed to take a picture: ", error);
+            Alert.alert("Capture Error", "Failed to take a picture.");
+        } finally {
+            setIsUploading(false);
+            onCancel();
+        }
+    };
+
+    const handleGalleryButton = async () => {
+        if (hasGalleryPermission !== true) {
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert("Permission Denied", "Access to gallery was denied.");
+                return; 
+            }
+            setHasGalleryPermission(status === 'granted');
+        }
+    
+        try {
+            // setIsUploading(true);
+            const location = type === 'gallery' ? placeDetails?.name : undefined;
+            await CameraService.pickImage(type, location);
+        } catch (error) {
+            console.error("Failed to pick an image: ", error);
+            Alert.alert("Gallery Error", "Failed to pick an image.");
+        } finally {
+            // setIsUploading(false);
+            onCancel(); // Optionally close the camera modal
+        }
+    };
+
     if (isUploading) {
         return (
             <View style={styles.waitingView}>
                 <ActivityIndicator size="large" color={Colors.DEEP_RED} />
             </View>
         );
-    }
-
-    const takePhotoHandler = async () => {
-        setIsUploading(true); // Start uploading indicator
-         const location = type === 'gallery' ? placeDetails?.name : undefined;
-        await CameraService.takePicture(cameraRef, type,location).finally(() => {
-            setIsUploading(false); // Stop uploading indicator
-            onCancel(); // Optionally close the camera modal
-        });
-    }
-
-    const choosePhotoHandler = async () => {
-        setIsUploading(true); // Start uploading indicator
-        const location = type === 'gallery' ? placeDetails?.name : undefined;
-        await CameraService.pickImage(type, location).finally(() => {
-            setIsUploading(false); // Stop uploading indicator
-            onCancel(); // Optionally close the camera modal
-        });
     }
 
     return (
@@ -56,28 +88,29 @@ export default function CameraScreen({ showCamera, onCancel, type, onImageCaptur
             transparent={true}
         >
             <View style={styles.fullscreen}>
-                <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
-                    <View style={styles.controlLayer}>
-                        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                            <FontAwesome5 name="window-close" size={36} color="white" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.captureButtonOuter} onPress={takePhotoHandler}>
-                            <View style={styles.captureButtonInner}>
-                                <FontAwesome name="camera" size={40} color="white" />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.galleryButton} onPress={choosePhotoHandler}>
-                            <FontAwesome name="photo" size={36} color="white" />
-                        </TouchableOpacity>
-                    </View>
-                </Camera>
+                {hasCameraPermission ? (
+                    <Camera style={styles.fullscreen} type={Camera.Constants.Type.back} ref={cameraRef}>
+                        <View style={styles.controlLayer}>
+                            <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+                                <FontAwesome5 name="window-close" size={36} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.captureButtonOuter} onPress={handleCameraButton}>
+                                <View style={styles.captureButtonInner}>
+                                    <FontAwesome name="camera" size={40} color="white" />
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.galleryButton} onPress={handleGalleryButton}>
+                                <FontAwesome name="photo" size={36} color="white" />
+                            </TouchableOpacity>
+                        </View>
+                    </Camera>
+                ) : (
+                    <ActivityIndicator size="large" color={Colors.DEEP_RED} />
+                )}
             </View>
         </Modal>
     );
 }
-
-
-
 
 const styles = StyleSheet.create({
     fullscreen: {
