@@ -4,7 +4,6 @@ import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
 import { getUpdatedUserData } from '../../Shared/updateUserData'
 import EditProfile from '../../Screens/EditProfile'
-import { AntDesign } from '@expo/vector-icons';
 
 export default function Header() {
     const { username, avatarUri } = getUpdatedUserData();

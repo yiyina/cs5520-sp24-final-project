@@ -14,7 +14,7 @@ export default function EditProfile({ showProfile, onCancel }) {
             onRequestClose={onCancel}>
             <View style={styles.modalContainer}>
                 <Pressable onPress={onCancel} style={styles.fold}>
-                    <Octicons name="chevron-down" size={50} color="white" />
+                    <Octicons name="chevron-down" size={50} color={Colors.WHITE} />
                 </Pressable>
                 <EditInfo onCancel={onCancel}/>
             </View>
