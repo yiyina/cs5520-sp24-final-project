@@ -4,7 +4,7 @@
 
 ### Authors: Yina Yi, Wei Song
 
-# Youtube Link
+# Youtube Link (Click the picture below)
 [![Video Preview](https://img.youtube.com/vi/um-r7QIZJGw/0.jpg)](https://www.youtube.com/watch?v=um-r7QIZJGw)
 
 # Firebase Rules
