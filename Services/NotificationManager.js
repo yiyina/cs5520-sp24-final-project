@@ -1,105 +1,175 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect } from 'react';
-import { View, Switch, Text, StyleSheet } from 'react-native';
+import { View, Switch, Text, StyleSheet, Button } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import Colors from '../Shared/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Set notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
 
-const NotificationManager = ({ onSave }) => {
-  const [settings, setSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
+const STORAGE_KEY = '@notificationTime';
 
+const NotificationManager = ({ settings, onSave }) => {
+  const [lunchEnabled, setLunchEnabled] = useState(settings.lunchEnabled);
+  const [dinnerEnabled, setDinnerEnabled] = useState(settings.dinnerEnabled);
+  const [time, setTime] = useState(new Date());
+  
   useEffect(() => {
-    loadSettings();
+    // Load saved time from AsyncStorage
+    const loadTimeFromStorage = async () => {
+      try {
+        const savedTime = await AsyncStorage.getItem(STORAGE_KEY);
+        if (savedTime !== null) {
+          setTime(new Date(savedTime));
+        }
+      } catch (error) {
+        console.error('Error loading time from AsyncStorage:', error);
+      }
+    };
+
+    loadTimeFromStorage();
   }, []);
 
   useEffect(() => {
+    // Save time to AsyncStorage whenever it changes
+    const saveTimeToStorage = async () => {
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, time.toISOString());
+      } catch (error) {
+        console.error('Error saving time to AsyncStorage:', error);
+      }
+    };
+
+    saveTimeToStorage();
+  }, [time]);
+
+  useEffect(() => {
+    // This effect is for updating parent component's state
+    onSave({ lunchEnabled, dinnerEnabled, time });
+  }, [lunchEnabled, dinnerEnabled, time, onSave]);
+
+  useEffect(() => {
+    // This effect is for registering for push notifications
+    const registerNotifications = async () => {
+      await registerForPushNotificationsAsync();
+    };
+
+    registerNotifications();
+  }, []); // Empty dependency array means this runs once on mount
+
+  useEffect(() => {
+    // This effect handles notification scheduling
+    const manageNotifications = async () => {
+      // Cancel all previous notifications to avoid duplicates
+      await Notifications.cancelAllScheduledNotificationsAsync();
+
+      if (lunchEnabled) {
+        const hour = time.getHours();
+        const minute = time.getMinutes();
+        await scheduleNotification('Let\'s Play Game!', 'Enjoy your Spin Time!', hour, minute);
+      }
+
+      if (dinnerEnabled) {
+        await scheduleNotification('Dinner time! Let\'s Play Game!', 'Bon appétit!', 18, 0);
+      }
+    };
+
     manageNotifications();
-    saveSettings();
-  }, [settings]);
+  }, [lunchEnabled, dinnerEnabled, time]); // This depends on lunchEnabled and dinnerEnabled
 
-  const loadSettings = async () => {
-    const storedSettings = await AsyncStorage.getItem('notificationSettings');
-    if (storedSettings) {
-      setSettings(JSON.parse(storedSettings));
+
+  async function registerForPushNotificationsAsync() {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
     }
-  };
-
-  const saveSettings = async () => {
-    await AsyncStorage.setItem('notificationSettings', JSON.stringify(settings));
-  };
-
-  const manageNotifications = async () => {
-    await Notifications.cancelAllScheduledNotificationsAsync();
-    if (settings.lunchEnabled) {
-      await scheduleNotification('It\'s lunch time! Let\'s Play Game!', 'Enjoy your meal!', 12, 0);
+    if (finalStatus !== 'granted') {
+      alert('Failed to get permission for notifications!');
+      return;
     }
-    if (settings.dinnerEnabled) {
-      await scheduleNotification('Dinner time! Let\'s Play Game!', 'Bon appétit!', 18, 0);
-    }
-  };
+    console.log('Notification permission granted.', finalStatus);
+  }
 
-  const scheduleNotification = async (title, body, hour, minute) => {
+  async function scheduleNotification(title, body, hour, minute) {
+    console.log('scheduling notification', title, body, hour, minute);
     const schedulingOptions = {
       content: {
         title,
         body,
       },
       trigger: {
-        hour: hour,
-        minute: minute,
+        hour: Number(hour),
+        minute: Number(minute),
         repeats: true,
       },
     };
     await Notifications.scheduleNotificationAsync(schedulingOptions);
-  };
+  }
 
   return (
     <View style={styles.container}>
-      <SwitchContainer
-        label="Schedule Lunch Notification at 12pm"
-        enabled={settings.lunchEnabled}
-        onChange={value => setSettings(prev => ({ ...prev, lunchEnabled: value }))}
-      />
-      <SwitchContainer
-        label="Schedule Dinner Notification at 6pm"
-        enabled={settings.dinnerEnabled}
-        onChange={value => setSettings(prev => ({ ...prev, dinnerEnabled: value }))}
-      />
+      {/* <Text style={styles.Text}>Schedule Notification at</Text> */}
+      <View style={styles.switchContainer}>
+        <DateTimePicker
+          value={time}
+          mode="time"
+          display="default"
+          onChange={(event, selectedTime) => {
+            if (event.type === 'set') {
+              setTime(selectedTime);
+            }
+          }}
+        />
+        <Switch
+          value={lunchEnabled}
+          onValueChange={setLunchEnabled}
+        />
+      </View>
+      {/* <View style={styles.switchContainer}>
+        <Text style={styles.Text}>Schedule Dinner Notification at</Text>
+        <Switch
+          value={dinnerEnabled}
+          onValueChange={setDinnerEnabled}
+        />
+      </View> */}
     </View>
   );
 };
-
-const SwitchContainer = ({ label, enabled, onChange }) => (
-  <View style={styles.switchContainer}>
-    <Text style={styles.text}>{label}</Text>
-    <Switch value={enabled} onValueChange={onChange} />
-  </View>
-);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   switchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '90%',
+    alignItems: 'center',
+    width: '100%',  
+    backgroundColor: Colors.WHITE, 
+    paddingVertical: 15,
+    paddingHorizontal: 20, 
+    borderRadius: 10, 
+    shadowColor: Colors.BLACK,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, 
     marginBottom: 20,
   },
-  text: {
-    fontSize: 16,
-    color: Colors.DARK_COLOR,
+  Text: {
+    color: Colors.BORDER_GOLD, 
+    fontSize: 20,
+    fontWeight: 'bold', 
   },
 });
 
