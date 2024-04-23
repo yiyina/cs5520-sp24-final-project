@@ -11,6 +11,7 @@ export default function Header() {
     const [showProfile, setShowProfile] = useState(false);
     const [day, setDay] = useState(true);
 
+    // Get the greeting based on the time of the day
     useEffect(() => {
         const getGreetingBasedOnTime = () => {
             const date = new Date();
@@ -26,6 +27,7 @@ export default function Header() {
         setGreeting(getGreetingBasedOnTime());
     }, []);
 
+    // Check if it is day or night based on the time of the day
     useEffect(() => {
         const date = new Date();
         const hours = date.getHours();
@@ -36,6 +38,7 @@ export default function Header() {
         }
     }, []);
 
+    // Function to toggle the edit profile modal
     const toggleEditProfile = () => {
         setShowProfile(!showProfile);
     }

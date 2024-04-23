@@ -10,22 +10,24 @@ import { useRoute } from '@react-navigation/native'
 export default function Search() {
   const route = useRoute();
   const { query } = route.params || {};
-
   const [placeList, setPlaceList] = useState([]);
   const { coords } = getUpdatedUserData();
 
+  // Fetch the nearby places when the component mounts
   useEffect(() => {
     if (coords) {
       getNearbyPlaces('restaurant');
     }
   }, []);
 
+  // Fetch the nearby places when the query changes
   useEffect(() => {
     if (query && coords) {
       getNearbyPlaces(query);
     }
   }, [query, coords]);
 
+  // Fetch the nearby places based on the search text
   const getNearbyPlaces = (value) => {
     GlobalApi.searchByText(value)
       .then((response) => {

@@ -4,6 +4,7 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import FlipCard from 'react-native-flip-card';
 
+// Component to flip between login and register forms
 const FlipForm = () => {
     const [isFlipped, setIsFlipped] = useState(false);
     const toggleFlip = () => setIsFlipped(!isFlipped);

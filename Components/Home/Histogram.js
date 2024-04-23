@@ -13,8 +13,9 @@ export default function Histogram() {
   const [data, setData] = useState(null);
   const [placeList, setPlaceList] = useState([])
   const [selectedLabel, setSelectedLabel] = useState(null);
-  const TOP = 10;
+  const TOP = 10; // change this to show more or less top results
 
+  // Process the spin results and update the data
   useEffect(() => {
     const updatedChartData = processSpinResults(spinResults); 
     setData([...updatedChartData]);
@@ -24,6 +25,7 @@ export default function Histogram() {
     }
   }, [spinResults, selectedLabel]);
 
+  // Process the spin results and return the top 10 results
   const processSpinResults = (spinResults) => {
     if (!spinResults) return [];
     const sortedResults = Object.entries(spinResults)
@@ -45,6 +47,7 @@ export default function Histogram() {
     return sortedResults.slice(0, TOP);
   }
 
+  // Get the nearby search place based on the value
   const getNearBySearchPlace = (value) => {
     if (coords) {
       console.log("Histograom: coords: ", coords.latitude, coords.longitude, "value: ", value);
@@ -64,6 +67,7 @@ export default function Histogram() {
     }
   };
 
+  // Function to handle the place click
   const onPlaceClick = (item) => {
     navigator.navigate("place-detail", { place: item });
     console.log("Place clicked", item);
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginTop: 30,
     color: Colors.TEXT_COLOR,
     alignSelf: 'center',
   },

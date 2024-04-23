@@ -7,6 +7,7 @@ import Button from '../../Shared/Button';
 import AddSpin from '../Spin/AddSpin';
 import { LinearGradient } from 'expo-linear-gradient';
 
+// set the height of the search bar based on the screen height
 const screenHeight = Dimensions.get('window').height;
 const topOffset = screenHeight < 700 ? Dimensions.get('screen').height * 0.25 : Dimensions.get('screen').height * 0.2;
 
@@ -14,18 +15,22 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
     const [searchInput, setSearchInput] = useState(spinValue || '');
     const [showAddSpinModal, setShowAddSpinModal] = useState(false);
 
+    // Set the search input to the spin value
     useEffect(() => {
         setSearchInput(spinValue);
     }, [spinValue]);
 
+    // Handle the text change
     const handleTextChange = (text) => {
         setSearchInput(text);
     }
 
+    // Handle the submit button press
     const handleSubmit = () => {
         setSearchText(searchInput);
     }
 
+    // Handle the search button press
     const handlePress = () => {
         if (!searchInput) {
             Alert.alert('Please search for a place first');
@@ -34,6 +39,7 @@ export default function SearchBar({ setSearchText, spinValue, playList }) {
         setSearchText(searchInput);
     }
 
+    // Handle the add spin button press
     const handleAddSpin = () => {
         console.log("SearchBar.js searchInput: ", searchInput);
         if (!searchInput) {

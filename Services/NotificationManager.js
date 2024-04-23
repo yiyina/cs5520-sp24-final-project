@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Switch, Text, StyleSheet, Button } from 'react-native';
+import { View, Switch, StyleSheet } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Colors from '../Shared/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// This is the NotificationManager component that schedules notifications
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -13,15 +14,15 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// This is the key for storing notification time in AsyncStorage
 const STORAGE_KEY = '@notificationTime';
 
 const NotificationManager = ({ settings, onSave }) => {
   const [lunchEnabled, setLunchEnabled] = useState(settings.lunchEnabled);
-  const [dinnerEnabled, setDinnerEnabled] = useState(settings.dinnerEnabled);
   const [time, setTime] = useState(new Date());
-  
+
+  // Load saved time from AsyncStorage when the component mounts
   useEffect(() => {
-    // Load saved time from AsyncStorage
     const loadTimeFromStorage = async () => {
       try {
         const savedTime = await AsyncStorage.getItem(STORAGE_KEY);
@@ -36,6 +37,7 @@ const NotificationManager = ({ settings, onSave }) => {
     loadTimeFromStorage();
   }, []);
 
+  // Save time to AsyncStorage whenever it changes
   useEffect(() => {
     // Save time to AsyncStorage whenever it changes
     const saveTimeToStorage = async () => {
@@ -49,22 +51,21 @@ const NotificationManager = ({ settings, onSave }) => {
     saveTimeToStorage();
   }, [time]);
 
+  // Update parent component's state whenever the settings change
   useEffect(() => {
-    // This effect is for updating parent component's state
-    onSave({ lunchEnabled, dinnerEnabled, time });
-  }, [lunchEnabled, dinnerEnabled, time, onSave]);
+    onSave({ lunchEnabled, time });
+  }, [lunchEnabled, time, onSave]);
 
+  // Register for push notifications when the component mounts
   useEffect(() => {
-    // This effect is for registering for push notifications
     const registerNotifications = async () => {
       await registerForPushNotificationsAsync();
     };
-
     registerNotifications();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []); 
 
+  // Schedule notifications whenever lunchEnabled, dinnerEnabled, or time changes
   useEffect(() => {
-    // This effect handles notification scheduling
     const manageNotifications = async () => {
       // Cancel all previous notifications to avoid duplicates
       await Notifications.cancelAllScheduledNotificationsAsync();
@@ -75,14 +76,15 @@ const NotificationManager = ({ settings, onSave }) => {
         await scheduleNotification('Let\'s Play Game!', 'Enjoy your Spin Time!', hour, minute);
       }
 
-      if (dinnerEnabled) {
-        await scheduleNotification('Dinner time! Let\'s Play Game!', 'Bon appétit!', 18, 0);
-      }
+      // if (dinnerEnabled) {
+      //   await scheduleNotification('Dinner time! Let\'s Play Game!', 'Bon appétit!', 18, 0);
+      // }
     };
 
     manageNotifications();
-  }, [lunchEnabled, dinnerEnabled, time]); // This depends on lunchEnabled and dinnerEnabled
+  }, [lunchEnabled, time]); 
 
+  // Request permission for notifications
   async function registerForPushNotificationsAsync() {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -97,6 +99,7 @@ const NotificationManager = ({ settings, onSave }) => {
     console.log('Notification permission granted.', finalStatus);
   }
 
+  // Schedule a notification at a specific time
   async function scheduleNotification(title, body, hour, minute) {
     console.log('scheduling notification', title, body, hour, minute);
     const schedulingOptions = {
@@ -115,7 +118,6 @@ const NotificationManager = ({ settings, onSave }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.Text}>Schedule Notification at</Text> */}
       <View style={styles.switchContainer}>
         <DateTimePicker
           value={time}
@@ -132,13 +134,6 @@ const NotificationManager = ({ settings, onSave }) => {
           onValueChange={setLunchEnabled}
         />
       </View>
-      {/* <View style={styles.switchContainer}>
-        <Text style={styles.Text}>Schedule Dinner Notification at</Text>
-        <Switch
-          value={dinnerEnabled}
-          onValueChange={setDinnerEnabled}
-        />
-      </View> */}
     </View>
   );
 };
@@ -153,22 +148,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',  
-    backgroundColor: Colors.WHITE, 
+    width: '100%',
+    backgroundColor: Colors.WHITE,
     paddingVertical: 15,
-    paddingHorizontal: 20, 
-    borderRadius: 10, 
+    paddingHorizontal: 20,
+    borderRadius: 10,
     shadowColor: Colors.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, 
+    elevation: 3,
     marginBottom: 20,
   },
   Text: {
-    color: Colors.BORDER_GOLD, 
+    color: Colors.BORDER_GOLD,
     fontSize: 20,
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
   },
 });
 

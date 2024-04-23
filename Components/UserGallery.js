@@ -7,20 +7,23 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function UserGallery() {
-
   const [groupedImages, setGroupedImages] = useState({});
   const { gallery } = getUpdatedUserData();
   const navigation = useNavigation();
+  // console.log("gallery: ", gallery);
 
+  // Function to handle the image press and navigate to the search screen
   const handleImagePress = (image) => {
     console.log("image: ", image);
     navigation.navigate('Search', { query: image.location });
   };
 
+  // Group the images by date
   useEffect(() => {
     groupImages(gallery);
   }, [gallery]);
-  // console.log("gallery: ", gallery);
+
+  // Group the images by date and set the state
   const groupImages = (gallery) => {
     const groups = gallery.reduce((acc, img) => {
       const date = img.createdAt.toDate().toISOString().slice(0, 10);
@@ -30,6 +33,7 @@ export default function UserGallery() {
       return acc;
     }, {});
 
+    // Sort the groups by date in descending order
     const sortedGroups = Object.keys(groups).sort((a, b) => b.localeCompare(a)).reduce(
       (obj, key) => {
         obj[key] = {
@@ -43,7 +47,7 @@ export default function UserGallery() {
     setGroupedImages(sortedGroups);
   };
 
-
+  // Function to handle the delete button press
   const handleDelete = (image) => {
     Alert.alert(
       "Delete Photo",
@@ -55,6 +59,7 @@ export default function UserGallery() {
     );
   };
 
+  // Function to delete the image from the gallery
   const deleteImage = async (image) => {
     try {
       await FirestoreService.deletePhoto(image.id); // Make sure you have a method to delete the photo by ID

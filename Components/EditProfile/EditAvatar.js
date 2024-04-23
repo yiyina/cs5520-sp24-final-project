@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons'
 export default function EditAvatar({ avatarUri, toggleCamera }) {
     const user = auth.currentUser;
 
+    // Function to delete the avatar
     const handleDeleteAvatar = () => {
         Alert.alert(
             "Delete Avatar", // Alert Title

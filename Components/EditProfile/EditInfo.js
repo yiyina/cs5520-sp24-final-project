@@ -29,6 +29,7 @@ export default function EditInfo({ onCancel }) {
     const [editProfilePressed, setEditProfilePressed] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
+    // fetch user data from Firestore when the component mounts
     useEffect(() => {
         async function fetchUserData() {
             if (auth.currentUser) {
@@ -44,16 +45,19 @@ export default function EditInfo({ onCancel }) {
         }
     }, []);
 
+    // check if the avatarUri is updated
     useEffect(() => {
         if (avatarUri && avatarUri.uri) {
             console.log("EditInfo AvatarUri: ", avatarUri.uri);
         }
     }, []);
 
+    // control camera screen visibility
     const toggleCamera = () => {
         setShowCamera(!showCamera);
     }
 
+    // toggle the edit profile button
     const toggleEditProfile = async () => {
         if (editProfilePressed) {
             if (usernameError || emailError || passwordError) {
@@ -111,6 +115,7 @@ export default function EditInfo({ onCancel }) {
         }
     };
 
+    // handle the avatar change
     const handleAvatarChange = async (imageUri) => {
         CameraService.handleImageCaptured(imageUri, 'avatar')
     }

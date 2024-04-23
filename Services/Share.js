@@ -6,7 +6,6 @@ const SharePlace = (place) => {
         message: 'Check out this place: ' + 
         place.name + ' at \n' + 
         (place.vicinity ? place.vicinity : place.formatted_address)+ '.',
-
     })
 }
 

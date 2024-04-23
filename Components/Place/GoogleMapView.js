@@ -13,6 +13,7 @@ export default function GoogleMapView({ placeList }) {
     console.log('GoogleMapView avatarUri:', avatarUri);
     const [mapRegion, setMapRegion] = useState({});
 
+    // Fetch user data and set the region
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {
             try {
@@ -37,6 +38,7 @@ export default function GoogleMapView({ placeList }) {
         })
     }, []);
 
+    // Custom user marker component with avatar image
     const customUserMarker = () => (
         <View style={styles.avatarContainer}>
             <Image 
