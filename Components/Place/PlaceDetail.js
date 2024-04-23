@@ -1,6 +1,6 @@
-import { Platform, StyleSheet, ScrollView,TouchableOpacity,Modal,Text} from 'react-native';
+import { Platform, StyleSheet, ScrollView, TouchableOpacity, Modal, Text } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { useRoute,useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import PlaceDetailItem from './PlaceDetailItem';
 import Colors from '../../Shared/Colors';
 import GoogleMapView from './GoogleMapView';
@@ -10,23 +10,24 @@ import CameraService from '../../Services/CameraService';
 import { EvilIcons } from '@expo/vector-icons';
 
 export default function PlaceDetail() {
-    const navigation = useNavigation();
     const { place } = useRoute().params || {};
     // console.log('PlaceDetail:', place);
     const [placeDetails, setPlaceDetails] = useState(place || {});
-      const [showCamera, setShowCamera] = useState(false);
+    const [showCamera, setShowCamera] = useState(false);
 
-  const toggleCamera = () => {
-    setShowCamera(!showCamera);
-  };
+    // Toggle the camera screen visibility
+    const toggleCamera = () => {
+        setShowCamera(!showCamera);
+    };
 
+    // Update the place details when the place is changed
     useEffect(() => {
         if (place) {
             setPlaceDetails(place);
         }
     }, [place]);
 
-
+    // Open the Google Map app
     const openMapsApp = () => {
         if (!placeDetails.geometry || !placeDetails.geometry.location) {
             console.error('Location data is missing');
@@ -60,31 +61,31 @@ export default function PlaceDetail() {
         <ScrollView style={styles.container}>
             <PlaceDetailItem place={placeDetails} onDirectionClick={openMapsApp} />
             <GoogleMapView placeList={[placeDetails]} />
-             <TouchableOpacity 
-            style={styles.cameraButton} 
-            onPress={toggleCamera}>
-            <EvilIcons 
-              name="camera" 
-              size={80} 
-              color={showCamera ? "#e32f45" : "#748c94"} 
-                /><Text style={ styles.cameraButtonText}>Take Photo For This Place</Text>
-        </TouchableOpacity>
-        <Modal
-          visible={showCamera}
-          animationType="slide"
-          transparent={true}
-        >
-          <CameraScreen
-            showCamera={showCamera}
-            onCancel={() => setShowCamera(false)}
-            type={'gallery'}
-                onImageCaptured={(imageUri) => {
-                CameraService.handleImageCaptured(imageUri, 'gallery', placeDetails.name);
-                setShowCamera(false);
-                }}
-            placeDetails={placeDetails}
-          />
-        </Modal>
+            <TouchableOpacity
+                style={styles.cameraButton}
+                onPress={toggleCamera}>
+                <EvilIcons
+                    name="camera"
+                    size={80}
+                    color={showCamera ? "#e32f45" : "#748c94"}
+                /><Text style={styles.cameraButtonText}>Take Photo For This Place</Text>
+            </TouchableOpacity>
+            <Modal
+                visible={showCamera}
+                animationType="slide"
+                transparent={true}
+            >
+                <CameraScreen
+                    showCamera={showCamera}
+                    onCancel={() => setShowCamera(false)}
+                    type={'gallery'}
+                    onImageCaptured={(imageUri) => {
+                        CameraService.handleImageCaptured(imageUri, 'gallery', placeDetails.name);
+                        setShowCamera(false);
+                    }}
+                    placeDetails={placeDetails}
+                />
+            </Modal>
 
         </ScrollView>
     );
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE,
         flex: 1
     },
-     button: {
+    button: {
         marginTop: 20,
         backgroundColor: Colors.PRIMARY,
         padding: 15,
@@ -111,14 +112,14 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: Colors.SECONDARY,
         borderRadius: 30,
-        alignItems: 'center', 
+        alignItems: 'center',
     },
     cameraButtonText: {
         color: Colors.BORDER_GOLD,
         fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center', 
-         borderRadius: 30,
+        textAlign: 'center',
+        borderRadius: 30,
     },
 
 });

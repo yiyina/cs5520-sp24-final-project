@@ -12,6 +12,7 @@ export default function CameraScreen({ showCamera, onCancel, type, placeDetails 
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
     const cameraRef = useRef(null);
 
+    // Request camera permission
     const requestCameraPermission = async () => {
         try {
             const { status } = await Camera.requestCameraPermissionsAsync();
@@ -22,20 +23,12 @@ export default function CameraScreen({ showCamera, onCancel, type, placeDetails 
         }
     };
 
-    const requestGalleryPermission = async () => {
-        try {
-            const { status } = await MediaLibrary.requestPermissionsAsync();
-            setHasGalleryPermission(status === 'granted');
-        } catch (error) {
-            console.error("Failed to request gallery permission: ", error);
-            Alert.alert("Permission Error", "Failed to request gallery permission.");
-        }
-    };
-
+    // Request gallery permission only when hasCameraPermission is null
     if (showCamera && hasCameraPermission === null) {
         requestCameraPermission();
     }
 
+    // Handle the camera button press event to take a picture
     const handleCameraButton = async () => {
         setIsUploading(true);
         try {
@@ -50,6 +43,7 @@ export default function CameraScreen({ showCamera, onCancel, type, placeDetails 
         }
     };
 
+    // Handle the gallery button press event to pick an image from the gallery
     const handleGalleryButton = async () => {
         if (hasGalleryPermission !== true) {
             const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -73,6 +67,7 @@ export default function CameraScreen({ showCamera, onCancel, type, placeDetails 
         }
     };
 
+    // Show a waiting view
     if (isUploading) {
         return (
             <View style={styles.waitingView}>

@@ -6,6 +6,7 @@ import { validateUsername, validateEmail, validatePassword } from '../../Shared/
 export default function EditFields({ title, value, onChange, error, setError, editProfilePressed }) {
     const isPassword = title === 'Password';
 
+    // Validate the input field based on the field name
     const handleValidation = (newValue) => {
         let validationResult = '';
         switch(title) {
@@ -25,6 +26,7 @@ export default function EditFields({ title, value, onChange, error, setError, ed
         onChange(newValue);
     }
 
+    // Set the input field style based on the editProfilePressed state
     const inputStyle = editProfilePressed ? styles.editableFieldInput : styles.nonEditableFieldInput;
 
     return (

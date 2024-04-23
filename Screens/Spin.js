@@ -20,12 +20,14 @@ export default function Spin() {
   const [spinId, setSpinId] = useState('')
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  // Default spin object
   const originalSpin = {
     spinColor: ColorThemes.SPRING,
     spinItems: defaultSpin,
     spinName: 'FOOD',
   }
 
+  // Fetch the spin data from Firestore, if no spins exist, add the default spin
   const fetchData = async () => {
     try {
       const spinsCollection = await FirestoreService.getSpinsCollection();
@@ -45,10 +47,12 @@ export default function Spin() {
     }
   };
 
+  // Fetch the data when the component mounts
   useEffect(() => {
     fetchData();
   }, [dataLoaded]);
 
+  // Handle the spin selection
   const spinSelectHandler = async (spinId) => {
     try {
       const spins = await FirestoreService.getSpinsCollection();

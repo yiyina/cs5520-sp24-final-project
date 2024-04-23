@@ -1,47 +1,12 @@
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Modal } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, View, Dimensions } from 'react-native'
+import React from 'react'
 import Colors from '../Shared/Colors'
 import UserGallery from '../Components/UserGallery';
-import CameraScreen from './CameraScreen';
-import CameraService from '../Services/CameraService';
-import { EvilIcons } from '@expo/vector-icons';
 
-export default function Gallery(props) {
-  const [showCamera, setShowCamera] = useState(false);
-
-  const toggleCamera = () => {
-    setShowCamera(!showCamera);
-  };
+export default function Gallery() {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}> */}
-        {/* <Text style={styles.userGalleryTitle}>Gallery</Text> */}
-        {/* <TouchableOpacity 
-            style={styles.cameraButton} 
-            onPress={toggleCamera}>
-            <EvilIcons 
-              name="camera" 
-              size={45} 
-              color={showCamera ? "#e32f45" : "#748c94"} 
-            />
-        </TouchableOpacity>
-        <Modal
-          visible={showCamera}
-          animationType="slide"
-          transparent={true}
-        >
-          <CameraScreen
-            showCamera={showCamera}
-            onCancel={() => setShowCamera(false)}
-            type={'gallery'}
-            onImageCaptured={(imageUri) => {
-              CameraService.handleImageCaptured(imageUri, 'gallery');
-              setShowCamera(false);
-            }}
-          />
-        </Modal> */}
-      {/* </View> */}
       <View style={styles.body}>
         <UserGallery />
       </View>

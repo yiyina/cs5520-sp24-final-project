@@ -6,6 +6,7 @@ import { MY_API_KEY } from '@env'
 export default function PlaceMarker({ item }) {
   const [imageSource, setImageSource] = useState(require('../../assets/placeholder.jpg'));
 
+  // Check if the item is valid, and if not, log an error
   if (
     !item ||
     !item.geometry ||
@@ -14,7 +15,6 @@ export default function PlaceMarker({ item }) {
     typeof item.geometry.location.lng !== 'number'
   ) {
     console.error('Invalid item:', item);
-    // Optionally, you could return null or a default marker here
     return null;
   }
 
@@ -22,6 +22,7 @@ export default function PlaceMarker({ item }) {
   //   ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference=${item.photos[0].photo_reference}&key=${MY_API_KEY}`
   //   : require('../../assets/placeholder.jpg');
 
+  // Set the image source based on the item's photos
   useEffect(() => {
     let source = require('../../assets/placeholder.jpg'); // Default to local image
     if (item?.photos && item.photos.length > 0) {

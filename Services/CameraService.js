@@ -3,18 +3,8 @@ import * as ImagePicker from 'expo-image-picker';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
 
 class CameraService {
-    // static async checkPermissions() {
-    //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    //     if (status !== 'granted') {
-    //         alert('Sorry, we need camera roll permissions to make this work!');
-    //         return false;
-    //     }
-    //     return true;
-    // }
+    // Take a picture using the camera and upload it to the storage
     static async takePicture(cameraRef, type, location = null) {
-        // const hasPermission = await this.checkPermissions();
-        // if (!hasPermission) return;
-
         try {
             if (cameraRef.current) {
                 let photo = await cameraRef.current.takePictureAsync();
@@ -26,9 +16,8 @@ class CameraService {
         }
     }
 
+    // Pick an image from the gallery and upload it to the storage
     static async pickImage(type, location = null) {
-        // const hasPermission = await this.checkPermissions();
-        // if (!hasPermission) return;
         try {
             let photo = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -46,6 +35,7 @@ class CameraService {
         }
     }
 
+    // Handle the image captured from the camera or gallery and upload it to the storage
     static async handleImageCaptured(imageUri, type, location = null) {
         Alert.alert(
             "Upload Photo",

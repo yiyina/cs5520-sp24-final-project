@@ -16,7 +16,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
     const [showPassword, setShowPassword] = useState(false)
     const [loginPressed, setLoginPressed] = useState(false)
 
-
+    // Clear the error message when the user starts typing
     useEffect(() => {
         if (usernameEmail) setNameEmailError('')
     }, [usernameEmail])
@@ -24,14 +24,17 @@ export default function LoginForm({ navigation, toggleFlip }) {
         if (password) setPasswordError('')
     }, [password])
 
+    // Handle the input for username/email and password
     const handleNameEmailInput = (username) => {
         setUsernameEmail(username)
     }
 
+    // Handle the input for password
     const handlePasswordInput = (password) => {
         setPassword(password)
     }
 
+    // Handle the login button press
     const handleLoginPress = async () => {
         setNameEmailError("");
         setPasswordError("");

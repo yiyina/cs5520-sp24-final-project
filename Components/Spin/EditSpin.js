@@ -26,16 +26,15 @@ export default function EditSpin({ spinId, spinColorName }) {
     const [showEditSpinModal, setShowEditSpinModal] = useState(false)
     const [inputs, setInputs] = useState([{ id: generateUUID(), value: '' }]);
 
+    // theme options for the dropdown list
     const themeOptions = Object.keys(ColorThemes).map(key => ([ColorThemes[key], key]));
 
+    // handle the theme selection from the dropdown list
     const handleThemeSelect = (theme) => {
         setSelectedTheme(theme);
     }
 
-    // useEffect(() => {
-    //     console.log('EditSpin inputs:', inputs)
-    // }, [inputs])
-
+    // fetch the spin data from Firestore
     const fetchData = async () => {
         const spinsCollection = await FirestoreService.getSpinsCollection()
         const selectedSpin = spinsCollection.find(s => s.id === spinId)
@@ -53,10 +52,12 @@ export default function EditSpin({ spinId, spinColorName }) {
         }
     }
 
+    // fetch the spin data when the component mounts
     useEffect(() => {
         fetchData()
     }, [spinId])
 
+    // add a new input field to the spin items
     const addInput = () => {
         const hasEmptyInput = inputs.some(input => input.value.trim() === '');
         if (inputs.length >= 10) {
@@ -73,16 +74,19 @@ export default function EditSpin({ spinId, spinColorName }) {
         setInputs(inputs => [...inputs, { id: newId, value: '' }]);
     };
 
+    // handle the input change for the spin items
     const handleInputChange = (text, id) => {
         setInputs(inputs => inputs.map(input =>
             input.id === id ? { ...input, value: text } : input
         ));
     }
 
+    // handle the edit button press
     const editHandler = () => {
         setShowEditSpinModal(true)
     }
 
+    // remove an input field from the spin items
     const removeInput = (idToRemove) => {
         if (inputs.length > 1 || inputs.find(input => input.id === idToRemove).value.trim() !== '') {
             const updatedInputs = inputs.filter(input => input.id !== idToRemove);
@@ -92,6 +96,7 @@ export default function EditSpin({ spinId, spinColorName }) {
         }
     };
 
+    // save the spin data to Firestore
     const saveInputs = async () => {
         console.log('selectedTheme:', selectedTheme);
         console.log('spinName:', spinName);
@@ -126,6 +131,7 @@ export default function EditSpin({ spinId, spinColorName }) {
         }
     }
 
+    // close the modal and reset the state
     const handleCloseModal = () => {
         setShowEditSpinModal(false);
         setSpinName(initialName);
@@ -133,6 +139,7 @@ export default function EditSpin({ spinId, spinColorName }) {
         setInputs(initialItems);
     }
 
+    // handle the delete spin button press and delete the spin from Firestore
     const handleDeleteSpin = async () => {
         const spins = await FirestoreService.getSpinsCollection();
         if (spins.length === 1) {

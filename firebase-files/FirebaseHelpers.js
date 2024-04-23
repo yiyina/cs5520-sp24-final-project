@@ -15,6 +15,7 @@ import {
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 const FirestoreService = {
+    // function to add user to firestore
     async addUser(user) {
         console.log("Adding user: ", user);
         try {
@@ -30,6 +31,7 @@ const FirestoreService = {
         }
     },
 
+    // function to get user data from firestore
     async getUserData() {
         try {
             const uid = auth.currentUser.uid;
@@ -48,6 +50,7 @@ const FirestoreService = {
         }
     },
 
+    // function to get user document id from firestore
     async getUserDocId(uid) {
         try {
             const firestore = getFirestore();
@@ -65,13 +68,14 @@ const FirestoreService = {
         }
     },
 
+    // function to update user data in firestore
     async uploadToStorage(fileUri, type) {
         try {
             const uid = auth.currentUser.uid;
             if (!uid || !fileUri) {
                 throw new Error("Invalid parameters for uploadToStorage");
             }
-    
+
             // Determine the storage path based on the type of image
             let storagePath;
             switch (type) {
@@ -84,20 +88,20 @@ const FirestoreService = {
                 default:
                     throw new Error("Invalid image type for uploadToStorage");
             }
-    
+
             const fileName = fileUri.substring(fileUri.lastIndexOf('/') + 1);
             const fileRef = storageRef(storage, `${storagePath}${fileName}`);
-    
+
             // Convert the file URI to a blob for uploading
             const response = await fetch(fileUri);
             const blob = await response.blob();
-    
+
             // Upload the file
             await uploadBytes(fileRef, blob);
-    
+
             // After upload, get the file's download URL
             const downloadURL = await getDownloadURL(fileRef);
-    
+
             return downloadURL;
         } catch (error) {
             console.error("Error uploading to storage:", error);
@@ -105,7 +109,7 @@ const FirestoreService = {
         }
     },
 
-
+    // function to update user avatar in firestore
     async updateUserAvatar(avatarUri) {
         try {
             const uid = auth.currentUser.uid;
@@ -133,7 +137,8 @@ const FirestoreService = {
         }
     },
 
-    async addPhotoToGallery(fileUri,location) {
+    // function to add photo to gallery in firestore
+    async addPhotoToGallery(fileUri, location) {
         console.log("Adding photo to gallery:", fileUri, "with location:", location);
         try {
             if (!fileUri) {
@@ -167,6 +172,7 @@ const FirestoreService = {
         }
     },
 
+    // function to get user gallery from firestore
     async addCurrentLocation(location) {
         try {
             const uid = auth.currentUser.uid;
@@ -190,6 +196,7 @@ const FirestoreService = {
         }
     },
 
+    // function to remove user avatar from firestore
     async removeAvatarFieldFromUser() {
         try {
             const uid = auth.currentUser.uid;
@@ -211,6 +218,8 @@ const FirestoreService = {
             throw error;
         }
     },
+
+    // function to delete avatar file from storage in firestore
     async deleteAvatarFileFromStorage() {
         try {
             const uid = auth.currentUser.uid;
@@ -231,12 +240,12 @@ const FirestoreService = {
         }
     },
 
-
+    // function to update user email in firestore
     async updateEmailForUser(newEmail) {
         try {
             const user = auth.currentUser;
             console.log("Updating email for user: ", user.uid, newEmail);
-            
+
             if (user) {
                 try {
                     updateEmail(user, newEmail);
@@ -261,6 +270,7 @@ const FirestoreService = {
         }
     },
 
+    // function to update user password in firestore
     async updateDocuments(fieldsToUpdate, subcollectionPath = null) {
         try {
             const uid = auth.currentUser.uid;
@@ -294,6 +304,7 @@ const FirestoreService = {
         }
     },
 
+    // function to add spin to user in firestore
     async addSpinToUser(spin, spinId) {
         try {
             const uid = auth.currentUser.uid;
@@ -320,6 +331,7 @@ const FirestoreService = {
         }
     },
 
+    // function to get spins collection from firestore for user
     async getSpinsCollection() {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
@@ -342,6 +354,7 @@ const FirestoreService = {
         }
     },
 
+    // function to delete spin from firestore for user
     async deleteSpin(spinId) {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
@@ -352,7 +365,9 @@ const FirestoreService = {
             throw error;
         }
     },
-     async deletePhoto(photoId) {
+
+    // function to delete photo from firestore for user
+    async deletePhoto(photoId) {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
             const photoDocRef = doc(firestore, "users", userDocId, "gallery", photoId);
@@ -369,6 +384,7 @@ const FirestoreService = {
         }
     },
 
+    // function to get spin results from firestore for user
     async addSpinResultToUser(result) {
         try {
             const userDocId = await this.getUserDocId(auth.currentUser.uid);
@@ -394,28 +410,6 @@ const FirestoreService = {
             throw error;
         }
     },
-    // async getGalleryImages(uid) {
-    //     try {
-    //         const userDocId = await this.getUserDocId(uid);
-    //         const galleryCollectionRef = collection(firestore, "users", userDocId, "gallery");
-    //         const querySnapshot = await getDocs(galleryCollectionRef);
-    //          console.log("querySnapshot: ", querySnapshot);
-
-
-    //          const galleryData = querySnapshot.docs.map(doc => {
-    //              return {
-    //                  id: doc.id,
-    //                  ...doc.data()
-    //              };}
-    //         );
-    //         return galleryData;
-    //     } catch (error) {
-    //         console.error("Error getting galley collection: ", error);
-    //         throw error;
-    //     }
-    // },
- 
-
 }
 
 export default FirestoreService;

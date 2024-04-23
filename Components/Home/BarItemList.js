@@ -69,8 +69,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         borderRadius: 20,
-        // borderWidth: 1,
-        // borderColor: Colors.LIGHT_COLOR,
         gap: 10,
         alignItems: 'center',
         shadowColor: Colors.BLACK,

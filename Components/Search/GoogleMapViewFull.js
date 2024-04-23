@@ -12,11 +12,12 @@ export default function GoogleMapViewFull({ placeList }) {
     const [mapRegion, setMapRegion] = useState({});
     const [mapRef, setMapRef] = useState(null);
 
-
+    // Log the coords to the console
     useEffect(() => {
         console.log('GoogleMapViewFull.js coords: ', coords);
     }, [coords])
 
+    // Fetch the user data and set the region
     useEffect(() => {
         const fetchUserDataAndSetRegion = async () => {
             try {
@@ -37,6 +38,7 @@ export default function GoogleMapViewFull({ placeList }) {
         })
     }, [coords]);
 
+    // Handle the my location press
     const handleMyLocationPress = () => {
         if (mapRef && coords) {
             mapRef.animateToRegion({
@@ -48,6 +50,7 @@ export default function GoogleMapViewFull({ placeList }) {
         }
     };
 
+    // Custom user marker
     const customUserMarker = () => (
         <View style={styles.avatarContainer}>
             <Image

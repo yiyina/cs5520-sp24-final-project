@@ -11,10 +11,12 @@ export default function Notification() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [notificationSettings, setNotificationSettings] = useState({ lunchEnabled: false, dinnerEnabled: false });
 
+    // Load the notification settings when the component mounts
     useEffect(() => {
         loadSettings();
     }, []);
 
+    // Load the notification settings from AsyncStorage
     const loadSettings = async () => {
         try {
             const settings = await AsyncStorage.getItem(SETTINGS_KEY);
@@ -26,6 +28,7 @@ export default function Notification() {
         }
     };
 
+    // Save the notification settings to AsyncStorage
     const saveSettings = async (settings) => {
         try {
             await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));

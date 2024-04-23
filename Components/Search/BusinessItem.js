@@ -9,6 +9,7 @@ import { getDistance } from '../../Shared/CalculateDistance'
 export default function BusinessItem({ place }) {
     const { coords } = getUpdatedUserData();
 
+    // Ensure the text has at least two lines
     const ensureTwoLines = (text) => {
         return text.includes('\n') ? text : text + '\n ';
     };

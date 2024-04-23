@@ -21,6 +21,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasErrors, setHasErrors] = useState(false);
 
+    // Clear the error message when the user starts typing
     useEffect(() => {
         if (username) setUsernameError('')
     }, [username])
@@ -31,18 +32,22 @@ export default function LoginForm({ navigation, toggleFlip }) {
         if (password) setPasswordError('')
     }, [password])
 
+    // Handle the input for username
     const handleUsernameInput = (username) => {
         setUsername(username)
     }
 
+    // Handle the input for email
     const handleEmailInput = (email) => {
         setEmail(email)
     }
 
+    // Handle the input for password
     const handlePasswordInput = (password) => {
         setPassword(password)
     }
 
+    // Handle the reset button press
     const handleResetPress = () => {
         setUsername('')
         setEmail('')
@@ -52,6 +57,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
         setPasswordError('')
     }
 
+    // Handle the login button press
     const handleConfirmPress = async () => {
         setIsLoading(true);
 
@@ -71,6 +77,7 @@ export default function LoginForm({ navigation, toggleFlip }) {
         handleRegister();
     };
 
+    // Handle the registration process
     const handleRegister = async () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password,

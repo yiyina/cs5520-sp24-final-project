@@ -5,11 +5,14 @@ import Colors from '../../Shared/Colors'
 import { MY_API_KEY } from '@env'
 import Share from '../../Services/Share'
 
+// Component to display the details of a place
 export default function PlaceDetailItem({ place, onDirectionClick }) {
     if (!place || Object.keys(place).length === 0) {
         return null; 
     }
-    console.log("PlaceDetailItem", place);
+
+    // console.log("PlaceDetailItem", place);
+    
     return (
         <View>
             <Text style={{ fontSize: 26 }}>

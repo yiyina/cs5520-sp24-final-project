@@ -8,6 +8,7 @@ import AddSpin from './AddSpin';
 export default function Header({ spinSelectHandler }) {
   const [showAddSpinModal, setShowAddSpinModal] = React.useState(false)
 
+  // Handle the add spin modal press
   const handleAddSpinModal = () => {
     setShowAddSpinModal(true)
   }

@@ -20,16 +20,19 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
     const [selectedTheme, setSelectedTheme] = useState('');
     const themeOptions = Object.keys(themes).map(key => ([themes[key], key]));
 
+    // handle the theme selection for the spin
     const handleThemeSelect = (item) => {
         setSelectedTheme(item);
     }
 
+    // set the spin name to the search input
     useEffect(() => {
         if (props.searchInput) {
             setSpinName(props.searchInput);
         }
     }, [props.searchInput]);
 
+    // set the spin items to the playlist items if the user wants to add a spin from the playlist
     useEffect(() => {
         if (props.playList) {
             const searchInputs = [];
@@ -40,6 +43,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
         }
     }, [props.playList]);
 
+    // set the spin name to the text input value or the search input value
     const handleSpinName = (text) => {
         if (props.searchInput) {
             console.log('Setting spinName handleSpinName:', props.searchInput);
@@ -49,6 +53,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
         }
     }
 
+    // add input to the spin items list for the user to fill out
     const addInput = () => {
         const hasEmptyInput = inputs.some(input => input.value.trim() === '');
         if (inputs.length >= 10) {
@@ -63,6 +68,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
         setInputs(inputs => [...inputs, { id: generateUUID(), value: '' }]);
     };
 
+    // remove input from the spin items list for the user to fill out or delete specific input
     const removeInput = (idToRemove) => {
         const inputToRemove = inputs.find(input => input.id === idToRemove);
         if (inputToRemove && (inputs.length > 1 || (inputToRemove.value && inputToRemove.value.trim() !== ''))) {
@@ -73,6 +79,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
         }
     };
 
+    // handle the input change for the spin items list
     const handleInputChange = (text, id) => {
         // const newInputs = [...inputs];
         // newInputs[index] = text;
@@ -82,6 +89,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
         ));
     };
 
+    // save the spin to the user's account
     const saveInputs = async () => {
         console.log('selectedTheme:', selectedTheme);
         console.log('spinName:', spinName);
@@ -119,6 +127,7 @@ export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...prop
         }
     }
 
+    // cancel the spin creation process and reset the inputs
     const onCancelModified = () => {
         if (!props) {
             setInputs([{ id: generateUUID(), value: '' }]);

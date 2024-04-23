@@ -5,6 +5,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Colors from '../../Shared/Colors';
 
 export default function Logout({ onCancel }) {
+    // Function to handle the logout process
     const handleLogout = async () => {
         Alert.alert("Logout", "Are you sure you want to logout?", [
             {
