@@ -4,6 +4,9 @@
 
 ### Authors: Yina Yi, Wei Song
 
+# Youtube Link
+[![Video Preview](https://img.youtube.com/vi/um-r7QIZJGw/0.jpg)](https://www.youtube.com/watch?v=um-r7QIZJGw)
+
 # Firebase Rules
 
 #### This app uses Firestore database.
