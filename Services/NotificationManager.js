@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Switch, StyleSheet } from 'react-native';
+import { View, Switch, StyleSheet, Alert, Platform, Text, Dimensions } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Colors from '../Shared/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Button from '../Shared/Button';
 
 // This is the NotificationManager component that schedules notifications
 Notifications.setNotificationHandler({
@@ -20,6 +21,7 @@ const STORAGE_KEY = '@notificationTime';
 const NotificationManager = ({ settings, onSave }) => {
   const [lunchEnabled, setLunchEnabled] = useState(settings.lunchEnabled);
   const [time, setTime] = useState(new Date());
+  const [isPickerShow, setIsPickerShow] = useState(false);
 
   // Load saved time from AsyncStorage when the component mounts
   useEffect(() => {
@@ -37,52 +39,13 @@ const NotificationManager = ({ settings, onSave }) => {
     loadTimeFromStorage();
   }, []);
 
-  // Save time to AsyncStorage whenever it changes
-  useEffect(() => {
-    // Save time to AsyncStorage whenever it changes
-    const saveTimeToStorage = async () => {
-      try {
-        await AsyncStorage.setItem(STORAGE_KEY, time.toISOString());
-      } catch (error) {
-        console.error('Error saving time to AsyncStorage:', error);
-      }
-    };
-
-    saveTimeToStorage();
-  }, [time]);
-
-  // Update parent component's state whenever the settings change
-  useEffect(() => {
-    onSave({ lunchEnabled, time });
-  }, [lunchEnabled, time, onSave]);
-
   // Register for push notifications when the component mounts
   useEffect(() => {
     const registerNotifications = async () => {
       await registerForPushNotificationsAsync();
     };
     registerNotifications();
-  }, []); 
-
-  // Schedule notifications whenever lunchEnabled, dinnerEnabled, or time changes
-  useEffect(() => {
-    const manageNotifications = async () => {
-      // Cancel all previous notifications to avoid duplicates
-      await Notifications.cancelAllScheduledNotificationsAsync();
-
-      if (lunchEnabled) {
-        const hour = time.getHours();
-        const minute = time.getMinutes();
-        await scheduleNotification('Let\'s Play Game!', 'Enjoy your Spin Time!', hour, minute);
-      }
-
-      // if (dinnerEnabled) {
-      //   await scheduleNotification('Dinner time! Let\'s Play Game!', 'Bon appétit!', 18, 0);
-      // }
-    };
-
-    manageNotifications();
-  }, [lunchEnabled, time]); 
+  }, []);
 
   // Request permission for notifications
   async function registerForPushNotificationsAsync() {
@@ -116,22 +79,66 @@ const NotificationManager = ({ settings, onSave }) => {
     await Notifications.scheduleNotificationAsync(schedulingOptions);
   }
 
+  // Function to handle Save button click
+  async function handleSave() {
+    // Save to AsyncStorage
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, time.toISOString());
+      Alert.alert('Notification time saved!');
+    } catch (error) {
+      console.error('Error saving time to AsyncStorage:', error);
+    }
+
+    // Schedule notifications
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    if (lunchEnabled) {
+      const hour = time.getHours();
+      const minute = time.getMinutes();
+      await scheduleNotification('Let\'s Play Game!', 'Enjoy your Spin Time!', hour, minute);
+    }
+
+    // Update parent component's state
+    onSave({ lunchEnabled, time });
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.switchContainer}>
-        <DateTimePicker
-          value={time}
-          mode="time"
-          display="default"
-          onChange={(event, selectedTime) => {
-            if (event.type === 'set') {
-              setTime(selectedTime);
-            }
-          }}
-        />
+        {Platform.OS !== 'ios' && (
+          <Text style={{ fontWeight: 'bold' }}>
+            Set time at:  {`${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`}
+          </Text>
+        )}
+        {Platform.OS === 'ios' || isPickerShow ? ( 
+          <DateTimePicker
+            value={time}
+            mode="time"
+            display={Platform.OS === 'ios' ? 'default' : 'spinner'}
+            onChange={(event, selectedTime) => {
+              const isSet = event.type === 'set';
+              if (Platform.OS !== 'ios' && isSet) {
+                setIsPickerShow(false);
+              }
+              if (isSet) {
+                setTime(selectedTime || time); 
+                setLunchEnabled(true); 
+              }
+            }}
+          />
+        ) : null}
         <Switch
           value={lunchEnabled}
-          onValueChange={setLunchEnabled}
+          onValueChange={(newValue) => {
+            setLunchEnabled(newValue);
+            setIsPickerShow(newValue);
+          }}
+        />
+        <Button
+          text="Save"
+          textStyle={{ fontSize: 16 }}
+          defaultStyle={[styles.saveButtonStyle, { backgroundColor: Colors.LIGHT_COLOR }]}
+          pressedStyle={[styles.saveButtonStyle, { backgroundColor: Colors.DARK_COLOR }]}
+          buttonPress={handleSave}
         />
       </View>
     </View>
@@ -145,10 +152,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   switchContainer: {
+    width: Dimensions.get('window').width * 0.8,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 20,
     alignItems: 'center',
-    width: '100%',
     backgroundColor: Colors.WHITE,
     paddingVertical: 15,
     paddingHorizontal: 20,
@@ -160,10 +167,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 20,
   },
-  Text: {
-    color: Colors.BORDER_GOLD,
-    fontSize: 20,
-    fontWeight: 'bold',
+  saveButtonStyle: {
+    position: 'absolute',
+    right: 0,
+    borderRadius: 5,
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
 });
 
