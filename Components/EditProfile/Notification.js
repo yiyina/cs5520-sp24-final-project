@@ -21,9 +21,9 @@ export default function Notification() {
                         settings={notificationSettings}
                         onSave={setNotificationSettings}
                     />
-                    <Pressable 
-                        onPress={() => setIsModalVisible(false)} 
-                        style={({pressed}) => [
+                    <Pressable
+                        onPress={() => setIsModalVisible(false)}
+                        style={({ pressed }) => [
                             styles.dismissButton,
                             { backgroundColor: pressed ? Colors.TEXT_COLOR : Colors.WHITE }
                         ]}>
