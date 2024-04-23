@@ -83,7 +83,6 @@ const NotificationManager = ({ settings, onSave }) => {
     manageNotifications();
   }, [lunchEnabled, dinnerEnabled, time]); // This depends on lunchEnabled and dinnerEnabled
 
-
   async function registerForPushNotificationsAsync() {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
