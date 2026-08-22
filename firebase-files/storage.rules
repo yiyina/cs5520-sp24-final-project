@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Avatars and gallery photos are uploaded to a folder named after the
+    // uploader's auth uid (see uploadToStorage in FirebaseHelpers.js), so the
+    // path itself carries ownership and no document lookup is needed.
+    match /user_avatars/{uid}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /user_gallery/{uid}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

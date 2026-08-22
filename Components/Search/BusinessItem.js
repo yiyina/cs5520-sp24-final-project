@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { MY_API_KEY } from '@env'
 import Colors from '../../Shared/Colors'
-import { AntDesign } from '@expo/vector-icons'
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { getUpdatedUserData } from '../../Shared/updateUserData'
 import { getDistance } from '../../Shared/CalculateDistance'
 

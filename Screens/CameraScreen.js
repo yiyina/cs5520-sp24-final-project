@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { View, TouchableOpacity, StyleSheet, Modal, Alert, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import CameraService from '../Services/CameraService'; 
 import Colors from '../Shared/Colors';
 import * as MediaLibrary from 'expo-media-library';

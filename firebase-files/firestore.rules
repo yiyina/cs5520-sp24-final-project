@@ -1,0 +1,52 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A user document carries its owner's auth uid in a `uid` field. The
+    // document id itself is auto-generated, so ownership has to be read off the
+    // document body rather than off the path.
+    match /users/{userDocId} {
+
+      // Owner-only reads. The app always queries with
+      // where("uid", "==", auth.currentUser.uid), which satisfies this rule --
+      // a query without that constraint is rejected outright.
+      allow read: if request.auth != null
+                  && resource.data.uid == request.auth.uid;
+
+      // A new user document must claim the caller's own uid.
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid;
+
+      // An update may change anything except who owns the document.
+      allow update: if request.auth != null
+                    && resource.data.uid == request.auth.uid
+                    && request.resource.data.uid == resource.data.uid;
+
+      allow delete: if request.auth != null
+                    && resource.data.uid == request.auth.uid;
+
+      // Photos and spin wheels live under the user document and store no uid of
+      // their own, so ownership is resolved by reading the parent document.
+      // Each evaluation costs one document read; if that ever matters, write a
+      // `uid` field onto these documents and compare it directly instead.
+      function ownsParent() {
+        return request.auth != null
+               && get(/databases/$(database)/documents/users/$(userDocId)).data.uid == request.auth.uid;
+      }
+
+      match /gallery/{photoId} {
+        allow read, write: if ownsParent();
+      }
+
+      match /spins/{spinId} {
+        allow read, write: if ownsParent();
+
+        // SpinDetails, and anything else nested under a spin wheel.
+        match /{nested=**} {
+          allow read, write: if ownsParent();
+        }
+      }
+    }
+  }
+}

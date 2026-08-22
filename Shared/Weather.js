@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import GlobalApi from '../Services/GlobalApi'
 import FirestoreService from '../firebase-files/FirebaseHelpers';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function Weather() {
     const [coords, setCoords] = useState(null);

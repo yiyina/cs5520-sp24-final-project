@@ -4,8 +4,8 @@ import Colors from '../../Shared/Colors'
 import Avatar from '../../Shared/Avatar'
 import FirestoreService from '../../firebase-files/FirebaseHelpers'
 import { auth } from '../../firebase-files/FirebaseSetup'
-import { AntDesign } from '@expo/vector-icons'
-import { FontAwesome } from '@expo/vector-icons'
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function EditAvatar({ avatarUri, toggleCamera }) {
     const user = auth.currentUser;

@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Feather from '@expo/vector-icons/Feather';
 import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
 import EditFields from './EditFields';
@@ -78,14 +78,19 @@ export default function EditInfo({ onCancel }) {
                 }
 
                 if (userData.email !== email) {
-                    const emailExists = await FirestoreService.doesEmailExist(email);
-                    if (emailExists) {
-                        setEmailError("Email already exists. Please choose a different one.");
-                        isEmailAlreadyExists = true;
-                        return;
+                    // Firebase Auth is the authority on email uniqueness, so let it
+                    // reject the duplicate. Pre-checking meant querying every other
+                    // user's document for a matching email.
+                    try {
+                        await FirestoreService.updateEmailForUser(email);
+                    } catch (error) {
+                        if (error.code === 'auth/email-already-in-use') {
+                            setEmailError("Email already exists. Please choose a different one.");
+                            isEmailAlreadyExists = true;
+                            return;
+                        }
+                        throw error;
                     }
-                    await FirestoreService.updateEmailForUser(email);
-                    // fieldsToUpdate.email = email;
                     hasChanges = true;
                 }
 

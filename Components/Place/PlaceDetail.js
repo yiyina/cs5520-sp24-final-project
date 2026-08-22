@@ -7,7 +7,7 @@ import GoogleMapView from './GoogleMapView';
 import { Linking } from 'react-native';
 import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
-import { EvilIcons } from '@expo/vector-icons';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 export default function PlaceDetail() {
     const { place } = useRoute().params || {};

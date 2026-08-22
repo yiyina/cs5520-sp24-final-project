@@ -11,45 +11,14 @@
 
 #### This app uses Firestore database.
 
-#### This is our rule for Cloud Firestore:
+The deployable rulesets live in this repository so they can be reviewed and
+diffed like any other source file:
 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{document=**} {
-      allow read, create: if request.auth != null;
-      allow write, delete: if request.auth != null && request.auth.uid == resource.data.uid;
-    	
-      match /spins/{spinId} {
-        allow read, create, write, delete: if request.auth != null;
-      }
-      
-      match /gallery/{photoId} {
-        allow read, create, write, delete: if request.auth != null;
-      }
-    }
-  }
-}
-```
+- [`firebase-files/firestore.rules`](firebase-files/firestore.rules)
+- [`firebase-files/storage.rules`](firebase-files/storage.rules)
 
-#### This is our rule for Storage:
-
-```
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match/user_avatars/{uid}/{allPaths=**} {
-      allow read: if request.auth !=null;
-      allow create,write,delete: if request.auth != null && request.auth.uid == uid ;
-    }
-    match /user_gallery/{uid}/{allPaths=**} {
-       allow read: if request.auth !=null;
-      allow create,write,delete: if request.auth != null && request.auth.uid == uid ;
-    }
-  }
-}
-```
+Both are owner-scoped: a signed-in user can read and write their own profile,
+gallery and spin wheels, and nothing belonging to anyone else.
 
 # Describe the data model
 

@@ -1,8 +1,8 @@
 import { StyleSheet, Text, Image, Dimensions, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { FontAwesome } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Colors from '../Shared/Colors'
 import Home from '../Screens/Home'
 import Search from '../Screens/Search'

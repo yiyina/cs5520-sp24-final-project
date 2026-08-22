@@ -7,7 +7,7 @@ import Input from '../../Shared/Input'
 import Button from '../../Shared/Button'
 import Colors from '../../Shared/Colors'
 import { validateUsername, validateEmail, validatePassword } from '../../Shared/InformationValidation';
-import { Ionicons } from '@expo/vector-icons'
+import Ionicons from '@expo/vector-icons/Ionicons';
 import Card from '../../Shared/Card'
 
 export default function LoginForm({ navigation, toggleFlip }) {

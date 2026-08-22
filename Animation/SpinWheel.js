@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions, Modal } from 'react-native';
 import Svg, { G, Path, Text as SvgText, Circle, Line } from 'react-native-svg';
 import tinycolor from 'tinycolor2';
-import { Entypo } from '@expo/vector-icons';
+import Entypo from '@expo/vector-icons/Entypo';
 import Colors from '../Shared/Colors';
 import Card from '../Shared/Card';
 import Button from '../Shared/Button';

@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions, View, Pressable, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import PlaceMarker from '../Place/PlaceMarker';
-import { FontAwesome6 } from '@expo/vector-icons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { getLocation } from '../../Shared/LocationManager';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
 import Colors from '../../Shared/Colors';

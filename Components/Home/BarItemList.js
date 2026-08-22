@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Colors from '../../Shared/Colors'
 import { MY_API_KEY } from '@env'
 import { getUpdatedUserData } from '../../Shared/updateUserData'
