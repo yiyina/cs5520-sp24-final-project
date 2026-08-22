@@ -68,12 +68,6 @@ const FirestoreService = {
         }
     },
     
-    // function to check if email exists in firestore
-    async doesEmailExist(email) {
-        const querySnapshot = await getDocs(query(collection(firestore, "users"), where("email", "==", email)));
-        return !querySnapshot.empty;
-    },
-
     // function to update user data in firestore
     async uploadToStorage(fileUri, type) {
         try {
@@ -248,32 +242,23 @@ const FirestoreService = {
 
     // function to update user email in firestore
     async updateEmailForUser(newEmail) {
-        try {
-            const user = auth.currentUser;
-            console.log("Updating email for user: ", user.uid, newEmail);
-
-            if (user) {
-                try {
-                    updateEmail(user, newEmail);
-                    console.log("Email updated successfully.");
-                } catch (error) {
-                    console.error("Error updating email: ", error);
-                    throw error;
-                }
-            } else {
-                console.error("Current user is not available.");
-            }
-
-            const userDocId = await this.getUserDocId(user.uid);
-            if (!userDocId) {
-                throw new Error("No user document found for UID: " + user.uid);
-            }
-            const userDocRef = doc(firestore, "users", userDocId);
-            await updateDoc(userDocRef, { email: newEmail });
-        } catch (error) {
-            console.error("Error updating email for user: ", error);
-            throw error;
+        const user = auth.currentUser;
+        if (!user) {
+            throw new Error("Current user is not available.");
         }
+
+        // Firebase Auth owns email uniqueness. Awaiting it means a rejection
+        // (auth/email-already-in-use, auth/requires-recent-login) reaches the
+        // caller instead of becoming an unhandled rejection, and the Firestore
+        // copy below is only written once Auth has actually accepted the change.
+        await updateEmail(user, newEmail);
+
+        const userDocId = await this.getUserDocId(user.uid);
+        if (!userDocId) {
+            throw new Error("No user document found for UID: " + user.uid);
+        }
+        const userDocRef = doc(firestore, "users", userDocId);
+        await updateDoc(userDocRef, { email: newEmail });
     },
 
     // function to update user password in firestore

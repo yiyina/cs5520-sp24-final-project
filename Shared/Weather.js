@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import GlobalApi from '../Services/GlobalApi'
 import FirestoreService from '../firebase-files/FirebaseHelpers';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Weather() {
     const [coords, setCoords] = useState(null);
@@ -47,11 +47,11 @@ export default function Weather() {
 
     const determineWeatherIcon = (temperature, precipitationProbability) => {
         if (precipitationProbability > 50) {
-            return <MaterialCommunityIcons name="weather-rainy" size={24} color="blue" />;
+            return <Ionicons name="rainy" size={24} color="blue" />;
         } else if (temperature > 20) {
-            return <MaterialCommunityIcons name="weather-sunny" size={24} color="orange" />;
+            return <Ionicons name="sunny" size={24} color="orange" />;
         } else {
-            return <MaterialCommunityIcons name="weather-cloudy" size={24} color="gray" />;
+            return <Ionicons name="cloudy" size={24} color="gray" />;
         }
     };
 

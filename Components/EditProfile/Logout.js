@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Alert, Pressable } from 'react-native'
 import React from 'react'
 import { auth } from '../../firebase-files/FirebaseSetup';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Colors from '../../Shared/Colors';
 
 export default function Logout({ onCancel }) {

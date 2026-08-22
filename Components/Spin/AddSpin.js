@@ -1,16 +1,16 @@
 import { StyleSheet, Text, Modal, View, Pressable, ScrollView, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { Octicons } from '@expo/vector-icons';
+import Octicons from '@expo/vector-icons/Octicons';
 import Input from '../../Shared/Input'
 import ColorThemes from './DefaultColorSet'
 import DropDownList from '../../Shared/DropDownList';
 import FirestoreService from '../../firebase-files/FirebaseHelpers';
-import { AntDesign } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
 import Button from '../../Shared/Button';
 import Colors from '../../Shared/Colors';
 import generateUUID from '../../Shared/GenerateUUID';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import HorizontalLine from '../../Shared/HorizontalLine';
 
 export default function AddSpin({ showAddSpinModal, setShowAddSpinModal, ...props }) {

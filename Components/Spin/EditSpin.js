@@ -1,6 +1,6 @@
 import { StyleSheet, Pressable, View, Dimensions, Modal, Text, ScrollView, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { EvilIcons } from '@expo/vector-icons';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Colors from '../../Shared/Colors'
 import FirestoreService from '../../firebase-files/FirebaseHelpers'
 import Button from '../../Shared/Button';
@@ -9,10 +9,10 @@ import DropdownList from '../../Shared/DropDownList';
 import HorizontalLine from '../../Shared/HorizontalLine';
 import ColorThemes from './DefaultColorSet';
 import generateUUID from '../../Shared/GenerateUUID';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Feather from '@expo/vector-icons/Feather';
+import Octicons from '@expo/vector-icons/Octicons';
 
 const screenHeight = Dimensions.get('window').height;
 const windowOffset = screenHeight < 700 ? 200 : 40;

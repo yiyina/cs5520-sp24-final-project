@@ -1,6 +1,6 @@
 import { StyleSheet, View, Modal, Pressable, Alert, Text } from 'react-native'
 import React from 'react'
-import { Octicons } from '@expo/vector-icons';
+import Octicons from '@expo/vector-icons/Octicons';
 import Colors from '../Shared/Colors';
 import EditInfo from '../Components/EditProfile/EditInfo';
 

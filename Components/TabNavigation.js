@@ -1,8 +1,8 @@
 import { StyleSheet, Text, Image, Dimensions, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { FontAwesome } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Colors from '../Shared/Colors'
 import Home from '../Screens/Home'
 import Search from '../Screens/Search'
@@ -40,7 +40,6 @@ export default function TabNavigation() {
                     options={{
                         tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>SPIN</Text> : null),
                         tabBarIcon: ({ color, size }) => (
-                            // <MaterialCommunityIcons name="ferris-wheel" size={size} color={color} />
                             <Image source={require('../assets/spin-icon.png')} style={styles.spinIcon} />
                         ),
                     }}

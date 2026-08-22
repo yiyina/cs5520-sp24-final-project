@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Input from '../../Shared/Input'
 import Button from '../../Shared/Button'
 import Colors from '../../Shared/Colors'
-import { Ionicons } from '@expo/vector-icons'
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase-files/FirebaseSetup';
 import Card from '../../Shared/Card'

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Dimensions, TextInput, Pressable, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Colors from '../../Shared/Colors';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import Weather from '../../Shared/Weather';
 import Button from '../../Shared/Button';
 import AddSpin from '../Spin/AddSpin';

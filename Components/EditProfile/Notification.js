@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors'
-import { AntDesign } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import NotificationManager from '../../Services/NotificationManager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

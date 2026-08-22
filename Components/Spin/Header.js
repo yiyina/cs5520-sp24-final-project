@@ -1,7 +1,7 @@
 import { StyleSheet, View, Dimensions, Pressable } from 'react-native'
 import React from 'react'
 import SpinSelector from './SpinSelector'
-import { AntDesign } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Colors from '../../Shared/Colors';
 import AddSpin from './AddSpin';
 

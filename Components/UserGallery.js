@@ -1,22 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Image, StyleSheet, Text, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { SectionList, FlatList, View, Image, StyleSheet, Text, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import Colors from '../Shared/Colors';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import Icon from '@expo/vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+
+// A single photo tile. Memoized so that re-rendering one day's strip does not
+// re-render every thumbnail inside it.
+const GalleryTile = React.memo(function GalleryTile({ img, onPress, onDelete }) {
+  return (
+    <View style={styles.imageContainer}>
+      <TouchableOpacity onPress={() => onPress(img)}>
+        <Image source={{ uri: img.url }} style={styles.image} />
+        <Text numberOfLines={1} style={styles.imageLocationText}>{img.location || 'No location'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(img)}>
+        <Icon name="close" size={20} color="white" />
+      </TouchableOpacity>
+    </View>
+  );
+});
+
+// One day's horizontal strip of photos.
+const GalleryRow = React.memo(function GalleryRow({ images, onPress, onDelete }) {
+  const renderTile = useCallback(
+    ({ item }) => <GalleryTile img={item} onPress={onPress} onDelete={onDelete} />,
+    [onPress, onDelete]
+  );
+
+  return (
+    <FlatList
+      data={images}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.imageScrollView}
+      keyExtractor={(img) => img.id}
+      renderItem={renderTile}
+      removeClippedSubviews={true}
+      initialNumToRender={4}
+      maxToRenderPerBatch={4}
+      windowSize={5}
+    />
+  );
+});
 
 export default function UserGallery() {
   const [groupedImages, setGroupedImages] = useState({});
   const { gallery } = getUpdatedUserData();
   const navigation = useNavigation();
-  // console.log("gallery: ", gallery);
 
   // Function to handle the image press and navigate to the search screen
-  const handleImagePress = (image) => {
-    console.log("image: ", image);
+  const handleImagePress = useCallback((image) => {
     navigation.navigate('Search', { query: image.location });
-  };
+  }, [navigation]);
 
   // Group the images by date
   useEffect(() => {
@@ -47,18 +84,6 @@ export default function UserGallery() {
     setGroupedImages(sortedGroups);
   };
 
-  // Function to handle the delete button press
-  const handleDelete = (image) => {
-    Alert.alert(
-      "Delete Photo",
-      "Are you sure you want to delete this photo?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", onPress: () => deleteImage(image) }
-      ]
-    );
-  };
-
   // Function to delete the image from the gallery
   const deleteImage = async (image) => {
     try {
@@ -71,29 +96,49 @@ export default function UserGallery() {
     }
   };
 
+  // Function to handle the delete button press
+  const handleDelete = useCallback((image) => {
+    Alert.alert(
+      "Delete Photo",
+      "Are you sure you want to delete this photo?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", onPress: () => deleteImage(image) }
+      ]
+    );
+  }, [gallery]);
+
+  // SectionList needs every section to carry an array of rows. Each day is a
+  // section holding exactly one row, and that row is the day's horizontal strip.
+  const sections = useMemo(
+    () => Object.entries(groupedImages).map(([date, data]) => ({ date, data: [data.images] })),
+    [groupedImages]
+  );
+
+  const renderRow = useCallback(
+    ({ item }) => <GalleryRow images={item} onPress={handleImagePress} onDelete={handleDelete} />,
+    [handleImagePress, handleDelete]
+  );
+
+  const renderSectionHeader = useCallback(
+    ({ section }) => <Text style={styles.dateText}>{section.date}</Text>,
+    []
+  );
+
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        {Object.entries(groupedImages).map(([date, data]) => (
-          <View key={date} style={styles.dateGroup}>
-            <Text style={styles.dateText}>{date}</Text>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.imageScrollView}>
-              {data.images.map((img) => (
-                <View key={img.id} style={styles.imageContainer}>
-                  <TouchableOpacity key={img.id} onPress={() => handleImagePress(img)}>
-                    <Image source={{ uri: img.url }} style={styles.image} />
-                    <Text numberOfLines={1} style={styles.imageLocationText}>{img.location || 'No location'}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(img)}>
-                    <Icon name="close" size={20} color="white" />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+    <SectionList
+      style={styles.scrollView}
+      contentContainerStyle={styles.container}
+      sections={sections}
+      keyExtractor={(item, index) => `row-${index}`}
+      renderSectionHeader={renderSectionHeader}
+      renderItem={renderRow}
+      stickySectionHeadersEnabled={false}
+      removeClippedSubviews={true}
+      initialNumToRender={3}
+      maxToRenderPerBatch={3}
+      windowSize={5}
+    />
   );
 }
 
@@ -105,9 +150,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
-  dateGroup: {
-    marginBottom: 20,
-  },
   dateText: {
     fontSize: 16,
     color: Colors.TEXT_COLOR,
@@ -116,6 +158,7 @@ const styles = StyleSheet.create({
   },
   imageScrollView: {
     flexDirection: 'row',
+    marginBottom: 20,
   },
   imageContainer: {
     marginRight: 10,
