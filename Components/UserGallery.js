@@ -3,7 +3,7 @@ import { SectionList, FlatList, View, Image, StyleSheet, Text, TouchableOpacity,
 import Colors from '../Shared/Colors';
 import { getUpdatedUserData } from '../Shared/updateUserData';
 import FirestoreService from '../firebase-files/FirebaseHelpers';
-import Icon from '@expo/vector-icons/MaterialIcons';
+import Icon from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 // A single photo tile. Memoized so that re-rendering one day's strip does not

@@ -40,7 +40,6 @@ export default function TabNavigation() {
                     options={{
                         tabBarLabel: ({ focused }) => (focused ? <Text style={styles.title}>SPIN</Text> : null),
                         tabBarIcon: ({ color, size }) => (
-                            // <MaterialCommunityIcons name="ferris-wheel" size={size} color={color} />
                             <Image source={require('../assets/spin-icon.png')} style={styles.spinIcon} />
                         ),
                     }}

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Colors from '../../Shared/Colors';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import CameraScreen from '../../Screens/CameraScreen';
 import CameraService from '../../Services/CameraService';
@@ -172,7 +172,7 @@ export default function EditInfo({ onCancel }) {
                     </>
                     :
                     <>
-                        <MaterialCommunityIcons name="lead-pencil" size={24} color={Colors.WHITE} />
+                        <Ionicons name="pencil" size={24} color={Colors.WHITE} />
                         <Text style={styles.buttonText}>Edit Profile</Text>
                     </>
                 }

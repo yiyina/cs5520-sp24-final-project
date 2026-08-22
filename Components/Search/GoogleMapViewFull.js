@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions, View, Pressable, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import PlaceMarker from '../Place/PlaceMarker';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { getLocation } from '../../Shared/LocationManager';
 import { getUpdatedUserData } from '../../Shared/updateUserData';
 import Colors from '../../Shared/Colors';
@@ -90,7 +90,7 @@ export default function GoogleMapViewFull({ placeList }) {
                         backgroundColor: pressed ? 'lightgray' : 'white',
                     },
                 ]} onPress={handleMyLocationPress}>
-                <FontAwesome6 name="location-crosshairs" size={24} color="gray" />
+                <Ionicons name="locate" size={24} color="gray" />
             </Pressable>
         </View>
     )
