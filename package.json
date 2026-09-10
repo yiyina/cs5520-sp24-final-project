@@ -52,5 +52,21 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "@xmldom/xmldom": "^0.8.15",
+    "tar": "^7.5.21",
+    "undici": "^6.28.0",
+    "postcss": "^8.5.23",
+    "fast-xml-parser": "^5.7.0",
+    "send": "^0.19.2",
+    "uuid": "^11.1.1",
+    "js-yaml": "^3.15.2",
+    "@expo/image-utils": {
+      "semver": "^7.5.2"
+    },
+    "@expo/xcpretty": {
+      "js-yaml": "^4.3.2"
+    }
+  }
 }
